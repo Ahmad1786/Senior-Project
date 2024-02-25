@@ -109,6 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+# Note this is technically not the best practice but maybe fine in our case
+# See https://docs.djangoproject.com/en/5.0/topics/i18n/timezones/
 TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
