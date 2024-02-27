@@ -34,6 +34,15 @@ INSTALLED_APPS = [
     # our own custom made apps
     'users',
 
+    # third party apps
+    # will use django-allauth for authentication (both regular and social accounts such as google)
+    # https://docs.allauth.org/en/latest/introduction/index.html
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    # more third party apps:
+
     # apps that come with Django by default
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +60,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Allauth needs this as well as some that were already added by default
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -58,7 +70,12 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        
+        # 'DIRS': [],
+        # Doing this allows us to override allauth templates or other templates 
+        # (Django will look in our templates folder (project/templates) first before looking in other template folders) 
+        'DIRS': [BASE_DIR / 'templates'], 
+        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +83,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # `allauth` needs this from django
+                'django.template.context_processors.request' 
             ],
         },
     },
@@ -84,6 +104,14 @@ DATABASES = {
     }
 }
 
+# Django allauth also needs these backends 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -128,10 +156,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Todo: Authentication settings
-
+# Authentication/User Settings
 # Let Django know which model represents a User
 AUTH_USER_MODEL = 'users.User'
+
+ACCOUNT_EMAIL_REQUIRED = True # Require the user to enter a email address when signing up
 
 # Todo: Set up email backend
 
