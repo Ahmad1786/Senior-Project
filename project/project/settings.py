@@ -24,6 +24,9 @@ SECRET_KEY = 'django-insecure-iii1!65$kdq^=#cm)$utv&@lj-%_52gr8ucalwhiqk=j_5-&_e
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+    # Note for future: If we go to production and set Debug to False:
+    # Will need to run `python manage.py collectstatic` to collect all static files?
+
 
 ALLOWED_HOSTS = []
 
@@ -35,13 +38,20 @@ INSTALLED_APPS = [
     'users',
 
     # third party apps
+
+    # Temporary UI for allauth - We should add our own custom UI later
+    "allauth_ui", # Needs to be added before allauth
+
     # will use django-allauth for authentication (both regular and social accounts such as google)
     # https://docs.allauth.org/en/latest/introduction/index.html
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    # more third party apps:
+
+    # More third party apps
+    "widget_tweaks", # dependency for allauth_ui
+
 
     # apps that come with Django by default
     'django.contrib.admin',
