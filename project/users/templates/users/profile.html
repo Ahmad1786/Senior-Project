@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user }} Profile</title>
+    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <h1 id="red">Note this page is for early development/debugging only</h1>
+
+    <h1>This is the Profile Page of {{ user }} </h1> 
+    
+    <!-- link to logout ... account_logout is the name provided by allauth -->
+    <h2><a href="{% url 'account_logout' %}">Logout</a></h2> 
+    
+    <ul>
+        {% for field_name, field_value in user_fields.items %}
+            <li>{{ field_name }}: {{ field_value }}</li><br>
+        {% endfor %}
+    </ul>
+    
+</body>
+</html>

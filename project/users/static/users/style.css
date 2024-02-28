@@ -1,0 +1,5 @@
+/* I know I could just use inline style, but this is just
+a silly example to show how static folder works */
+#red {
+    color: red;
+}

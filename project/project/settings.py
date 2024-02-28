@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # third party apps
 
     # Temporary UI for allauth - We should add our own custom UI later
+    # https://github.com/danihodovic/django-allauth-ui
     "allauth_ui", # Needs to be added before allauth
 
     # will use django-allauth for authentication (both regular and social accounts such as google)
@@ -51,7 +52,7 @@ INSTALLED_APPS = [
 
     # More third party apps
     "widget_tweaks", # dependency for allauth_ui
-
+    "phonenumber_field", # for phone number field in user model
 
     # apps that come with Django by default
     'django.contrib.admin',
@@ -167,10 +168,24 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication/User Settings
-# Let Django know which model represents a User
-AUTH_USER_MODEL = 'users.User'
-
+AUTH_USER_MODEL = 'users.User' # Let Django know which model represents a User
 ACCOUNT_EMAIL_REQUIRED = True # Require the user to enter a email address when signing up
+LOGIN_REDIRECT_URL = 'users:profile' # redirect to users/profile page after login
+ACCOUNT_AUTHENTICATION_METHOD = 'email' # Use email to login
+ACCOUNT_USERNAME_REQUIRED = False # Don't require a Username
+SOCIALACCOUNT_AUTO_SIGNUP = False # Don't automatically sign up social accounts
+# Use our custom forms for allauth
+ACCOUNT_FORMS = {'signup': 'users.forms.MyCustomSignupForm'}
+SOCIALACCOUNT_FORMS = {'signup': 'users.forms.MyCustomSocialSignupForm'}
 
-# Todo: Set up email backend
+SOCIALACCOUNT_ADAPTER = 'users.adapter.CustomSocialAccountAdapter' # Use our custom adapter for social accounts
+
+
+# Set up email backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'cohabitat.ru@gmail.com'
+EMAIL_HOST_PASSWORD = 'oypgzzgdkiuaogry' # This is a google app password (not the gmail password)
 
