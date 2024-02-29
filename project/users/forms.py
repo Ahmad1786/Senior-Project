@@ -4,17 +4,16 @@ from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
+# Customize the default signup form for normal signups
 class MyCustomSignupForm(SignupForm):
 
     def __init__(self, *args, **kwargs):
-        # Can customize the parent class/form fields here such as... 
+        # Can customize the parent class/form fields here such as email or 
         # setting initial values (assuming not already set if in social signup form)
         super(MyCustomSignupForm, self).__init__(*args, **kwargs)
         self.fields['email'].label = "Email (Required)"
         self.fields['password1'].label = "Password (Required)"
 
-    email = forms.EmailField(max_length=254, required=True, label="Email (Required)",
-                                widget=forms.TextInput(attrs={'placeholder': 'Email Address'}))
     first_name = forms.CharField(max_length=30, required=True, label="First Name (Required)", 
                                  widget=forms.TextInput(attrs={'placeholder': 'First name'}))
     last_name = forms.CharField(max_length=30, required=True, label="Last Name (Required)", 
@@ -38,6 +37,7 @@ class MyCustomSignupForm(SignupForm):
         # You must return the original result.
         return user
 
+# Customize the default signup form for social signups
 class MyCustomSocialSignupForm(SocialSignupForm):
 
     def __init__(self, *args, **kwargs):
@@ -47,13 +47,13 @@ class MyCustomSocialSignupForm(SocialSignupForm):
         self.fields['email'].widget = forms.HiddenInput()
         self.fields['email'].required = False
         
-
+    # For the most part First and Last should already be given by the social account provider
     first_name = forms.CharField(max_length=30, required=True, label = "First Name (Required)", 
                                  widget=forms.TextInput(attrs={'placeholder': 'First name'}))
     last_name = forms.CharField(max_length=30, required=True, label = "Last Name (Required)", 
                                 widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
     phone_number = PhoneNumberField(required=False, label='Phone Number',
-                                widget=PhoneNumberPrefixWidget(initial=None, attrs={'placeholder': 'Phone number'}))
+                                widget=PhoneNumberPrefixWidget(initial='US', attrs={'placeholder': 'Phone number'}))
 
     
     # Handle saving the user in the adapter instead of the form

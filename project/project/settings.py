@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-iii1!65$kdq^=#cm)$utv&@lj-%_52gr8ucalwhiqk=j_5-&_e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
     # Note for future: If we go to production and set Debug to False:
-    # Will need to run `python manage.py collectstatic` to collect all static files?
+    # Will need to run `python manage.py collectstatic` to collect all static files...
+    # https://docs.djangoproject.com/en/5.0/howto/static-files/#deployment
 
 
 ALLOWED_HOSTS = []
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
 
     # third party apps
 
-    # Temporary UI for allauth - We should add our own custom UI later
+    # Temporary 3rd party UI for allauth - We should add our own custom UI later
     # https://github.com/danihodovic/django-allauth-ui
     "allauth_ui", # Needs to be added before allauth
 
@@ -84,7 +85,7 @@ TEMPLATES = [
         
         # 'DIRS': [],
         # Doing this allows us to override allauth templates or other templates 
-        # (Django will look in our templates folder (project/templates) first before looking in other template folders) 
+        # Django will look in our templates folder (project/templates) first before looking in other template folders
         'DIRS': [BASE_DIR / 'templates'], 
         
         'APP_DIRS': True,
