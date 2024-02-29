@@ -11,7 +11,7 @@
   <li><b>cd project/</b></li>
   <li><b>python manage.py makemigrations</b> (Note: not needed unless made changes to the model)</li>
   <li><b>python manage.py migrate</b> (Apply changes from migrations to the actual database)</li>
-  <li>Run project: e.g. <b>python manage.py migrate</b></li>
+  <li>Run project: e.g. <b>python manage.py runserver</b></li>
   </ol>
 
   **NOTE: Need to insert google credentials into the database if you want to use google login functionality in application**
