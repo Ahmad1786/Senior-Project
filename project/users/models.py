@@ -23,3 +23,4 @@ class User(AbstractUser):
     
     def __str__(self):
         return f"{self.first_name.capitalize()} {self.last_name.capitalize()}"  # "First Last" 
+    

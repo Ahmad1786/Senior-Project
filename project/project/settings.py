@@ -180,6 +180,12 @@ SOCIALACCOUNT_FORMS = {'signup': 'users.forms.MyCustomSocialSignupForm'}
 
 SOCIALACCOUNT_ADAPTER = 'users.adapter.CustomSocialAccountAdapter' # Use our custom adapter for social accounts
 
+# Let allauth know not to use username for representing a user
+# Still defaults to username unless user __str__ method is overwriten
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# Could also specify another name for the user to be displayed in email or message framework messages
+# ACCOUNT_USER_DISPLAY = lambda user: user.some_function() 
 
 # Set up email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
