@@ -170,4 +170,4 @@ cython_debug/
 .history
 
 # google credentials
-client_secret_*.apps.googleusercontent.com.json
+client_secret*.json
