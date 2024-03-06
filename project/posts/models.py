@@ -1,53 +1,73 @@
 from django.contrib.auth.models import AbstractUser 
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 from django.db import models
 
 class Post(models.Model):
     """
     A parent class that Event, Bill, and Chore will extend.
     """
-    # Strings
+    # Foreign keys
+    # Need to change Server value to connect to Luke's server class
+    server = models.ForeignKey(Server)
+
+    # Field attributes
     post_name = models.CharField(max_length = 50)
     description = models.TextField()
 
+    def __str__(self):
+        return "Server: " + self.server + ", post_name: " + self.post_name + ", description: " + self.description
+
 # Extends Post
 class Event(Post):
+    # Field attributes
     creator = models.CharField(max_length = 30)
     date_time = models.DateTimeField()
 
+    def __str__(self):
+        return self.creator + " created an event " + Post.post_name + " (" + Post.description + ") that takes place at " + self.date_time
+
 # Extends Post
 class Bill(Post):
-    # Set fields
+    # Foreign keys
+    payee = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    bill_creator = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    # Field attributes
     posted_date = models.DateField()
     cost = models.FloatField(blank = True, null = True)
     split = models.BooleanField(default = True)
     completed = models.BooleanField(default = False)
 
+    def __str__(self):
+        return self.bill_creator + " created a bill " + Post.post_name + " (" + Post.description + ") for " + self.cost + " due by " + self.due_date
+
 # Extends Post
-class Chore():
+class Chore(Post):
+    # Foreign keys
+    assignee = models.ManyToManyField(settings.AUTH_USER_MODEL)
+
+    # Field attributes
     due_date = models.DateField()
     assigned_date = models.DateField()
     completed = models.BooleanField(default = False)
     point_value = models.IntegerField()
 
+    def __str__(self):
+        return self.assignee.name + " is assigned to " + Post.post_name + " (" + Post.description + ") due by " + self.due_date
+
 class Comment(models.Model):
+    # Foreign keys
+    user = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    task = models.ForeignKey(Chore, null = True)
+    event = models.ForeignKey(Event, null = True)
+    bill = models.ForeignKey(Bill, null = True)
+    parent_comment = models.ForeignKey("self", null = True, related_name = "replies")
+
+    # Field attributes
     content = models.TextField()
     date_time = models.DateTimeField()
 
-# extend the User model by extending AbstractUser: see link for details
-# https://docs.djangoproject.com/en/5.0/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
-class User(AbstractUser):
-    phone_number = PhoneNumberField()
-
-    def save(self, *args, **kwargs):
-        # since we are not using username it will just be something hidden to user
-        # but superuser will still make own username
-        if not self.is_superuser and not self.pk: # save may be called multiple times so do this only on first save
-            self.username = self.generate_username()
-        super().save(*args, **kwargs)
-    
-    # String representation of the user object
-    # Can also be used as allauth display name
     def __str__(self):
-        return f"{self.first_name.capitalize()} {self.last_name.capitalize()}"  # "First Last" 
+        return self.user + " (" + self.date_time +")" + "commented \"" + self.content + "\""
     
