@@ -1,9 +1,8 @@
 from django.contrib.auth.models import AbstractUser 
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db import models
-import datetime
 
-class Post(models.model):
+class Post(models.Model):
     """
     A parent class that Event, Bill, and Chore will extend.
     """
@@ -11,20 +10,22 @@ class Post(models.model):
     post_name = models.CharField(max_length = 50)
     description = models.TextField()
 
-class Event():
+# Extends Post
+class Event(Post):
     
 
-
-class Bill():
+# Extends Post
+class Bill(Post):
     # Set fields
     posted_date = models.DateField()
-    cost = models.FloatField(blank = True)
-    split = models.BooleanField(default = True, )
+    cost = models.FloatField(blank = True, null = True)
+    split = models.BooleanField(default = True)
     completed = models.BooleanField(default = False)
 
+# Extends Post
 class Chore():
 
-class Comment():
+class Comment(models.Model):
     
 
 # extend the User model by extending AbstractUser: see link for details
