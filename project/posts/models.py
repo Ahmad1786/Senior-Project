@@ -12,7 +12,8 @@ class Post(models.Model):
 
 # Extends Post
 class Event(Post):
-    
+    creator = models.CharField(max_length = 30)
+    date_time = models.DateTimeField()
 
 # Extends Post
 class Bill(Post):
@@ -24,9 +25,14 @@ class Bill(Post):
 
 # Extends Post
 class Chore():
+    due_date = models.DateField()
+    assigned_date = models.DateField()
+    completed = models.BooleanField(default = False)
+    point_value = models.IntegerField()
 
 class Comment(models.Model):
-    
+    content = models.TextField()
+    date_time = models.DateTimeField()
 
 # extend the User model by extending AbstractUser: see link for details
 # https://docs.djangoproject.com/en/5.0/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
