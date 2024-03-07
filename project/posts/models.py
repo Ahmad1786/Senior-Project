@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from django.db import models
+from serverparticipation.models import Server
 
 class Post(models.Model):
     """
@@ -9,7 +10,7 @@ class Post(models.Model):
     """
     # Foreign keys
     # Need to change Server value to connect to Luke's server class -- Done
-    server = models.ForeignKey(models.Server)
+    server = models.ForeignKey(Server)
 
     # Field attributes
     post_name = models.CharField(max_length = 50)
