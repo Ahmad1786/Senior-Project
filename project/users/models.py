@@ -5,6 +5,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 # https://docs.djangoproject.com/en/5.0/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
 class User(AbstractUser):
     phone_number = PhoneNumberField()
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    profile_picture = models.BinaryField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # since we are not using username it will just be something hidden to user
