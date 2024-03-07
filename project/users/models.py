@@ -26,9 +26,11 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.first_name.capitalize()} {self.last_name.capitalize()}"  # "First Last" 
 
+# Done by Luke
+# Should wait until we have a better understanding of the project to implement this - Muhammad
 # Model for Notification
 # class Notification():
-       # user = models.ForeignKey(User, on_delete=models.CASCADE)
+       # user = models.ForeignKey(User, on_delete=models.CASCADE) - This should probably be a MtoM though - Muhammad
        # message = models.TextField()
        # created = models.DateTimeField(default=timezone.now)
     
