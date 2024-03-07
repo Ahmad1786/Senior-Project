@@ -3,7 +3,7 @@ from django.db import models
 import datetime
 # Create your models here.
 
-class Server(models.Model):
+class Server():
     group_name = models.CharField(max_length=100)
     group_icon = models.BinaryField(null=True, blank=True)
     date_created = models.DateField(auto_now_add=True)
@@ -12,7 +12,7 @@ class Server(models.Model):
     def __str__(self):
         return self.group_name
 
-class Participation(models.Model):
+class Participation():
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     server = models.ForeignKey(Server, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=100)
