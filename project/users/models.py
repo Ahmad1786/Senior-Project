@@ -25,8 +25,8 @@ class User(AbstractUser):
         return f"{self.first_name.capitalize()} {self.last_name.capitalize()}"  # "First Last" 
 
 # Model for Notification
-class Notification(models.model):
-        user = models.ForeignKey(User, on_delete=models.CASCADE)
+class Notification():
+       # user = models.ForeignKey(User, on_delete=models.CASCADE)
         message = models.TextField()
-        created = models.DateTimeField(default=timezone.now)
+       # created = models.DateTimeField(default=timezone.now)
     
