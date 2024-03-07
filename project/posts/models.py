@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from django.db import models
-from serverparticipation.models import Server
+from servers.models import Server
 
 class Post(models.Model):
     """

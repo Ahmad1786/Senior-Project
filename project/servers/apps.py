@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ServerparticipationConfig(AppConfig):
+class ServersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'serverparticipation'
+    name = 'servers'

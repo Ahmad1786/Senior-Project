@@ -22,6 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
+    path('servers/', include('servers.urls')),
+    path('posts/', include('posts.urls')),
     # if no path take to profile page (currently being used for testing)
     path('', users.views.profile),
 ]

@@ -37,6 +37,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # our own custom made apps
     'users',
+    'posts',
+    'servers',
 
     # third party apps
 
