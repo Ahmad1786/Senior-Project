@@ -23,4 +23,10 @@ class User(AbstractUser):
     # Can also be used as allauth display name
     def __str__(self):
         return f"{self.first_name.capitalize()} {self.last_name.capitalize()}"  # "First Last" 
+
+# Model for Notification
+class Notification(models.model):
+        user = models.ForeignKey(User, on_delete=models.CASCADE)
+        message = models.TextField()
+        created = models.DateTimeField(default=timezone.now)
     
