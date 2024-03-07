@@ -8,7 +8,7 @@ class Post(models.Model):
     A parent class that Event, Bill, and Chore will extend.
     """
     # Foreign keys
-    # Need to change Server value to connect to Luke's server class
+    # Need to change Server value to connect to Luke's server class -- Done
     server = models.ForeignKey(models.Server)
 
     # Field attributes
