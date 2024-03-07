@@ -9,7 +9,6 @@ class Post(models.Model):
     A parent class that Event, Bill, and Chore will extend.
     """
     # Foreign keys
-    # Need to change Server value to connect to Luke's server class -- Done
     server = models.ForeignKey(Server)
 
     # Field attributes
@@ -52,7 +51,7 @@ class Chore(Post):
     due_date = models.DateField()
     assigned_date = models.DateField()
     completed = models.BooleanField(default = False)
-    point_value = models.IntegerField()
+    point_value = models.IntegerField(default = 0)
 
     def __str__(self):
         return self.assignee.name + " is assigned to " + Post.post_name + " (" + Post.description + ") due by " + self.due_date
