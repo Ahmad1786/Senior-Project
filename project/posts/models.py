@@ -9,7 +9,7 @@ class Post(models.Model):
     """
     # Foreign keys
     # Need to change Server value to connect to Luke's server class
-    server = models.ForeignKey(Server)
+    server = models.ForeignKey(models.Server)
 
     # Field attributes
     post_name = models.CharField(max_length = 50)
