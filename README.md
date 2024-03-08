@@ -11,8 +11,9 @@
   <li><b>cd project/</b></li>
   <li><b>python manage.py makemigrations</b> (Note: not needed unless made changes to the model)</li>
   <li><b>python manage.py migrate</b> (Apply changes from migrations to the actual database)</li>
+  <li><b>python manage.py shell < insert_data.py</b> (Create all the dummy data - Also creates a SuperUser)</li>
   <li>May also need to run <b>python manage.py activategoogle &lt;json_file_path&gt;</b> (See Below) </li>
   <li>Run project: e.g. <b>python manage.py runserver</b></li>
   </ol>
 
-  **NOTE on #9: <br> Need to insert google credentials into the database if running for the first time to use the google signin functionality. <br> Theres a script to avoid manually inserting them, simply put the client_secret json file somewhere into the project (it will be gitignored) and run the custom command specifying the path to the file as an argument**
+  **NOTE on #10: <br> Need to insert google credentials into the database if running for the first time to use the google signin functionality. <br> Theres a script to avoid manually inserting them, simply put the client_secret json file somewhere into the project (it will be gitignored) and run the custom command specifying the path to the file as an argument**
