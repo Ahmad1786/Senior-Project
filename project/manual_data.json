@@ -1,0 +1,487 @@
+[
+  [
+    {
+      "model": "user",
+      "first_name": "Muhammad",
+      "last_name": "Ahmad",
+      "email": "muhammadahmad@random.com"
+    },
+    {
+      "model": "user",
+      "first_name": "Daniel",
+      "last_name": "Reger",
+      "email": "danielreger@random.com"
+    },
+    {
+      "model": "user",
+      "first_name": "Luke",
+      "last_name": "Lachowicz",
+      "email": "lukelachowicz@random.com"
+    },
+    {
+      "model": "user",
+      "first_name": "Mary",
+      "last_name": "Monaco",
+      "email": "marymonaco@random.com"
+    },
+    {
+      "model": "user",
+      "first_name": "Tayyab",
+      "last_name": "Qaiser",
+      "email": "tayyabqaiser@random.com"
+    },
+    {
+      "model": "user",
+      "first_name": "Doctor",
+      "last_name": "Baliga",
+      "email": "doctorbaliga@random.com"
+    },
+    {
+      "model": "user",
+      "first_name": "Ridhaa",
+      "last_name": "Rahman",
+      "email": "ridhaarahman@random.com"
+    }
+  ],
+  [
+    {
+      "model": "server",
+      "name": "Rowan University Group"
+    },
+    {
+      "model": "server",
+      "name": "Holly Point"
+    },
+    {
+      "model": "server",
+      "name": "220 Rowan Boulevard"
+    }
+  ],
+  [
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Rowan University Group",
+      "user": "Muhammad"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Rowan University Group",
+      "user": "Daniel"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Rowan University Group",
+      "user": "Luke"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Rowan University Group",
+      "user": "Mary"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Rowan University Group",
+      "user": "Tayyab"
+    },
+    {
+      "model": "participation",
+      "is_owner": true,
+      "house": "Rowan University Group",
+      "user": "Doctor"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Rowan University Group",
+      "user": "Ridhaa"
+    },
+    {
+      "model": "participation",
+      "is_owner": true,
+      "house": "Holly Point",
+      "user": "Muhammad"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Holly Point",
+      "user": "Ridhaa"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "Holly Point",
+      "user": "Luke"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "220 Rowan Boulevard",
+      "user": "Daniel"
+    },
+    {
+      "model": "participation",
+      "is_owner": false,
+      "house": "220 Rowan Boulevard",
+      "user": "Mary"
+    },
+    {
+      "model": "participation",
+      "is_owner": true,
+      "house": "220 Rowan Boulevard",
+      "user": "Tayyab"
+    }
+  ],
+  [
+    {
+      "model": "task",
+      "name": "Fix the bookshelves",
+      "house": "Rowan University Group",
+      "description": "Do you really need me to tell you? Its all in the title: Fix the bookshelves !!!",
+      "creator": "Doctor"
+    },
+    {
+      "model": "task",
+      "name": "Clean the whiteboards",
+      "house": "Rowan University Group",
+      "description": "Do you really need me to tell you? Its all in the title: Clean the whiteboards !!!",
+      "creator": "Doctor"
+    },
+    {
+      "model": "task",
+      "name": "Clean the Kitchen",
+      "house": "Holly Point",
+      "description": "Do you really need me to tell you? Its all in the title: Clean the Kitchen !!!",
+      "creator": "Muhammad"
+    },
+    {
+      "model": "task",
+      "name": "Clean the Bathroom",
+      "house": "Holly Point",
+      "description": "Do you really need me to tell you? Its all in the title: Clean the Bathroom !!!",
+      "creator": "Muhammad"
+    },
+    {
+      "model": "task",
+      "name": "Vacuum the Living Room",
+      "house": "Holly Point",
+      "description": "Do you really need me to tell you? Its all in the title: Vacuum the Living Room !!!",
+      "creator": "Muhammad"
+    },
+    {
+      "model": "task",
+      "name": "Take out the Trash",
+      "house": "Holly Point",
+      "description": "Do you really need me to tell you? Its all in the title: Take out the Trash !!!",
+      "creator": "Muhammad"
+    },
+    {
+      "model": "task",
+      "name": "Mop the Kitchen",
+      "house": "Holly Point",
+      "description": "Do you really need me to tell you? Its all in the title: Mop the Kitchen !!!",
+      "creator": "Muhammad"
+    },
+    {
+      "model": "task",
+      "name": "Put on the shower curtain",
+      "house": "220 Rowan Boulevard",
+      "description": "Do you really need me to tell you? Its all in the title: Put on the shower curtain !!!",
+      "creator": "Tayyab"
+    },
+    {
+      "model": "task",
+      "name": "Do the laundry",
+      "house": "220 Rowan Boulevard",
+      "description": "Do you really need me to tell you? Its all in the title: Do the laundry !!!",
+      "creator": "Tayyab"
+    }
+  ],
+  [
+    {
+      "model": "event",
+      "name": "Leetcode workshop",
+      "house": "Rowan University Group",
+      "description": "Come join us for Leetcode workshop at our place Rowan University Group!!! Bring your friends too!",
+      "creator": "Doctor"
+    },
+    {
+      "model": "event",
+      "name": "Football with the boyz",
+      "house": "Holly Point",
+      "description": "Come join us for Football with the boyz at our place Holly Point!!! Bring your friends too!",
+      "creator": "Muhammad"
+    },
+    {
+      "model": "event",
+      "name": "Movie Night",
+      "house": "220 Rowan Boulevard",
+      "description": "Come join us for Movie Night at our place 220 Rowan Boulevard!!! Bring your friends too!",
+      "creator": "Tayyab"
+    },
+    {
+      "model": "event",
+      "name": "Study Session",
+      "house": "220 Rowan Boulevard",
+      "description": "Come join us for Study Session at our place 220 Rowan Boulevard!!! Bring your friends too!",
+      "creator": "Tayyab"
+    }
+  ],
+  [
+    {
+      "model": "bill",
+      "name": "Rowan Laptop",
+      "house": "Rowan University Group",
+      "description": "It's simple really - we gotta pay for Rowan Laptop together!!!!",
+      "cost": 1000.0,
+      "creator": "Doctor",
+      "payers": [
+        "Doctor"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "Rowan Fridge",
+      "house": "Rowan University Group",
+      "description": "It's simple really - we gotta pay for Rowan Fridge together!!!!",
+      "cost": 500.0,
+      "creator": "Doctor",
+      "payers": [
+        "Doctor"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "Rowan TV",
+      "house": "Rowan University Group",
+      "description": "It's simple really - we gotta pay for Rowan TV together!!!!",
+      "cost": 300.0,
+      "creator": "Doctor",
+      "payers": [
+        "Doctor"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "Rowan Couch",
+      "house": "Rowan University Group",
+      "description": "It's simple really - we gotta pay for Rowan Couch together!!!!",
+      "cost": 400.0,
+      "creator": "Doctor",
+      "payers": [
+        "Doctor"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "Rowan Table",
+      "house": "Rowan University Group",
+      "description": "It's simple really - we gotta pay for Rowan Table together!!!!",
+      "cost": 200.0,
+      "creator": "Doctor",
+      "payers": [
+        "Doctor"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "Football",
+      "house": "Holly Point",
+      "description": "It's simple really - we gotta pay for Football together!!!!",
+      "cost": 20.0,
+      "creator": "Muhammad",
+      "payers": [
+        "Muhammad"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "New TV Remote",
+      "house": "Holly Point",
+      "description": "It's simple really - we gotta pay for New TV Remote together!!!!",
+      "cost": 15.0,
+      "creator": "Muhammad",
+      "payers": [
+        "Muhammad"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "Shower Curtain",
+      "house": "220 Rowan Boulevard",
+      "description": "It's simple really - we gotta pay for Shower Curtain together!!!!",
+      "cost": 10.0,
+      "creator": "Tayyab",
+      "payers": [
+        "Tayyab"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "New Shower Head",
+      "house": "220 Rowan Boulevard",
+      "description": "It's simple really - we gotta pay for New Shower Head together!!!!",
+      "cost": 20.0,
+      "creator": "Tayyab",
+      "payers": [
+        "Tayyab"
+      ]
+    },
+    {
+      "model": "bill",
+      "name": "Toilet Paper",
+      "house": "220 Rowan Boulevard",
+      "description": "It's simple really - we gotta pay for Toilet Paper together!!!!",
+      "cost": 5.0,
+      "creator": "Tayyab",
+      "payers": [
+        "Tayyab"
+      ]
+    }
+  ],
+  [
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Fix the bookshelves",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Clean the whiteboards",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "Clean the Kitchen",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "Clean the Bathroom",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "Vacuum the Living Room",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "Take out the Trash",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "Mop the Kitchen",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Tayyab",
+      "post_name": "Put on the shower curtain",
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Tayyab",
+      "post_name": "Do the laundry",
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Leetcode workshop",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "Football with the boyz",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Tayyab",
+      "post_name": "Movie Night",
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Tayyab",
+      "post_name": "Study Session",
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Rowan Laptop",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Rowan Fridge",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Rowan TV",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Rowan Couch",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Doctor",
+      "post_name": "Rowan Table",
+      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "Football",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Muhammad",
+      "post_name": "New TV Remote",
+      "text": "I am the owner of Holly Point and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Tayyab",
+      "post_name": "Shower Curtain",
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Tayyab",
+      "post_name": "New Shower Head",
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+    },
+    {
+      "model": "comment",
+      "author": "Tayyab",
+      "post_name": "Toilet Paper",
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+    }
+  ]
+]
