@@ -9,10 +9,10 @@ class Post(models.Model):
     # Foreign keys
     # related_name = "posts" but need to tune for abstract classes
     server = models.ForeignKey(Server, on_delete = models.CASCADE, 
-                               related_name = "%(app_label)s_%(class)s_posts") 
+                               related_name = "%(app_label)s_%(class)s_related") 
     
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, 
-                                related_name = "%(app_label)s_%(class)s_posts") 
+                                related_name = "%(app_label)s_%(class)s_related") 
 
     # Field attributes
     post_name = models.CharField(max_length = 50)
@@ -23,8 +23,9 @@ class Post(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(self):
-        return "Server: " + self.server + ", post_name: " + self.post_name + ", description: " + self.description
+    # def __str__(self):
+        # return "Server: " + self.server + ", post_name: " + self.post_name + ", description: " + self.description
+        # return f"Post {self.id}"
 
 # Extends Post
 class Event(Post):
@@ -33,7 +34,8 @@ class Event(Post):
     date_time = models.DateTimeField(null = True, blank = True) # date and time of the event (not the date it was created)
 
     def __str__(self):
-        return self.creator + " created an event " + Post.post_name + " (" + Post.description + ") that takes place at " + self.date_time
+        # return self.creator + " created an event " + Post.post_name + " (" + Post.description + ") that takes place at " + self.date_time
+        return f"Event {self.id}"
 
 # Extends Post
 class Bill(Post):
@@ -58,8 +60,8 @@ class Bill(Post):
         return self.date_created
 
     def __str__(self):
-        return self.bill_creator + " created a bill " + Post.post_name + " (" + Post.description + ") for " + self.cost + " due by " + self.posted_date
-
+        # return self.bill_creator + " created a bill " + Post.post_name + " (" + Post.description + ") for " + self.cost + " due by " + self.posted_date
+        return f"Bill {self.id}"
 # Extends Post
 class Chore(Post):
     # Foreign keys
@@ -82,20 +84,21 @@ class Chore(Post):
         return self.date_created
 
     def __str__(self):
-        return self.assignee.name + " is assigned to " + Post.post_name + " (" + Post.description + ") due by " + self.due_date
+        # return self.assignee.name + " is assigned to " + Post.post_name + " (" + Post.description + ") due by " + self.due_date
+        return f"Chore {self.id}"
 
 class Comment(models.Model):
     # Foreign keys
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name = "comments")
-    task = models.ForeignKey(Chore, on_delete = models.CASCADE, null = True, related_name = "comments")
-    event = models.ForeignKey(Event, on_delete = models.CASCADE, null = True, related_name = "comments")
-    bill = models.ForeignKey(Bill, on_delete = models.CASCADE, null = True, related_name = "comments")
-    parent_comment = models.ForeignKey("self", null = True, on_delete = models.CASCADE , related_name = "replies")
+    task = models.ForeignKey(Chore, on_delete = models.CASCADE, null = True, blank = True, related_name = "comments")
+    event = models.ForeignKey(Event, on_delete = models.CASCADE, null = True, blank = True, related_name = "comments")
+    bill = models.ForeignKey(Bill, on_delete = models.CASCADE, null = True, blank = True, related_name = "comments")
+    parent_comment = models.ForeignKey("self", null = True, blank = True, on_delete = models.CASCADE , related_name = "replies")
 
     # Field attributes
     content = models.TextField()
     date_time = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
-        return self.user + " (" + self.date_time +")" + "commented \"" + self.content + "\""
-    
+        # return self.user + " (" + self.date_time +")" + "commented \"" + self.content + "\""
+        return f"Comment {self.id}"
