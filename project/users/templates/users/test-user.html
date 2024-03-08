@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User {{ user.id }} </title>
+    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h3>User Info</h3> <br>
+            <ul style="font-size: 0.1px;">
+                {% for field_name, field_value in user_fields.items %}
+                    <li>{{ field_name }}: {{ field_value }}</li><br>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="right">
+            <div>
+                <h3>SERVERS</h3>
+                <!-- Like in the servers page will need to go through participation -->
+                <ul>
+                    {% for p in participations %}
+                        <li>
+                            <a href="{% url 'servers:test_server' p.server.id %}">Server Id: {{ p.server.id }}</a>
+                            {% if p.is_owner %}
+                                (Owner)
+                            {% else %}
+                                (Not Owner)
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+            </div>
+            <div>
+                <h3>COMMENTS</h3>
+                <ul>
+                    {% for c in user.comments.all %}
+                        <li><a href="{% url 'posts:test_comment' c.id %}">Comment Id: {{ c.id }}</a></li>
+                    {% empty %}
+                        <li>No comments yet</li>
+                    {% endfor %}
+            </div>
+            <div>
+                <h3>POSTS</h3>  
+                <ul>
+                    Chores: <br>
+                    {% for post in user.posts_chore_related.all %}
+                        <li><a href="{% url 'posts:test_chore' post.id %}">Chore Id: {{ post.id }}</a></li>
+                    {% empty %}
+                        <li>No chores yet</li>
+                    {% endfor %}
+                </ul>
+                <ul>
+                    Bills: <br>
+                    {% for post in user.posts_bill_related.all %}
+                        <li><a href="{% url 'posts:test_bill' post.id %}">Bill Id: {{ post.id }}</a></li>
+                    {% empty %}
+                        <li>No bills yet</li>
+                    {% endfor %}
+                </ul>
+                <ul>
+                    Events: <br>
+                    {% for post in user.posts_event_related.all %}
+                        <li><a href="{% url 'posts:test_event' post.id %}">Event Id: {{ post.id }}</a></li>
+                    {% empty %}
+                        <li>No events yet</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,1 +1,43 @@
-/* Can be used to style pages specific to posts app */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.left {
+    flex: 0 0 50%;     
+    display: flex;
+    flex-direction: column;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    flex: 1
+}
+
+.right > div {   
+    flex: 1;
+}
+
+
+.right div:nth-child(1) {
+    flex-grow: 1;
+}
+
+.right div:nth-child(2) {
+    flex-grow: 2;
+}
+
+.right div:nth-child(3) {
+    flex-grow: 5;
+}
+
+* {
+    font-size: x-large;
+}
+
+h3 {
+    color: lightcoral
+}
