@@ -26,15 +26,15 @@
             </div>
             <div style="flex: 1">
                 <h3>Server</h3>
-                <a href="#">Yes this has a server .. need to implement link</a>
+                <a href="{% url 'servers:test_server' post.server.id %}">{{ post.server }}</a>
             </div>
             <div style="flex: 1">
                 <h3>Post</h3>
-                {% if post_type == 'event' %}
+                {% if post_type == 'Event' %}
                     <a href="{% url 'posts:test_event' comment.event.id %}">Event Id: {{ comment.event.id }}</a>
-                {% elif post_type == 'chore' %}
+                {% elif post_type == 'Chore' %}
                     <a href="{% url 'posts:test_chore' comment.task.id %}">Chore Id: {{ comment.task.id }}</a>
-                {% elif post_type == 'bill' %}
+                {% elif post_type == 'Bill' %}
                     <a href="{% url 'posts:test_bill' comment.bill.id %}">Bill Id: {{ comment.bill.id }}</a>
                 {% endif %}
             </div>

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Server, Participation
 from django import http
 from django.shortcuts import get_object_or_404
+from .models import Participation
 
 # note should have @login_required decorator but its okay for testing
 def test_server(request, id):
@@ -19,7 +20,8 @@ def test_server(request, id):
     # So we'll do it here
     participations = Participation.objects.filter(server=server)
     print(f"Participations in this server {server}: ", 
-          [(p.user, p.display_name, p.points) for p in participations])
+          [f"{p.display_name} w/ {p.points} points" for p in participations])
+    print()
 
     context = {
         "server": server,
@@ -31,7 +33,8 @@ def test_server(request, id):
     # related name = appname_childmodel_related  
     events = server.posts_event_related.all()
     print(f"Events and their time in this server {server}: ", 
-          [(e.id, (e.date_time or "No time set")) for e in events])
+          [(e.post_name, (e.date_time.strftime('%A %m/%y %H:%M:%S.%f') or "No time set")) for e in events])
+    print()
 
     return render(request, "servers/test-server.html", context=context)
 

@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="left">
-            <h3>User Info</h3> <br>
+            <h3>{{ user.first_name }}  {{ user.last_name  }}</h3> <br>
             <ul style="font-size: 0.1px;">
                 {% for field_name, field_value in user_fields.items %}
                     <li>{{ field_name }}: {{ field_value }}</li><br>
@@ -53,12 +53,20 @@
                     {% endfor %}
                 </ul>
                 <ul>
-                    Bills: <br>
+                    Created Bills: <br>
                     {% for post in user.posts_bill_related.all %}
                         <li><a href="{% url 'posts:test_bill' post.id %}">Bill Id: {{ post.id }}</a></li>
                     {% empty %}
-                        <li>No bills yet</li>
+                        <li>No created bills yet</li>
                     {% endfor %}
+                </ul>
+                <ul>
+                Paying Bills: <br>
+                {% for post in user.bills.all %}
+                    <li><a href="{% url 'posts:test_bill' post.id %}">Bill Id: {{ post.id }}</a></li>
+                {% empty %}
+                    <li>Not paying for any bills yet</li>
+                {% endfor %}
                 </ul>
                 <ul>
                     Events: <br>

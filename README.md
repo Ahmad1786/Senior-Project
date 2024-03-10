@@ -16,4 +16,4 @@
   <li>Run project: e.g. <b>python manage.py runserver</b></li>
   </ol>
 
-  **NOTE on #10: <br> Need to insert google credentials into the database if running for the first time to use the google signin functionality. <br> Theres a script to avoid manually inserting them, simply put the client_secret json file somewhere into the project (it will be gitignored) and run the custom command specifying the path to the file as an argument**
+  **NOTE on #10: <br> Need to insert google credentials into the database if running for the first time to use the google signin functionality. <br> Theres a script to avoid manually inserting them, simply put the client_secret json file somewhere into the project (it will be gitignored), or even anywhere on your computer, and run the custom command specifying the path to the file as an argument**

@@ -29,7 +29,7 @@
                 Creator = <a href="{% url 'users:test_user' bill.creator.id %}">User Id: {{ bill.creator.id }} {{ bill.creator }} </a>
                 <br><br> Payees:
                 <ul>
-                    {% for p in bill.payees.all %}
+                    {% for p in bill.payee.all %}
                         <li>
                             <a href="{% url 'users:test_user' p.id %}">User Id: {{ p.id }} {{ p }} </a>
                         </li>

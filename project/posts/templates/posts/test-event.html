@@ -25,10 +25,6 @@
                 <a href="{% url 'servers:test_server' event.server.id %}">Server Id: {{ event.server.id }} {{ event.server }} </a>
             </div>
             <div>
-                <h3>Users</h3>
-                I BELIEVE WE SAID EVENTS WOULD BE FOR THE ENTIRE SERVER? - Muhammad
-            </div>
-            <div>
                 <h3>Comments</h3>
                 <ul>
                     {% for c in event.comments.all %}
@@ -36,6 +32,10 @@
                     {% empty %}
                         <li>No comments yet</li>
                     {% endfor %}
+            </div>
+            <div>
+                <h3>Users</h3>
+                I BELIEVE WE SAID EVENTS WOULD BE FOR THE ENTIRE SERVER????
             </div>
         </div>
     </div>

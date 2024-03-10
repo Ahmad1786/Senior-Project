@@ -72,19 +72,12 @@ def test_comment(request, id):
 
     # get which post it belongs to (could be one of three)  
     post = comment.task or comment.event or comment.bill
-    if comment.task:
-        post_type = 'chore'
-    elif comment.event:
-        post_type = 'event'
-    elif comment.bill:
-        post_type = 'bill'
-    print(post_type)
-
-
+    
     context = {
         "comment": comment,
         "comment_fields": comment_fields,
-        "post_type": post_type
+        "post_type": type(post).__name__, # Event, Bill, or Chore
+        "post": post
     }
 
     return render(request, "posts/test-comment.html", context=context)

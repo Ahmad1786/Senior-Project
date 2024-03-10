@@ -33,6 +33,8 @@
                         <li>
                             <a href="{% url 'users:test_user' a.id %}">User Id: {{ a.id }} {{ a }} </a>
                         </li>
+                    {% empty %}
+                        <li>No assignees yet</li>
                     {% endfor %}
             </div>
             <div>
