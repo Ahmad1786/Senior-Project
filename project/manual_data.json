@@ -241,7 +241,8 @@
       "cost": 1000.0,
       "creator": "Doctor",
       "payers": [
-        "Doctor"
+        "Doctor",
+        "Ridhaa"
       ]
     },
     {
@@ -296,7 +297,8 @@
       "cost": 20.0,
       "creator": "Muhammad",
       "payers": [
-        "Muhammad"
+        "Muhammad",
+        "Luke"
       ]
     },
     {
@@ -318,7 +320,8 @@
       "cost": 10.0,
       "creator": "Tayyab",
       "payers": [
-        "Tayyab"
+        "Tayyab",
+        "Mary"
       ]
     },
     {
@@ -349,139 +352,139 @@
       "model": "comment",
       "author": "Doctor",
       "post_name": "Fix the bookshelves",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Fix the bookshelves!!!"
     },
     {
       "model": "comment",
       "author": "Doctor",
       "post_name": "Clean the whiteboards",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Clean the whiteboards!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "Clean the Kitchen",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled Clean the Kitchen!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "Clean the Bathroom",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled Clean the Bathroom!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "Vacuum the Living Room",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled Vacuum the Living Room!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "Take out the Trash",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled Take out the Trash!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "Mop the Kitchen",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled Mop the Kitchen!!!"
     },
     {
       "model": "comment",
       "author": "Tayyab",
       "post_name": "Put on the shower curtain",
-      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post that is titled Put on the shower curtain!!!"
     },
     {
       "model": "comment",
       "author": "Tayyab",
       "post_name": "Do the laundry",
-      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post that is titled Do the laundry!!!"
     },
     {
       "model": "comment",
       "author": "Doctor",
       "post_name": "Leetcode workshop",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Leetcode workshop!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "Football with the boyz",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled Football with the boyz!!!"
     },
     {
       "model": "comment",
       "author": "Tayyab",
       "post_name": "Movie Night",
-      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post that is titled Movie Night!!!"
     },
     {
       "model": "comment",
       "author": "Tayyab",
       "post_name": "Study Session",
-      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post that is titled Study Session!!!"
     },
     {
       "model": "comment",
       "author": "Doctor",
       "post_name": "Rowan Laptop",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Rowan Laptop!!!"
     },
     {
       "model": "comment",
       "author": "Doctor",
       "post_name": "Rowan Fridge",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Rowan Fridge!!!"
     },
     {
       "model": "comment",
       "author": "Doctor",
       "post_name": "Rowan TV",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Rowan TV!!!"
     },
     {
       "model": "comment",
       "author": "Doctor",
       "post_name": "Rowan Couch",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Rowan Couch!!!"
     },
     {
       "model": "comment",
       "author": "Doctor",
       "post_name": "Rowan Table",
-      "text": "I am the owner of Rowan University Group and I approve of this post!!"
+      "text": "I am the owner of Rowan University Group and I approve of this post that is titled Rowan Table!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "Football",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled Football!!!"
     },
     {
       "model": "comment",
       "author": "Muhammad",
       "post_name": "New TV Remote",
-      "text": "I am the owner of Holly Point and I approve of this post!!"
+      "text": "I am the owner of Holly Point and I approve of this post that is titled New TV Remote!!!"
     },
     {
       "model": "comment",
       "author": "Tayyab",
       "post_name": "Shower Curtain",
-      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post that is titled Shower Curtain!!!"
     },
     {
       "model": "comment",
       "author": "Tayyab",
       "post_name": "New Shower Head",
-      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post that is titled New Shower Head!!!"
     },
     {
       "model": "comment",
       "author": "Tayyab",
       "post_name": "Toilet Paper",
-      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post!!"
+      "text": "I am the owner of 220 Rowan Boulevard and I approve of this post that is titled Toilet Paper!!!"
     }
   ]
 ]

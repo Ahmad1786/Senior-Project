@@ -1,25 +1,12 @@
 import json
 
-# In Hindsight: these were just notes I was making trying to make sense of how best to create the data
-# Decided to make some data manually to see some familiar names - rest will be done with faker
-
-# define the model attributes
-# user, server (house), participation (connection between user and server)
-# Different Posts: chores (task), events, bill 
-# Comments / Can also have Replies
-
 # Simplifications to make my life easy
 # For simplicity - Will ignore phone numbers and profile pictures / icons for now
-# Will also ignore the due dates for things - may run another script to update the due dates by some fixed amount + now (now+10days)
 # Will not do replies. Each comment will be a top level comment
 
 # Some time fields are set to auto_now_add=True: all creation / date_joined dates # no need to worry about them
 
-# Tricky thing will be creating participations 
-# One trick - make all is_owner false and then make one true for each house - will just have to ignore the same date fallacy
-
 # for manual data example (our 3 house) - just make owners now
-
 
 Model_Types = {
     0: 'user',
@@ -116,6 +103,8 @@ Bill_List += [('Football', 20.00, 1), ('New TV Remote', 15.00, 1)]
 Bill_List += [('Shower Curtain', 10.00, 2), ('New Shower Head', 20.00, 2), ('Toilet Paper', 5.00, 2)]
 
 Chores, Events, Bills = [], [], []
+
+# TODO: Add some random assignees for the chores
 for chore in Chore_List:
     dict = {
         'model': Model_Types[3],
@@ -149,7 +138,19 @@ for bill in Bill_List:
     }
     Bills.append(dict)
 
+# TODO: randomly add payers for each bill rather than just the owner
+# I'll add 3 manually for now - take one bill from each house and add an extra payer aside from the owner 
+bill = next(bill for bill in Bills if bill['house'] == Rowan)
+bill['payers'] += ['Ridhaa']
+
+bill = next(bill for bill in Bills if bill['house'] == Muhammad_House)
+bill['payers'] += ['Luke']
+
+bill = next(bill for bill in Bills if bill['house'] == Tayyab_House)
+bill['payers'] += ['Mary']
+
 # create a comment for each post from the owner of that house
+# Maybe TODO: Create better comments :/
 comments = []
 for post in Chores + Events + Bills:
     house_owner = owners[post['house']]
@@ -159,7 +160,7 @@ for post in Chores + Events + Bills:
                 'model': Model_Types[6],
                 'author': user_name,
                 'post_name': post['name'],
-                'text': f"I am the owner of {user_house} and I approve of this post!!"
+                'text': f"I am the owner of {user_house} and I approve of this post that is titled {post['name']}!!!",
             }
             comments.append(dict)
             break 

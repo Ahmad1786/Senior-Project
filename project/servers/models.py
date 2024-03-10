@@ -5,6 +5,7 @@ class Server(models.Model):
     group_name = models.CharField(max_length=30)
     group_icon = models.BinaryField(null=True, blank=True)
     date_created = models.DateField(auto_now_add=True)
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Participation', related_name='servers')
 
     # These string methods are giving a lot of error : should keep simple for now
     def __str__(self):
