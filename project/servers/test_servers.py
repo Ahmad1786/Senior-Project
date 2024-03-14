@@ -23,10 +23,15 @@ def test_server(request, id):
           [f"{p.display_name} w/ {p.points} points" for p in participations])
     print()
 
+    # Will always be one owner but using .first() to be safe
+    owner_participation = participations.filter(is_owner=True, server=server).first()
+    print(f"Owner of this server has the user id {owner_participation.user.id}")
+
     context = {
         "server": server,
         "server_fields": server_fields,
-        "participations": participations
+        "participations": participations,
+        "owner_id": owner_participation.user.id
     }
     
     # Example on how to use the super weird but necessary related_name syntax for abstract classes

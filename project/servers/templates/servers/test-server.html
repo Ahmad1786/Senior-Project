@@ -21,10 +21,10 @@
         </div>
 
         <div class="right">
-            <div>
+            <div style="padding-top: 100px;">
                 <h3>Users</h3>
                 <ul>
-                    <!-- Will need to go through participation -->
+                    <!-- Originally needed to go through participations like this -->
                     {% for p in participations %}
                         <li>
                             <a href="{% url 'users:test_user' p.user.id %}">User Id: {{ p.user.id }}</a>
@@ -35,6 +35,21 @@
                             {% endif %}
                         </li>
                     {% endfor %}
+                </ul>
+                <h3>Users Version 2 - different query now that I put the manytomany field directly in the server model</h3>
+                <ul>
+                    <!-- After the changes in the database no longer HAVE to go through participation -->
+                    {% for m in server.members.all %}
+                        <li>
+                            <a href="{% url 'users:test_user' m.id %}">User Id: {{ m.id }}</a>
+                            {% if m.id == owner_id %}
+                                (Owner)
+                            {% else %}
+                                (Not Owner)
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>                
             </div>
             <div>
                 <h3>Posts</h3>

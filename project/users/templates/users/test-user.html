@@ -18,9 +18,9 @@
             </ul>
         </div>
         <div class="right">
-            <div>
+            <div style="padding-top: 100px;">
                 <h3>SERVERS</h3>
-                <!-- Like in the servers page will need to go through participation -->
+                <!-- Like in the servers page will need to go through participation (NO LONGER HAVE TO SEE BELOW) -->
                 <ul>
                     {% for p in participations %}
                         <li>
@@ -32,6 +32,21 @@
                             {% endif %}
                         </li>
                     {% endfor %}
+                </ul>
+                <!-- After the changes in the database no longer HAVE to go through participation -->
+                <h3>SERVERS Version 2 (Same result but arguably better? query)</h3>                
+                <ul>
+                    {% for s in user.servers.all %}
+                        <li>
+                            <a href="{% url 'servers:test_server' s.id %}">Server Id: {{ s.id }}</a>
+                            {% if s.id in owned_servers_ids %}
+                                (Owner)
+                            {% else %}
+                                (Not Owner)
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
             <div>
                 <h3>COMMENTS</h3>
