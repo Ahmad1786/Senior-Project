@@ -1,3 +1,4 @@
+import os
 import json
 from django.contrib.auth import get_user_model
 from posts.models import Chore, Event, Bill, Comment
@@ -31,7 +32,8 @@ hashed_password = make_password(PASSWORD)
 # 7 types of objects in order: 0User, 1Server, 2Participation, 3Chore/Task, 4Event, 5Bill, 6Comment
 
 # read in json data
-with open('manual_data.json') as f:
+file_path = os.path.join('data_creation', 'manual_data.json')
+with open(file_path) as f:
     data = json.load(f) # array of len 7
 
 Users, Servers, Participations, Chores, Events, Bills, Comments = data

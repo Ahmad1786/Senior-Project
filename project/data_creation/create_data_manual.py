@@ -1,4 +1,5 @@
 import json
+import os
 
 # Simplifications to make my life easy
 # For simplicity - Will ignore phone numbers and profile pictures / icons for now
@@ -166,5 +167,7 @@ for post in Chores + Events + Bills:
             break 
 
 json_data = [users] + [houses] + [participations] + [Chores] + [Events] + [Bills] + [comments]
-with open('manual_data.json', 'w') as f:
+
+file_path = os.path.join('data_creation', 'manual_data.json')
+with open(file_path, 'w') as f:
     json.dump(json_data, f, indent=2)
