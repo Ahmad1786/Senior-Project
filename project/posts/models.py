@@ -17,7 +17,7 @@ class Post(models.Model):
     # Field attributes
     post_name = models.CharField(max_length = 50)
     description = models.TextField()
-    date_created = models.DateField(auto_now_add = True)
+    date_created = models.DateTimeField(auto_now_add = True)
 
     # make into Abstract class - won't be creating Post objects
     class Meta:
@@ -46,7 +46,6 @@ class Bill(Post):
     # bill_creator = models.ForeignKey(settings.AUTH_USER_MODEL) - relationship already established in Post - just use property decorator
 
     # Field attributes
-    # posted_date = models.DateField()
     cost = models.FloatField(blank = True, null = True)
     split = models.BooleanField(default = True)
     completed = models.BooleanField(default = False)
@@ -70,8 +69,7 @@ class Chore(Post):
 
     # Field attributes
     due_date = models.DateField()
-    # make assigned date the current date it was created
-    # assigned_date = models.DateField(auto_now_add = True) - since both chore and bill have a date_created => move to parent model
+    # make assigned date the current date it was created ?
     completed = models.BooleanField(default = False)
     point_value = models.IntegerField(default = 0)
 
