@@ -73,13 +73,24 @@
             
 
             {% for b in bills %}
-            <h3> {{ b.post_name }} </h3>
+            <a href="{% url 'posts:test_bill' b.id %}"><h3>{{ b.post_name }}</h3></a>
+            
                 <ul>
                     <li> description: {{ b.description }} </li>
                     <li> date posted: {{ b.posted_date | date:"l F d, Y" }} </li>    
                     <li> creator:  {{ b.bill_creator }} </li>    
                     <li> cost:  {{ b.cost }} </li>   
-                    <li> Your split: not doing rn </li>
+                    
+                    <li> payees: {% for p in b.payee.all %} 
+                        {{ p.first_name }} {{ p.last_name }}{% if not forloop.last %},  {% endif %} {% empty %} none 
+                        {% endfor %} 
+                    
+                    </li>
+                    {% if b.split %}
+                        <li> Your split: 1 MILLION DOLLARS </li>
+                    {% else %}
+                        <li> No split for you </li>
+                    {% endif %}
                 </ul>
             {% endfor %}
         </div>
@@ -91,10 +102,13 @@
     </div>
 
     <div id="modal" class="modal fade">
+        <h2 style="text-align: center;">CREATING A NEW BILL</h2>
         <div id="dialog" class="modal-dialog" hx-target="this"></div>
       </div>
 
       <script>
+        /* Modal Forms Tutorial */
+        /* https://blog.benoitblanchon.fr/django-htmx-modal-form/ */
         const modal = new bootstrap.Modal(document.getElementById("modal"))
 
         htmx.on("htmx:afterSwap", (e) => {
@@ -113,6 +127,10 @@
         htmx.on("hidden.bs.modal", () => {
             document.getElementById("dialog").innerHTML = ""
         })
+
+        document.body.addEventListener('billListChanged', () => {
+            window.location.reload();
+        });
     </script>
 </body>
 </html>
