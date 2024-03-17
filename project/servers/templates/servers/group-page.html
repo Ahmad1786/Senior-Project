@@ -17,32 +17,19 @@
             padding-top: 50px;
             display: flex;
         }
-        #tasks {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid red;
-            flex: 1;
-        }
-        #bills {
-            border: 1px solid #236ace;
-            flex: 1;
-        }
-        #events {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+
+        .posts {
             border: 1px solid red;
             flex: 1;
         }
 
-        #bill-nav {
+        .post-nav {
             display: flex;
             justify-content: center;
             gap: 10px;
         }
 
-        #bill-nav a {
+        .post-nav a {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,21 +37,50 @@
             padding: 5px;
             background-color: #000000;
         }
-
     </style>
+
 </head>
 <body>
 
     <div id="container">
-        <div id="tasks">
-            <h2>Tasks</h2>
+
+        <div id="tasks" class="scroll posts">
+
+            <div id="task-nav" class="post-nav">
+                <h2 style="text-align: center;">Tasks for {{ tasks.first.server.group_name }}</h2>
+                <a hx-get="{% url 'servers:add_task' tasks.first.server.id %}" hx-target="#dialog" class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                      </svg>
+                </a>
+            </div>
+
+            {% for t in tasks %}
+            <a href="{% url 'posts:test_chore' t.id %}"><h3>{{ t.post_name }}</h3></a>
+            
+                <ul>
+                    <li> description: {{ t.description }} </li> <br>
+                    <li> Assigned date (post created): {{ t.assigned_date | date:"l F d, Y" }} </li>    
+                    <li> Assigner / Post Creator:  {{ t.assigner }} </li>  
+
+                    <li> People Assigned to this task: {% for p in t.assignee.all %} 
+                        {{ p.first_name }} {{ p.last_name }}{% if not forloop.last %},  {% endif %} {% empty %} none 
+                        {% endfor %} 
+                    </li>
+
+                    <li> Due date: {{ t.due_date | date:"l F d, Y" }} </li>
+
+                </ul>
+            {% endfor %}
+
+
         </div>
 
-        <div id="bills" class="scroll">
+        <div id="bills" class="scroll posts">
             
-            <div id="bill-nav">
+            <div id="bill-nav" class="post-nav">
                 <h2 style="text-align: center;">Bills for {{ bills.first.server.group_name }}</h2>
-                <a hx-get="{% url 'posts:add_bill' bills.first.server.id %}" hx-target="#dialog" class="">
+                <a hx-get="{% url 'servers:add_bill' bills.first.server.id %}" hx-target="#dialog" class="">
                     <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                       </svg>
@@ -84,9 +100,10 @@
                     <li> payees: {% for p in b.payee.all %} 
                         {{ p.first_name }} {{ p.last_name }}{% if not forloop.last %},  {% endif %} {% empty %} none 
                         {% endfor %} 
-                    
                     </li>
+
                     {% if b.split %}
+                        <!-- NOT DOING THE LOGIC FOR THIS RIGHT NOW -->
                         <li> Your split: 1 MILLION DOLLARS </li>
                     {% else %}
                         <li> No split for you </li>
@@ -96,15 +113,48 @@
         </div>
     
 
-        <div id="events">
-            <h2>Events</h2>
+        <div id="events" class="scroll posts">
+
+            <div id="event-nav" class="post-nav">
+                <h2 style="text-align: center;">Events for {{ events.first.server.group_name }}</h2>
+                <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                      </svg>
+                </a>
+            </div>
+
+
+            {% for e in events %}
+            <a href="{% url 'posts:test_event' e.id %}"><h3>{{ e.post_name }}</h3></a>
+                <ul>
+                    <li> description: {{ e.description }} </li> <br>
+                    <li> date posted: {{ e.date_created | date:"l F d, Y" }} </li>    
+                    <li> When is it: {{ e.date_time | date:"l F d, Y, h:i A"  }} </li>
+                    <li> Original poster:  {{ e.creator }} </li>   
+                </ul>
+            {% endfor %}
         </div>
+
+
     </div>
+
+
+
+
 
     <div id="modal" class="modal fade">
         <h2 style="text-align: center;">CREATING A NEW BILL</h2>
         <div id="dialog" class="modal-dialog" hx-target="this"></div>
       </div>
+
+
+
+
+
+
+
+
 
       <script>
         /* Modal Forms Tutorial */
