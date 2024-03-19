@@ -11,7 +11,8 @@
   <li><b>cd project/</b></li>
   <li><b>python manage.py makemigrations</b> (Note: not needed unless made changes to the model)</li>
   <li><b>python manage.py migrate</b> (Apply changes from migrations to the actual database)</li>
-  <li><b>python manage.py shell < data_creation/insert_data.py</b> (Create all the dummy data - Also creates a SuperUser)</li>
+  <li><b>python manage.py shell < data_creation/insert_data.py</b> (Create all the dummy data - Also creates a SuperUser) </li> 
+  May need to do: <b>echo "import data_creation.insert_data.py" | python manage.py shell </b> instead
   <li>May also need to run <b>python manage.py activategoogle &lt;json_file_path&gt;</b> (See Below) </li>
   <li>Run project: e.g. <b>python manage.py runserver</b></li>
   </ol>
