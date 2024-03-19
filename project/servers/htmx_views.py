@@ -55,3 +55,40 @@ def add_event(request, server_id):
     return render(request, 'servers/partials/event-form.html', {
         'form': form,
     })
+
+# Function to edit event - done by Luke
+def edit_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if request.method == 'POST':
+        form = EditEventForm(request.POST, instance=event)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'Event Updated'})
+    else:
+        form = EditEventForm(instance=event)
+    return render(request, 'servers/partials/edit-event-form.html', {'form': form})
+
+# Function to edit bill - done by Luke
+def edit_bill(request, bill_id):
+    bill = get_object_or_404(Bill, id=bill_id)
+    if request.method == 'POST':
+        form = EditBillForm(request.POST, instance=bill)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'Bill Updated'})
+    else:
+        form = EditBillForm(instance=bill)
+    return render(request, 'servers/partials/edit-bill-form.html', {'form': form})
+
+# Function to edit task - done by Luke
+def edit_task(request, task_id):
+    task = get_object_or_404(Chore, id=task_id)
+    if request.method == 'POST':
+        form = EditTaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'Task Updated'})
+    else:
+        form = EditTaskForm(instance=task)
+    return render(request, 'servers/partials/edit-task-form.html', {'form': form})
+
