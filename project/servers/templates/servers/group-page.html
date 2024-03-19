@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill board</title>
+    <script src="{% static 'servers/js/modals_script.js' %}" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.js"></script>
+    <link href="{% static 'servers/css/style.css' %}" rel="stylesheet">
+
+    <style>
+        .card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #0079bf;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <div id="tasks" class="scroll posts">
+            <div class="card">
+                <div class="card-header">
+                    <h2 style="text-align: center;">Tasks</h2>
+                </div>
+                <div class="card-body">
+                    <a hx-get="{% url 'servers:add_task' tasks.first.server.id %}" hx-target="#dialog" class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg>
+                    </a>
+                    {% for t in tasks %}
+                    <a href="{% url 'posts:test_chore' t.id %}"><h3>{{ t.post_name }}</h3></a>
+                    <ul>
+                        <li> description: {{ t.description }} </li>
+                        <li> Assigned date (post created): {{ t.assigned_date | date:"l F d, Y" }} </li>    
+                        <li> Assigner / Post Creator:  {{ t.assigner }} </li>  
+                        <li> People Assigned to this task: {% for p in t.assignee.all %} 
+                            {{ p.first_name }} {{ p.last_name }}{% if not forloop.last %},  {% endif %} {% empty %} none 
+                            {% endfor %} 
+                        </li>
+                        <li> Due date: {{ t.due_date | date:"l F d, Y" }} </li>
+                        {% if t.completed %}
+                            <li> Completed: Yes </li>
+                        {% else %}
+                            <li> Completed: No </li>
+                        {% endif %}
+                    </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div id="bills" class="scroll posts">
+            <div class="card">
+                <div class="card-header">
+                    <h2 style="text-align: center; font-weight: bold; font-size: 28px;">Bills/Supplies</h2>
+                </div>
+                <div class="card-body">
+                    <a hx-get="{% url 'servers:add_bill' bills.first.server.id %}" hx-target="#dialog" class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg>
+                    </a>
+                    {% for b in bills %}
+                    <a href="{% url 'posts:test_bill' b.id %}"><h3>{{ b.post_name }}</h3></a>
+                    <ul>
+                        <li> description: {{ b.description }} </li>
+                        <li> date posted: {{ b.posted_date | date:"l F d, Y" }} </li>    
+                        <li> creator:  {{ b.bill_creator }} </li>    
+                        <li> cost:  {{ b.cost }} </li>   
+                        <li> payees: {% for p in b.payee.all %} 
+                            {{ p.first_name }} {{ p.last_name }}{% if not forloop.last %},  {% endif %} {% empty %} none 
+                            {% endfor %} 
+                        </li>
+                        {% if b.split %}
+                            <li> Your split: 1 MILLION DOLLARS </li>
+                        {% else %}
+                            <li> No split for you </li>
+                        {% endif %}
+                        {% if b.completed %}
+                            <li> Completed: Yes </li>
+                        {% else %}
+                            <li> Completed: No </li>
+                        {% endif %}
+                    </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div id="events" class="scroll posts">
+            <div class="card">
+                <div class="card-header">
+                    <h2 style="text-align: center;">Events</h2>
+                </div>
+                <div class="card-body">
+                    <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg>
+                    </a>
+                    {% for e in events %}
+                    <a href="{% url 'posts:test_event' e.id %}"><h3>{{ e.post_name }}</h3></a>
+                    <ul>
+                        <li> description: {{ e.description }} </li> 
+                        <li> date posted: {{ e.date_created | date:"l F d, Y" }} </li>    
+                        <li> When is it: {{ e.date_time | date:"l F d, Y, h:i A"  }} </li>
+                        <li> Original poster:  {{ e.creator }} </li>   
+                    </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal" class="modal fade">
+        <div id="dialog" class="modal-dialog" hx-target="this"></div>
+    </div>
+
+</body>
+</html>
