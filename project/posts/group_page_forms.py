@@ -3,7 +3,6 @@
 
 from django import forms
 from posts.models import Bill, Event, Chore
-from servers.models import Server
 import datetime
 
 # NOTE: MADE these forms kind of "fast", so they may not be the 
@@ -12,20 +11,12 @@ import datetime
 class BillForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        self.current_server_id = kwargs.pop('current_server_id', None)
-        server_instance = Server.objects.get(pk=self.current_server_id)
+        self.server_instance = kwargs.pop('server_instance', None)
+        self.current_user = kwargs.pop('current_user', None)
         super(BillForm, self).__init__(*args, **kwargs)
         
-        # initial server value
-        self.fields['server'].initial = self.current_server_id
-        self.fields['server'].widget = forms.HiddenInput()
-        self.fields['creator'].widget = forms.HiddenInput()
-        self.fields['creator'].initial = self.request.user
-        
-        self.fields['payee'].queryset = server_instance.members.all()
-  
-        self.fields['payee'].initial = self.request.user
+        self.fields['payee'].queryset = self.server_instance.members.all()
+        self.fields['payee'].initial = self.current_user
         
     def clean(self):
         cleaned_data = super().clean()
@@ -54,33 +45,24 @@ class BillForm(forms.ModelForm):
 
     class Meta:
         model = Bill
-        fields = ['post_name', 'description', 'cost', 'split','payee', 'server', 'creator']
+        fields = ['post_name', 'description', 'cost', 'split','payee']
 
 
 class TaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        self.current_server_id = kwargs.pop('current_server_id', None)
-        server_instance = Server.objects.get(pk=self.current_server_id)
+        self.server_instance = kwargs.pop('server_instance', None)
         super(TaskForm, self).__init__(*args, **kwargs)
         
-        # initial server value
-        self.fields['server'].initial = self.current_server_id
-        self.fields['server'].widget = forms.HiddenInput()
-        self.fields['creator'].widget = forms.HiddenInput()
-        self.fields['creator'].initial = self.request.user
-
-        self.fields['assignee'].queryset = server_instance.members.all()
-
+        self.fields['assignee'].queryset = self.server_instance.members.all()
         self.fields['due_date'].initial = datetime.datetime.now().strftime('%Y-%m-%d')
         
-    def clean(self):
-        cleaned_data = super().clean()
-        # validation if needed can go here
-        return cleaned_data
+    #def clean(self):
+    #    cleaned_data = super().clean()
+    #    # validation if needed can go here
+    #    return cleaned_data
     class Meta:
         model = Chore
-        fields = ['post_name', 'description',  'server', 'creator', 'assignee', 'due_date']
+        fields = ['post_name', 'description', 'assignee', 'due_date']
         widgets = {
             'due_date':forms.TextInput(attrs={'type':'date'}),
         }
@@ -88,29 +70,20 @@ class TaskForm(forms.ModelForm):
 
 class EventForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        self.current_server_id = kwargs.pop('current_server_id', None)
-        server_instance = Server.objects.get(pk=self.current_server_id)
         super(EventForm, self).__init__(*args, **kwargs)
         
-        # initial server value
-        self.fields['server'].initial = self.current_server_id
-        self.fields['server'].widget = forms.HiddenInput()
-        self.fields['creator'].widget = forms.HiddenInput()
-        self.fields['creator'].initial = self.request.user
-
         # label for datetime
         self.fields['date_time'].label = "Date and Time"
         self.fields['date_time'].initial = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
         
-    def clean(self):
-        cleaned_data = super().clean()
-        # validation if needed can go here
-        return cleaned_data
+    #def clean(self):
+    #    cleaned_data = super().clean()
+    #    # validation if needed can go here
+    #    return cleaned_data"""
 
     class Meta:
         model = Event
-        fields = ['post_name', 'description', 'date_time', 'server', 'creator']
+        fields = ['post_name', 'description', 'date_time']
         widgets = {
             'date_time':forms.TextInput(attrs={'type':'datetime-local'}),
         }

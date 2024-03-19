@@ -1,57 +1,71 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from posts.group_page_forms import BillForm, EventForm, TaskForm
-
+from posts.models import Bill, Event, Chore
+from servers.models import Server
 
 # These views will be used to create the modal forms that pop up
 # in the main group page to create a new post
 
 def add_bill(request, server_id):
+    server_instance = Server.objects.get(pk=server_id)
+    current_user = request.user
     if request.method == 'POST':
-        form = BillForm(request.POST, request=request, current_server_id=server_id)
+        form = BillForm(request.POST, server_instance=server_instance, current_user=current_user)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.server = server_instance
+            obj.creator = request.user
+            obj.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
         else:
             return render(request, 'servers/partials/bill-form.html', {
                 'form': form,
             })
     
-    form = BillForm(request=request, current_server_id=server_id)
+    form = BillForm(server_instance=server_instance, current_user=current_user)
     return render(request, 'servers/partials/bill-form.html', {
         'form': form,
     })
 
 
 def add_task(request, server_id):
+    server_instance = Server.objects.get(pk=server_id)
     if request.method == 'POST':
-        form = TaskForm(request.POST, request=request, current_server_id=server_id)
+        form = TaskForm(request.POST, server_instance=server_instance)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.server = server_instance
+            obj.creator = request.user
+            obj.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
         else:
             return render(request, 'servers/partials/task-form.html', {
                 'form': form,
             })
     
-    form = TaskForm(request=request, current_server_id=server_id)
+    form = TaskForm(server_instance=server_instance)
     return render(request, 'servers/partials/task-form.html', {
         'form': form,
     })
 
 
 def add_event(request, server_id):
+    server_instance = Server.objects.get(pk=server_id)
     if request.method == 'POST':
-        form = EventForm(request.POST, request=request, current_server_id=server_id)
+        form = EventForm(request.POST)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.server = server_instance
+            obj.creator = request.user
+            obj.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
         else:
             return render(request, 'servers/partials/event-form.html', {
                 'form': form,
             })
     
-    form = EventForm(request=request, current_server_id=server_id)
+    form = EventForm()
     return render(request, 'servers/partials/event-form.html', {
         'form': form,
     })
