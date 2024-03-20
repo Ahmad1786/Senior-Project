@@ -2,10 +2,11 @@ from django.shortcuts import render
 from .models import Bill, Chore, Event, Comment
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 # Sorry. About to completely violate the DRY principle :/
 
-# note should have @login_required decorator but its okay for testing
+@login_required
 def test_bill(request, id):
     
     bill = get_object_or_404(Bill, id=id)
@@ -24,6 +25,7 @@ def test_bill(request, id):
 
     return render(request, "posts/test-bill.html", context=context)
 
+@login_required
 def test_chore(request, id):
     chore = get_object_or_404(Chore, id=id)
     if chore is None:
@@ -41,7 +43,7 @@ def test_chore(request, id):
 
     return render(request, "posts/test-chore.html", context=context)
 
-
+@login_required
 def test_event(request, id):
     event = get_object_or_404(Event, id=id)
     if event is None:
@@ -59,7 +61,7 @@ def test_event(request, id):
 
     return render(request, "posts/test-event.html", context=context)
 
-
+@login_required
 def test_comment(request, id):
     comment = get_object_or_404(Comment, id=id)
     if comment is None:

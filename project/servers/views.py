@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from posts.models import Bill, Chore, Event
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 # This view will be used to take to the server page
-# eventually should have @login_required
-# even better a decorator that checks if the user is a member of the server
+# may be good to also have decorator that checks if the user is a member of the server
+@login_required
 def server_page(request, server_id):
     # I don't how exactly we want this but for now
     # I will show all the posts of the entire group
