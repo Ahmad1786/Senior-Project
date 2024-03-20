@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='bill',
-            name='payee',
+            name='payers',
             field=models.ManyToManyField(related_name='bills', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(

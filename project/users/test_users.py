@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from .models import User
-from django import http
 from django.shortcuts import get_object_or_404
 
 # test view that will show all things related to the user
@@ -9,9 +8,7 @@ def test_user(request, id):
     # query by user by id
     
     user = get_object_or_404(User, id=id)
-    if user is None:
-        return http.HttpResponseNotFound("User not found")
-    
+
     # get participations
     participations = user.participations.all()
 

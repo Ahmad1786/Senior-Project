@@ -1,10 +1,8 @@
 from django.shortcuts import render
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core.mail import send_mail
-
-User = get_user_model() # gets current user model
+from .models import User
 
 # The view thats called when a user first logs in
 # Show all the fields and their values for the current user

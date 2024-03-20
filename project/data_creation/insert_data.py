@@ -76,7 +76,7 @@ for b in Bills:
             post_name=b['name'], description=b['description'], cost=b['cost'])
     
     # originally forgot about the MtoM payers field
-    bill.payee.add(*[User.objects.get(first_name=f) for f in b['payers']])
+    bill.payers.add(*[User.objects.get(first_name=f) for f in b['payers']])
     
     bill.save()
 

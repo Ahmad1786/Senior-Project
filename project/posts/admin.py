@@ -16,7 +16,7 @@ class EventAdmin(admin.ModelAdmin):
 class BillAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_name', 'cost', 'split', 'bill_creator', 'server', 'posted_date')
     inlines = (CommentInline,)
-    filter_horizontal = ('payee',)
+    filter_horizontal = ('payers',)
 class ChoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_name', 'completed', 'assigner', 'server', 'assigned_date')
     inlines = (CommentInline,)

@@ -40,9 +40,9 @@ class Event(Post):
 # Extends Post
 class Bill(Post):
     # Foreign keys
-    # payee = people who receive the bill vs payer = people who pay the bill
+    # payers = people who receive the bill vs payers = people who pay the bill
     # Can have multiple people who pay the money
-    payee = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="bills")
+    payers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="bills")
     # bill_creator = models.ForeignKey(settings.AUTH_USER_MODEL) - relationship already established in Post - just use property decorator
 
     # Field attributes

@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill</title>
+    <link href="{% static 'posts/style.css' %}" rel="stylesheet">
+    <!-- htmx script -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+
+<!-- htmx csrf_token passage -->
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></body>
+
+<p>
+    <b> {{ post_name }} </b>
+<br> <b>Description:</b> {{ description }}
+<br> <b>Date Posted:</b> {{ date_created }}
+<br> <b>Cost:</b> ${{ cost }}
+<br> <b>Split?:</b> {{ split }}
+<br> <b>Your Portion:</b> ${{ individual_portion }}
+<br> <b>Who To Pay:</b> <!-- Field not ready yet -->
+</p>

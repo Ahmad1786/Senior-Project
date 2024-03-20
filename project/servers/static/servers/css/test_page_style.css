@@ -1,3 +1,8 @@
+body {
+    /* really annoying top keeps getting cut off!! */
+    transform: scale(0.75); 
+  }
+
 .container {
     display: flex;
     height: 100vh;
