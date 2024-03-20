@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from .models import Bill, Chore, Event, Comment
-from users.models import User
 
 def bill(request, id):
 
@@ -35,7 +34,7 @@ def chore(request, id):
     date_created = chore.date_created
     due_date = chore.due_date
     assignees = chore.assignee.all()
-    # Fix later
+    # Fix formatting at some point
     assigned_to = [assignee.first_name for assignee in assignees]
     creator = chore.creator
 
@@ -66,6 +65,7 @@ def event(request, id):
        "creator": creator, 
     })
 
+# TODO, complete at some point
 def comment(request, id):
 
     comment = Comment.objects.get(id=id)
