@@ -69,4 +69,4 @@ def feed_view(request):
     feed_items.sort(key=lambda x: x['date'], reverse=True)
     print(feed_items)
     # Render the feed template with the feed items as context
-    return render(request, 'feed.html', {'feed_items': feed_items})
+    return render(request, 'feed.html', {'feed_items': feed_items, 'servers': servers})
