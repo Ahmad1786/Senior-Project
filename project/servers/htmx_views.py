@@ -17,6 +17,7 @@ def add_bill(request, server_id):
             obj.server = server_instance
             obj.creator = request.user
             obj.save()
+            form.save_m2m()
             return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
         else:
             return render(request, 'servers/partials/bill-form.html', {
@@ -38,6 +39,7 @@ def add_task(request, server_id):
             obj.server = server_instance
             obj.creator = request.user
             obj.save()
+            form.save_m2m()
             return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
         else:
             return render(request, 'servers/partials/task-form.html', {
@@ -59,6 +61,7 @@ def add_event(request, server_id):
             obj.server = server_instance
             obj.creator = request.user
             obj.save()
+            form.save_m2m()
             return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
         else:
             return render(request, 'servers/partials/event-form.html', {
