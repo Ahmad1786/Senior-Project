@@ -140,7 +140,7 @@ for bill in Bill_List:
     Bills.append(dict)
 
 # TODO: randomly add payers for each bill rather than just the owner
-# I'll add 3 manually for now - take one bill from each house and add an extra payer aside from the owner 
+# I'll add 3 manually for now - take one bill from each house and add an extra payers aside from the owner 
 bill = next(bill for bill in Bills if bill['house'] == Rowan)
 bill['payers'] += ['Ridhaa']
 

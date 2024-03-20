@@ -70,7 +70,7 @@
                     <li> date posted: {{ b.posted_date | date:"l F d, Y" }} </li>    
                     <li> creator:  {{ b.bill_creator }} </li>    
                     <li> cost:  {{ b.cost }} </li>   
-                    <li> payees: {% for p in b.payee.all %} 
+                    <li> payers: {% for p in b.payers.all %} 
                         {{ p.first_name }} {{ p.last_name }}{% if not forloop.last %},  {% endif %} {% empty %} none 
                         {% endfor %} 
                     </li>

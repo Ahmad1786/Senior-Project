@@ -6,10 +6,11 @@ urlpatterns = []
 
    
 testing_routes = [
-    path('bill/<int:id>', test_posts.test_bill, name="test_bill"),
-    path('chore/<int:id>', test_posts.test_chore, name="test_chore"),
-    path('event/<int:id>', test_posts.test_event, name="test_event"),
-    path('comment/<int:id>', test_posts.test_comment, name="test_comment"),
+    path('test-bill/<int:id>', test_posts.test_bill, name="test_bill"),
+    path('test-chore/<int:id>', test_posts.test_chore, name="test_chore"),
+    path('test-event/<int:id>', test_posts.test_event, name="test_event"),
+    path('test-comment/<int:id>', test_posts.test_comment, name="test_comment"),
+    path('bill/<int:id>', views.bill, name="bill")
 ]
 
 htmx_routes = []

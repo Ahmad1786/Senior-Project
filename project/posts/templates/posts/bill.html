@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bill {{ bill.id }} </title>
+    <link href="{% static 'posts/style.css' %}" rel="stylesheet">
+    <!-- htmx script -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+
+<!-- htmx csrf_token passage -->
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></body>
+
+Hello!
+
+Bill creator: {{ creator }}

@@ -15,8 +15,8 @@ class BillForm(forms.ModelForm):
         self.current_user = kwargs.pop('current_user', None)
         super(BillForm, self).__init__(*args, **kwargs)
         
-        self.fields['payee'].queryset = self.server_instance.members.all()
-        self.fields['payee'].initial = self.current_user
+        self.fields['payers'].queryset = self.server_instance.members.all()
+        self.fields['payers'].initial = self.current_user
         
     def clean(self):
         cleaned_data = super().clean()
@@ -28,24 +28,24 @@ class BillForm(forms.ModelForm):
         if cleaned_data.get('cost', None) is not None and cleaned_data['cost'] < 0:
             self.add_error('cost', 'The cost must be a positive value')
         
-        if not cleaned_data['split'] and len(cleaned_data['payee']) > 1:
-            self.add_error('payee', 'Can not split bill between multiple people if split is not checked')
+        if not cleaned_data['split'] and len(cleaned_data['payers']) > 1:
+            self.add_error('payers', 'Can not split bill between multiple people if split is not checked')
 
-        if cleaned_data['split'] and len(cleaned_data['payee']) == 1:
-            self.add_error('payee', 'Must split bill between multiple people if split is checked')
+        if cleaned_data['split'] and len(cleaned_data['payers']) == 1:
+            self.add_error('payers', 'Must split bill between multiple people if split is checked')
 
         # Decided this may not be what we want but basically i was trying to say
         # if split is false: the user making the post must be the only one paying
         # if not cleaned_data['split']:
-        #    print(cleaned_data['payee'])
+        #    print(cleaned_data['payers'])
         #    print(self.request.user)
-        #    cleaned_data['payee'] = [self.request.user]
+        #    cleaned_data['payers'] = [self.request.user]
         
         return cleaned_data
 
     class Meta:
         model = Bill
-        fields = ['post_name', 'description', 'cost', 'split','payee']
+        fields = ['post_name', 'description', 'cost', 'split','payers']
 
 
 class TaskForm(forms.ModelForm):
@@ -113,7 +113,7 @@ class EditBillForm(forms.ModelForm):
 
     class Meta:
         model = Bill
-        fields = ['post_name', 'description', 'cost', 'split', 'payee', 'server', 'creator']
+        fields = ['post_name', 'description', 'cost', 'split', 'payers', 'server', 'creator']
         widgets = {
             'date_time':forms.TextInput(attrs={'type':'datetime-local'}),
         }
