@@ -43,3 +43,10 @@
   <li>After pushing the code, if you go to https://github.com/Ahmad1786/Senior-Project. It should pop that new code was pushed and to create a pull request. Make sure the pull request is to main</li>
   <li>Then dont merge it into main until you tested it, and it been peer reviewed by someone else</li>
   </ol>
+
+   **How to use reset_db shell script:**
+   <br> This script should be used any time you need to change a model and run migrations. <br> This helps resolve the issue where a table does not exist after making a change.**
+  <ol>
+  <li>From the project's root directory, the directory where the reset_db.sh exists, run the following command: <b>chmod +x reset_db.sh</b>. This makes it an executable script.</li>
+  <li>Then run the following command to run the script: <b>./reset_db.sh</b> </li>
+  </ol>
