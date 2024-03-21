@@ -27,3 +27,8 @@ overflow-y: scroll;
     padding: 5px;
     background-color: #000000;
 }
+
+h3 {
+    display: inline-block;
+    margin-right: 10px;
+}

@@ -10,7 +10,7 @@ htmx_routes = [
     path('add-bill/<int:server_id>', htmx_views.add_bill, name="add_bill"),
     path('edit-bill/<int:bill_id>', htmx_views.edit_bill, name= "edit_bill"),
     path('add-task/<int:server_id>', htmx_views.add_task, name="add_task"),
-    path ('edit-task/<int:task_id>', htmx_views.edit_task, name="edit_task"),
+    path('edit-task/<int:task_id>', htmx_views.edit_task, name="edit_task"),
     path('add-event/<int:server_id>', htmx_views.add_event, name="add_event"),
     path('edit-event/<int:event_id>', htmx_views.edit_event, name ="edit_event")
     
@@ -19,7 +19,7 @@ htmx_routes = [
 urlpatterns += htmx_routes
 
 test_routes = [
-    path('server/test/<int:id>', test_servers.test_server, name="test_server"),
+    path('test-server/<int:id>', test_servers.test_server, name="test_server"),
 ]
 
 urlpatterns += test_routes

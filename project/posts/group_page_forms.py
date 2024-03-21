@@ -45,7 +45,7 @@ class BillForm(forms.ModelForm):
 
     class Meta:
         model = Bill
-        fields = ['post_name', 'description', 'cost', 'split','payers']
+        fields = ['post_name', 'description', 'cost', 'split', 'payers']
 
 
 class TaskForm(forms.ModelForm):
@@ -90,16 +90,9 @@ class EventForm(forms.ModelForm):
 
 # Function for editing event form - done by Luke
 class EditEventForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(EditEventForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        return cleaned_data
-    
     class Meta:
         model = Event
-        fields = ['post_name', 'description', 'date_time', 'server', 'creator']
+        fields = ['post_name', 'description', 'date_time']
         widgets = {
             'date_time':forms.TextInput(attrs={'type':'datetime-local'}),
         }
@@ -108,26 +101,21 @@ class EditEventForm(forms.ModelForm):
 class EditBillForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditBillForm, self).__init__(*args, **kwargs)
-        self.fields['server'].widget = forms.HiddenInput()
-        self.fields['creator'].widget = forms.HiddenInput()
+        self.fields['payers'].queryset = self.instance.server.members.all()
 
     class Meta:
         model = Bill
-        fields = ['post_name', 'description', 'cost', 'split', 'payers', 'server', 'creator']
-        widgets = {
-            'date_time':forms.TextInput(attrs={'type':'datetime-local'}),
-        }
+        fields = ['post_name', 'description', 'cost', 'split', 'payers']
 
 # Function for editing the task form - done by Luke
 class EditTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditTaskForm, self).__init__(*args, **kwargs)
-        self.fields['server'].widget = forms.HiddenInput()
-        self.fields['creator'].widget = forms.HiddenInput()
-
+        self.fields['assignee'].queryset = self.instance.server.members.all()
+        
     class Meta:
         model = Chore
-        fields = ['post_name', 'description', 'server', 'creator']
+        fields = ['post_name', 'description', 'assignee', 'due_date']
         widgets = {
-            'due_date': forms.TextInput(attrs={'type':'datetime-local'}),
+            'due_date':forms.TextInput(attrs={'type':'date'}),
         }
