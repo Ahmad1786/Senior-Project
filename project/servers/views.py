@@ -1,11 +1,20 @@
 from django.shortcuts import render
 from posts.models import Bill, Chore, Event
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from servers.models import Server
+
+# only let user see page if they are in the server
+# is_in_server = lambda user, server_id: Server.objects.filter(participations__user=user, id=server_id).exists()
+is_in_server = lambda user, server_id: user in Server.objects.get(id=server_id).members.all()
 
 # This view will be used to take to the server page
-# may be good to also have decorator that checks if the user is a member of the server
 @login_required
 def server_page(request, server_id):
+
+    if not is_in_server(request.user, server_id):
+        return HttpResponse(status=403)
+
     # I don't how exactly we want this but for now
     # I will show all the posts of the entire group
     # no other criteria such as show certain dates
