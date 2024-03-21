@@ -2,8 +2,6 @@ from django.shortcuts import render
 from posts.models import Bill, Chore, Event
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-
 # This view will be used to take to the server page
 # may be good to also have decorator that checks if the user is a member of the server
 @login_required

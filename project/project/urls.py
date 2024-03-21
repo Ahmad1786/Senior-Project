@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import users.views
+from users import views, feed_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +24,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('servers/', include('servers.urls')),
     path('posts/', include('posts.urls')),
-    # if no path take to profile page (currently being used for testing)
-    path('', users.views.profile),
+    path('', feed_views.feed_view, name='feed_view'),
 ]

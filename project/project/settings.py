@@ -173,7 +173,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Authentication/User Settings
 AUTH_USER_MODEL = 'users.User' # Let Django know which model represents a User
 ACCOUNT_EMAIL_REQUIRED = True # Require the user to enter a email address when signing up
-LOGIN_REDIRECT_URL = 'users:profile' # redirect to users/profile page after login
+LOGIN_REDIRECT_URL = 'users:feed_view' # redirect to users/profile page after login
 ACCOUNT_AUTHENTICATION_METHOD = 'email' # Use email to login
 ACCOUNT_USERNAME_REQUIRED = False # Don't require a Username
 SOCIALACCOUNT_AUTO_SIGNUP = False # Don't automatically sign up social accounts
