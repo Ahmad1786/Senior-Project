@@ -22,6 +22,8 @@ def server_page(request, server_id):
 
     # get all the bills for the server
     bills = Bill.objects.filter(server_id=server_id).order_by('-date_created') # latest first
+    for b in bills:
+        b.portion = b.individual_portion(request.user)
     
     # note may need to adjust for participation names and other complications
     # just keeping everything simple for now
@@ -36,6 +38,5 @@ def server_page(request, server_id):
         "events": events,
         "server_id": server_id,
     } 
-
     return render(request, "servers/group-page.html", context=context)
 

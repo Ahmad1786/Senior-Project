@@ -13,7 +13,7 @@ def bill(request, id):
     date_created = bill.date_created
     cost = bill.cost
     split = "Yes" if bill.split else "No"
-    individual_portion = cost / float(bill.payers.count())
+    individual_portion = bill.individual_portion(request.user)
     payers = bill.payers
     # Who to pay/ Need to add new field to table and fix later
     #payee = bill.payee

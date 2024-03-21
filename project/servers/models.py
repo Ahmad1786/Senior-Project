@@ -3,7 +3,7 @@ from django.conf import settings
 
 class Server(models.Model):
     group_name = models.CharField(max_length=30)
-    group_icon = models.BinaryField(null=True, blank=True)
+    group_icon = models.ImageField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Participation', related_name='servers')
 

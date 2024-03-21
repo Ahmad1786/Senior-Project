@@ -81,15 +81,14 @@
                         {% endfor %} 
                     </li>
                     {% if b.split %}
-                        <!-- NOT DOING THE LOGIC FOR THIS RIGHT NOW -->
-                        <li> Your split: 1 MILLION DOLLARS </li>
+                        <li> Your split: {{ b.portion }} </li>
                     {% else %}
                         <li> No split for you </li>
                     {% endif %}
                     {% if b.completed %}
-                        <li> Completed: Yes </li>
+                        <li> Paid: Yes </li>
                     {% else %}
-                        <li> Completed: No </li>
+                        <li> Paid: No </li>
                     {% endif %}
                 </ul>
                 

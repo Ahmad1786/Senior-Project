@@ -57,6 +57,11 @@ class Bill(Post):
     @property
     def posted_date(self):
         return self.date_created
+    
+    def individual_portion(self, user):
+        if user in self.payers.all():
+            return self.cost / float(self.payers.count())
+        return 0
 
     def __str__(self):
         # return self.bill_creator + " created a bill " + Post.post_name + " (" + Post.description + ") for " + self.cost + " due by " + self.posted_date
