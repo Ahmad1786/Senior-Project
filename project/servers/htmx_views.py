@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from posts.group_page_forms import BillForm, EventForm, TaskForm
+from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm
 from posts.models import Bill, Event, Chore
 from servers.models import Server
+from django.utils.timezone import get_current_timezone
+
 
 # These views will be used to create the modal forms that pop up
 # in the main group page to create a new post
-
 def add_bill(request, server_id):
     server_instance = Server.objects.get(pk=server_id)
     current_user = request.user
@@ -18,7 +19,7 @@ def add_bill(request, server_id):
             obj.creator = request.user
             obj.save()
             form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
         else:
             return render(request, 'servers/partials/bill-form.html', {
                 'form': form,
@@ -40,7 +41,7 @@ def add_task(request, server_id):
             obj.creator = request.user
             obj.save()
             form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
         else:
             return render(request, 'servers/partials/task-form.html', {
                 'form': form,
@@ -62,7 +63,7 @@ def add_event(request, server_id):
             obj.creator = request.user
             obj.save()
             form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'NewPostAdded'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
         else:
             return render(request, 'servers/partials/event-form.html', {
                 'form': form,
@@ -75,37 +76,46 @@ def add_event(request, server_id):
 
 # Function to edit event - done by Luke
 def edit_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
+    instance = Event.objects.get(id=event_id)
     if request.method == 'POST':
-        form = EditEventForm(request.POST, instance=event)
+        form = EditEventForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'Event Updated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
     else:
-        form = EditEventForm(instance=event)
-    return render(request, 'servers/partials/edit-event-form.html', {'form': form})
+        # get the time but in our timezone
+        date_time = instance.date_time.astimezone(get_current_timezone())
+        
+        # format it as needed to show up in the form calendar view
+        formatted_datetime = date_time.strftime("%Y-%m-%dT%H:%M")
+        
+        return render(request, 'servers/partials/edit-event-form.html', {
+            'form': EditEventForm(instance=instance, initial={'date_time': formatted_datetime})
+            })
 
 # Function to edit bill - done by Luke
 def edit_bill(request, bill_id):
-    bill = get_object_or_404(Bill, id=bill_id)
+    instance = Bill.objects.get(id=bill_id)
     if request.method == 'POST':
-        form = EditBillForm(request.POST, instance=bill)
+        form = EditBillForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'Bill Updated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
     else:
-        form = EditBillForm(instance=bill)
-    return render(request, 'servers/partials/edit-bill-form.html', {'form': form})
+        return render(request, 'servers/partials/edit-bill-form.html', {
+            'form': EditBillForm(instance=instance)
+            })
 
 # Function to edit task - done by Luke
 def edit_task(request, task_id):
-    task = get_object_or_404(Chore, id=task_id)
+    instance = Chore.objects.get(id=task_id)
     if request.method == 'POST':
-        form = EditTaskForm(request.POST, instance=task)
+        form = EditTaskForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'Task Updated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
     else:
-        form = EditTaskForm(instance=task)
-    return render(request, 'servers/partials/edit-task-form.html', {'form': form})
+        return render(request, 'servers/partials/edit-task-form.html', {
+            'form':  EditTaskForm(instance=instance)
+            })
 

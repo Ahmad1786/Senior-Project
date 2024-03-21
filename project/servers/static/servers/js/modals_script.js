@@ -20,7 +20,7 @@ htmx.on("hidden.bs.modal", () => {
     document.getElementById("dialog").innerHTML = ""
 })
 
-/* Auto reload page when new post gets added */
-document.body.addEventListener('NewPostAdded', () => {
+/* Auto reload page when new post gets added or gets edited */
+document.body.addEventListener('PostAddedOrUpdated', () => {
     window.location.reload();
 });

@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from .models import Bill, Chore, Event, Comment
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
+@login_required
 def bill(request, id):
 
     bill = Bill.objects.get(id=id)
@@ -25,6 +28,7 @@ def bill(request, id):
         "payers": payers
     })
 
+@login_required
 def chore(request, id):
 
     chore = Chore.objects.get(id=id)
@@ -47,6 +51,7 @@ def chore(request, id):
         "creator": creator,
     })
 
+@login_required
 def event(request, id):
     
     event = Event.objects.get(id=id)
@@ -64,8 +69,3 @@ def event(request, id):
        "time": time,
        "creator": creator, 
     })
-
-# TODO, complete at some point
-def comment(request, id):
-
-    comment = Comment.objects.get(id=id)
