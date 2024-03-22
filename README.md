@@ -21,12 +21,36 @@
 
   **How to get started with GIT:**
   <ol>
-  <li>git clone git@github.com:Ahmad1786/Senior-Project.git</li>
+  <li>git clone git@github.com:Ahmad1786/Senior-Project.git (for ssh)</li>
+  <li>git clone https://github.com/Ahmad1786/Senior-Project.git (for http)</li>
   <li>cd Senior-Project</li>
   <li>git branch(To show the branches in your local repository) </li>
   <li>git branch &lt;YourName&gt;(YourName = what you want to name the branch)</li>
   <li>git checkout &lt;YourName&gt;(Switches branches and go to the new branch you created)</li>
   </ol>
+  
+  **How to rebase to GIT:**
+  <ol>
+  <li>git fetch origin (Download any new changes that occured since last fetch of origin)</li>
+  <li>git rebase origin/main (This means all the new commits you have made locally are getting placed ontop of the commits that live in main, so when you create a pull request to main there should be no merge conflicts) </li> 
+  <ul>
+   <li>*This will start the process of updating your branch to main, it will stop applying changes when you have a merge conflict</li>
+   <li>git status (will show you what your staging area is) <br/>
+       Then edit the files that unstaged(the ones in red)</li>
+   <li>It will show you the merge conflict <br/>
+        <<<<<<<<<<< head <br/>
+        This is the code that is in your branch currently <br/>
+        =================================================  <br/>
+       The incoming code change from that commit <br/>
+       >>>>>>>>>>>>> 1ce4btgrve(the shaid of the commit)
+   </li>
+   <li> Chose which one you want to keep either the head or the new chages and save the file</li>
+   <li> git add the file you just changed</li>
+   <li> Once all the unstaged files are added you can git rebase --continue <br/>
+        Continue this process until staging area is empty</li>
+  </ul> 
+  </ol>
+
   
   **How to push to GIT:**
   <ol>
