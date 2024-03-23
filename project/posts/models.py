@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from servers.models import Server
+from decimal import Decimal, ROUND_HALF_UP
 
 class Post(models.Model):
     """
@@ -46,7 +47,7 @@ class Bill(Post):
     # bill_creator = models.ForeignKey(settings.AUTH_USER_MODEL) - relationship already established in Post - just use property decorator
 
     # Field attributes
-    cost = models.FloatField(blank = True, null = True)
+    cost = models.DecimalField(blank = True, null = True, max_digits = 10, decimal_places = 2)
     split = models.BooleanField(default = True)
     completed = models.BooleanField(default = False)
 
@@ -60,8 +61,10 @@ class Bill(Post):
     
     def individual_portion(self, user):
         if user in self.payers.all():
-            return self.cost / float(self.payers.count())
-        return 0
+            # ensure no more than 2 decimal places result
+            return (self.cost / Decimal(len(self.payers.all()))).quantize(Decimal('0.01'), rounding = ROUND_HALF_UP)
+        return Decimal('0.00')
+
 
     def __str__(self):
         # return self.bill_creator + " created a bill " + Post.post_name + " (" + Post.description + ") for " + self.cost + " due by " + self.posted_date
