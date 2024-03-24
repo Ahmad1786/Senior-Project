@@ -38,11 +38,12 @@
                 <ul>
                     <li> description: {{ t.description }} </li>
                     <li> Assigned date (post created): {{ t.assigned_date | date:"l F d, Y" }} </li>   
-                    <li> Assigner / Post Creator: {% if request.user == t.assigner %} You {% else %} {{ t.assigner }} {% endif %} </li> 
+                    <li> Assigner / Post Creator: {% if request.user == t.assigner %} You {% else %} {{ t.post_creator }} {% endif %} </li> 
                     <li> People Assigned to this task: {% for p in t.assignee.all %} 
                         {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{% if not forloop.last %},{% endif %}{% empty %} none 
                         {% endfor %} 
                     </li>
+                    <li> People Assigned to this task (display names): {{ t.assignee_string }}</li>
                     <li> Due date: {{ t.due_date | date:"l F d, Y" }} </li>
                     {% if t.completed %}
                         <li> Completed: Yes </li>
@@ -73,13 +74,14 @@
                 <ul>
                     <li> description: {{ b.description }} </li>
                     <li> date posted: {{ b.posted_date | date:"l F d, Y" }} </li>   
-                    <li> creator: {% if request.user == b.bill_creator %} You {% else %} {{ b.bill_creator }} {% endif %} </li> 
+                    <li> creator: {% if request.user == b.bill_creator %} You {% else %} {{ b.post_creator }} {% endif %} </li> 
                     <li> cost:  {{ b.cost }} </li>   
                     <li> payers: 
                         {% for p in b.payers.all %} 
                         {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{% if not forloop.last %},{% endif %}{% empty %}none 
                         {% endfor %} 
                     </li>
+                    <li>payers (display names): {{ b.payers_string }}</li>
                     {% if b.split %}
                         <li> Your split: {{ b.portion }} </li>
                     {% else %}
@@ -116,7 +118,7 @@
                     <li> description: {{ e.description }} </li> 
                     <li> date posted: {{ e.date_created | date:"l F d, Y" }} </li>    
                     <li> When is it: {{ e.date_time | date:"l F d, Y, h:i A"  }} </li>
-                    <li> Original poster: {% if request.user == e.creator %} You {% else %} {{ e.creator }} {% endif %} </li>
+                    <li> Original poster: {% if request.user == e.creator %} You {% else %} {{ e.post_creator }} {% endif %} </li>
                 </ul>
             {% endfor %}
 

@@ -20,29 +20,20 @@ class Post(models.Model):
     description = models.TextField()
     date_created = models.DateTimeField(auto_now_add = True)
 
-    # make into Abstract class - won't be creating Post objects
     class Meta:
         abstract = True
 
-    # def __str__(self):
-        # return "Server: " + self.server + ", post_name: " + self.post_name + ", description: " + self.description
-        # return f"Post {self.id}"
-
 # Extends Post
 class Event(Post):
-    # Field attributes
-    # creator = models.CharField(max_length = 30) # bad practice - may cause problems later
     date_time = models.DateTimeField(null = True, blank = True) # date and time of the event (not the date it was created)
 
     def __str__(self):
-        # return self.creator + " created an event " + Post.post_name + " (" + Post.description + ") that takes place at " + self.date_time
-        return f"Event {self.id}"
+        return f"Event: {self.post_name} in {self.server.group_name} on {self.date_time.strftime('%m/%d/%Y %I:%M %p')}"
 
 # Extends Post
 class Bill(Post):
     # Foreign keys
-    # payers = people who receive the bill vs payers = people who pay the bill
-    # Can have multiple people who pay the money
+    # payees = people who receive the bill vs payers = people who pay the bill
     payers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="bills")
     # bill_creator = models.ForeignKey(settings.AUTH_USER_MODEL) - relationship already established in Post - just use property decorator
 
@@ -64,15 +55,20 @@ class Bill(Post):
             # ensure no more than 2 decimal places result
             return (self.cost / Decimal(len(self.payers.all()))).quantize(Decimal('0.01'), rounding = ROUND_HALF_UP)
         return Decimal('0.00')
-
+    
+    def payers_string(self, user):
+        if len(self.payers.all()) == 1:
+            return "You" if user in self.payers.all() else self.payers.first().display_name(self.server)
+        if user in self.payers.all():
+            return f"You, {', '.join([p.display_name(self.server) for p in self.payers.all() if p != user])}"
+        return ', '.join([p.display_name(self.server) for p in self.payers.all()]) 
 
     def __str__(self):
-        # return self.bill_creator + " created a bill " + Post.post_name + " (" + Post.description + ") for " + self.cost + " due by " + self.posted_date
-        return f"Bill {self.id}"
-# Extends Post
+        return f"Bill: {self.post_name} in {self.server.group_name} (${self.cost})"
+
 class Chore(Post):
     # Foreign keys
-    # assignee = the person who is assigned the chore/can have multiple people working on the chore
+    # assignee = the people assigned with chore
     assignee = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="assigned_chores")
 
     # Field attributes
@@ -88,10 +84,16 @@ class Chore(Post):
     @property
     def assigned_date(self):
         return self.date_created
+    
+    def assignee_string(self, user):
+        if len(self.assignee.all()) == 1:
+            return "You" if user in self.assignee.all() else self.assignee.first().display_name(self.server)
+        if user in self.assignee.all():
+            return f"You, {', '.join([a.display_name(self.server) for a in self.assignee.all() if a != user])}"
+        return ', '.join([a.display_name(self.server) for a in self.assignee.all()]) 
 
     def __str__(self):
-        # return self.assignee.name + " is assigned to " + Post.post_name + " (" + Post.description + ") due by " + self.due_date
-        return f"Chore {self.id}"
+        return f"Chore: {self.post_name} in {self.server.group_name}"
 
 class Comment(models.Model):
     # Foreign keys
@@ -106,5 +108,5 @@ class Comment(models.Model):
     date_time = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
-        # return self.user + " (" + self.date_time +")" + "commented \"" + self.content + "\""
-        return f"Comment {self.id}"
+        post = self.task or self.event or self.bill
+        return f"Comment by {self.author} in {post.post_name}"

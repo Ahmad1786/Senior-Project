@@ -25,6 +25,10 @@ class User(AbstractUser):
     # Can also be used as allauth display name
     def __str__(self):
         return f"{self.first_name.capitalize()} {self.last_name.capitalize()}"  # "First Last" 
+    
+    def display_name(self, server):
+        participation = self.participations.get(server=server)
+        return participation.display_name
 
 # Done by Luke
 # Should wait until we have a better understanding of the project to implement this - Muhammad

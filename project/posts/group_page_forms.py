@@ -15,7 +15,9 @@ class BillForm(forms.ModelForm):
         self.current_user = kwargs.pop('current_user', None)
         super(BillForm, self).__init__(*args, **kwargs)
         
-        self.fields['payers'].queryset = self.server_instance.members.all()
+        members = self.server_instance.members.all()
+        #self.fields['payers'].queryset = members
+        self.fields['payers'].choices = [(member.id, member.display_name(self.server_instance)) for member in members]
         self.fields['payers'].initial = self.current_user
         
     def clean(self):
@@ -53,7 +55,9 @@ class TaskForm(forms.ModelForm):
         self.server_instance = kwargs.pop('server_instance', None)
         super(TaskForm, self).__init__(*args, **kwargs)
         
-        self.fields['assignee'].queryset = self.server_instance.members.all()
+        members = self.server_instance.members.all()
+        # self.fields['assignee'].queryset = members
+        self.fields['assignee'].choices = [(member.id, member.display_name(self.server_instance)) for member in members]
         self.fields['due_date'].initial = datetime.datetime.now().strftime('%Y-%m-%d')
         
     #def clean(self):
@@ -101,7 +105,10 @@ class EditEventForm(forms.ModelForm):
 class EditBillForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditBillForm, self).__init__(*args, **kwargs)
-        self.fields['payers'].queryset = self.instance.server.members.all()
+
+        members = self.instance.server.members.all()
+        #self.fields['payers'].queryset = members
+        self.fields['payers'].choices = [(member.id, member.display_name(self.instance.server)) for member in members]
 
     class Meta:
         model = Bill
@@ -111,7 +118,10 @@ class EditBillForm(forms.ModelForm):
 class EditTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditTaskForm, self).__init__(*args, **kwargs)
-        self.fields['assignee'].queryset = self.instance.server.members.all()
+
+        members = self.instance.server.members.all()
+        # self.fields['assignee'].queryset = members
+        self.fields['assignee'].choices = [(member.id, member.display_name(self.instance.server)) for member in members]
         
     class Meta:
         model = Chore

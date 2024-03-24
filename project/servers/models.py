@@ -7,10 +7,8 @@ class Server(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Participation', related_name='servers')
 
-    # These string methods are giving a lot of error : should keep simple for now
     def __str__(self):
-        # return "Group: " + self.group_name + ", created on " + self.date_created
-        return f"{self.group_name} [Server ID {self.id}]"
+        return f"{self.group_name}"
     
 class Participation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="participations")
@@ -24,8 +22,10 @@ class Participation(models.Model):
         unique_together = ('user', 'server')
 
     def __str__(self):
-        # return "User: " + self.self.user.name + ", joined " + self.server.group_name + " on " + self.date_joined
-        return f"Participation {self.id}"
+        return f"[{self.user}] -> [{self.server}] {'(Owner)' if self.is_owner else ''}"
+    
+    def server_name(self):
+        return self.server.group_name
     
     # override save method to default display_name to user's first + last name
     def save(self, *args, **kwargs):

@@ -11,7 +11,7 @@ class ServerAdmin(admin.ModelAdmin):
     inlines = [ParticipationInline]
 
 class ParticipationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'display_name', 'points', 'date_joined', 'is_owner')
+    list_display = ('id', 'display_name', 'points', 'date_joined', 'is_owner', 'server_name')
 
 # Register models
 admin.site.register(Server, ServerAdmin)
