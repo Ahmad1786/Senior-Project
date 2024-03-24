@@ -25,7 +25,7 @@ def add_bill(request, server_id):
             obj.creator = request.user
             obj.save()
             form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
         else:
             return render(request, 'servers/partials/bill-form.html', {
                 'form': form,
@@ -49,7 +49,7 @@ def add_task(request, server_id):
             obj.creator = request.user
             obj.save()
             form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
         else:
             return render(request, 'servers/partials/task-form.html', {
                 'form': form,
@@ -73,7 +73,7 @@ def add_event(request, server_id):
             obj.creator = request.user
             obj.save()
             form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
         else:
             return render(request, 'servers/partials/event-form.html', {
                 'form': form,
@@ -97,7 +97,7 @@ def edit_event(request, event_id):
         form = EditEventForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
         # get the time but in our timezone
         date_time = instance.date_time.astimezone(get_current_timezone())
@@ -122,7 +122,7 @@ def edit_bill(request, bill_id):
         form = EditBillForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
         return render(request, 'servers/partials/edit-bill-form.html', {
             'form': EditBillForm(instance=instance)
@@ -141,7 +141,7 @@ def edit_task(request, task_id):
         form = EditTaskForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PostAddedOrUpdated'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
         return render(request, 'servers/partials/edit-task-form.html', {
             'form':  EditTaskForm(instance=instance)

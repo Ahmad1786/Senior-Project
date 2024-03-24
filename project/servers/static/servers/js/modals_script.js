@@ -20,7 +20,8 @@ htmx.on("hidden.bs.modal", () => {
     document.getElementById("dialog").innerHTML = ""
 })
 
-/* Auto reload page when new post gets added or gets edited */
-document.body.addEventListener('PostAddedOrUpdated', () => {
+// Auto reload page when new post gets added or gets edited 
+// Or any other change that requires a page refresh to see new changes
+document.body.addEventListener('PageRefreshNeeded', () => {
     window.location.reload();
 });
