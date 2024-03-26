@@ -38,20 +38,21 @@ class Participation(models.Model):
         super().save(*args, **kwargs)
 
 class Invitation(models.Model):
-    token = models.CharField(max_length=20, unique=True)
+    token = models.CharField(max_length=7, unique=True)
     server = models.ForeignKey(Server, on_delete=models.CASCADE)
-    invited_email = models.EmailField()
+    invited_email = models.EmailField(blank=True, null=True)
     invited_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     expiration_time = models.DateTimeField()
 
     @classmethod
-    def create_invitation(cls, server, invited_user):
+    def create_invitation(cls, server, invited_email=None):
         expiration_time = timezone.now() + timedelta(hours=24)  # Invitation expires in 24 hours
         token = cls.generate_token()
-        return cls.objects.create(token=token, server=server, invited_user=invited_user, expiration_time=expiration_time)
+        return cls.objects.create(token=token, server=server, invited_email=invited_email, expiration_time=expiration_time)
 
     @staticmethod
     def generate_token():
         alphabet = string.ascii_letters + string.digits
-        return ''.join(secrets.choice(alphabet) for _ in range(20))
+        return ''.join(secrets.choice(alphabet) for _ in range(7))
+
 

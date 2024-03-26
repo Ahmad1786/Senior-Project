@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm
 from posts.models import Bill, Event, Chore
-from servers.models import Server
+from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
 
 # some quick server side validation
@@ -147,3 +147,17 @@ def edit_task(request, task_id):
             'form':  EditTaskForm(instance=instance)
             })
 
+#Function for joining a server
+def join_server(request):
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        invitation = Invitation.objects.filter(token=token).first()
+        if invitation and not invitation.expired:
+            server = invitation.server
+            user = request.user
+            Participation.objects.create(user=user, server=server, is_owner=False)
+            invitation.delete()
+            return JsonResponse({'message': 'Successfully joined the server.'})
+        else:
+            return JsonResponse({'error': 'Invalid or expired token.'}, status=400)
+    return JsonResponse({'error': 'Invalid request.'}, status=400)
