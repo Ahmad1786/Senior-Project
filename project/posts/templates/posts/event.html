@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event</title>
-    <link href="{% static 'posts/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="posts/styles.css">
     <!-- htmx script -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 
 <!-- htmx csrf_token passage -->
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></body>
-
 <p>
     <b> {{ post_name }} </b>
 <br> <b>Description:</b> {{ description }}
@@ -22,16 +21,32 @@
 </p>
 
 <p>
+    <div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">
     <b>Comments:</b>
     {% for comment in comments %}
-    <div style="width: 60%; height: auto; align-items: center; border: 1px solid black;">
-        <p> {{ comment.author }}        posted at {{ comment.date_time }}
+        
+        <!-- Replies -->
+        {% if comment.parent_comment %}    
+            <!--<div style="margin-top: 10px; margin-left: 10px; margin-right: 10px;
+            width: 60%; height: auto; border: 1px solid black;"> -->
+            <div class="reply">
+                <p> {{ comment.author }}        posted at {{ comment.date_time }}
 
-        {% if comment.parent_comment %}
-            <br>Replying to {{ comment.parent_comment.author}}
+                <br>Replying to {{ comment.parent_comment.author}}
+                
+                <br><br>{{ comment.content}}
+                </p>
+            </div>
+            
+        <!-- Regular comments -->  
+        {% else %}
+            <div style="margin-top: 10px; margin-left: auto; margin-right: auto;
+            width: 80%; height: auto; border: 1px solid black;">
+                <p> {{ comment.author }}        posted at {{ comment.date_time }}
+                <br><br>{{ comment.content}}
+                </p>
+            </div>
         {% endif %}
-        <br><br>{{ comment.content}}
-        </p>
-      </div>
     {% endfor %}
+    <div>
 </p>
