@@ -199,3 +199,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'cohabitat.ru@gmail.com'
 EMAIL_HOST_PASSWORD = 'oypgzzgdkiuaogry' # This is a google app password (not the gmail password)
 
+# Set up django for file uploads
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'

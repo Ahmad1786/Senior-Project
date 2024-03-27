@@ -19,10 +19,12 @@ class EventInline(admin.TabularInline):
 class MyUserAdmin(UserAdmin):
     def __init__(self, model, admin_site):
         super().__init__(model, admin_site)
-        self.list_display = ('id',) + self.list_display + ('phone_number',)
+        self.list_display = ('id',) + self.list_display + ('phone_number',) + ('profile_picture',)
         next(field_option for name, field_option in self.fieldsets if name == 'Personal info')['fields'] += ('phone_number',)
+        next(field_option for name, field_option in self.fieldsets if name == 'Personal info')['fields'] += ('profile_picture',)
 
     inlines = [ParticipationInline, ChoreInline, BillInline, EventInline] 
+
 
 # Register models
 admin.site.register(User, MyUserAdmin)
