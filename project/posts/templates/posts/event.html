@@ -27,24 +27,18 @@
         
         <!-- Replies -->
         {% if comment.parent_comment %}    
-            <!--<div style="margin-top: 10px; margin-left: 10px; margin-right: 10px;
-            width: 60%; height: auto; border: 1px solid black;"> -->
             <div class="reply">
-                <p> {{ comment.author }}        posted at {{ comment.date_time }}
-
-                <br>Replying to {{ comment.parent_comment.author}}
-                
-                <br><br>{{ comment.content}}
-                </p>
+                <!-- Find alternative to avoid line break other than <a> tag? -->
+                {{ comment.author }} <a class="comment_date"> posted at {{ comment.date_time }}</a>
+                <br>@{{ comment.parent_comment.author}} from {{ comment.parent_comment.date_time}}
+                <br><br>{{ comment.content}}    
             </div>
             
         <!-- Regular comments -->  
         {% else %}
-            <div style="margin-top: 10px; margin-left: auto; margin-right: auto;
-            width: 80%; height: auto; border: 1px solid black;">
-                <p> {{ comment.author }}        posted at {{ comment.date_time }}
+            <div class="comment">
+                {{ comment.author }}<a class="comment_date"> posted at {{ comment.date_time }}</a>
                 <br><br>{{ comment.content}}
-                </p>
             </div>
         {% endif %}
     {% endfor %}

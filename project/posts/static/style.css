@@ -45,3 +45,23 @@ h3 {
 p {
     color: black;
 }
+
+.comment, .reply {
+    border: 1px solid blue;
+    color: blue;
+    margin-top: 10px;
+}
+
+.comment {
+    width: 80%;
+    margin-left: 10%;
+}
+.reply {
+    width: 60%;
+    margin-left: 30%;   
+}
+
+.comment_date {
+    float: right;
+    
+}
