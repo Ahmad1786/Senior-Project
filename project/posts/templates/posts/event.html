@@ -20,3 +20,18 @@
 <br> <b>Time:</b> {{ time }}
 <br> <b>Created By:</b> {{ creator }}
 </p>
+
+<p>
+    <b>Comments:</b>
+    {% for comment in comments %}
+    <div style="width: 60%; height: auto; align-items: center; border: 1px solid black;">
+        <p> {{ comment.author }}        posted at {{ comment.date_time }}
+
+        {% if comment.parent_comment %}
+            <br>Replying to {{ comment.parent_comment.author}}
+        {% endif %}
+        <br><br>{{ comment.content}}
+        </p>
+      </div>
+    {% endfor %}
+</p>

@@ -55,6 +55,7 @@ def chore(request, id):
 def event(request, id):
     
     event = Event.objects.get(id=id)
+    comments = Comment.objects.filter(event_id=event.id)
 
     post_name = event.post_name
     description = event.description
@@ -68,4 +69,5 @@ def event(request, id):
        "date_created": date_created,
        "time": time,
        "creator": creator, 
+       "comments": comments,
     })
