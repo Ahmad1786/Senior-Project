@@ -53,9 +53,18 @@ def chore(request, id):
 
 @login_required
 def event(request, id):
-    
     event = Event.objects.get(id=id)
-    comments = Comment.objects.filter(event_id=event.id)
+    comment_chains = []
+    for comment in Comment.objects.filter(event_id=event.id):
+        if comment.parent_comment == None:
+            chain = []
+            # The parent comments
+            chain.append(comment)
+            # The reply chain under the parent
+            chain.append(Comment.objects.filter(comment.id = comment.parent_comment_id))
+            comment_chains.append(chain)
+            
+            #print(comment.content)
 
     post_name = event.post_name
     description = event.description
@@ -69,5 +78,5 @@ def event(request, id):
        "date_created": date_created,
        "time": time,
        "creator": creator, 
-       "comments": comments,
+       "comment_chains": comment_chains,
     })
