@@ -69,7 +69,7 @@ class Bill(Post):
 class Chore(Post):
     # Foreign keys
     # assignee = the people assigned with chore
-    assignee = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="assigned_chores")
+    assignee = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="assigned_chores", blank=True)
 
     # Field attributes
     due_date = models.DateField()
