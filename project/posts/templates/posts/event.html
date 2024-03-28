@@ -23,25 +23,20 @@
 <p>
     <div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">
     <b>Comments:</b>
-    {% for comment_chain in comment_chain %}
-        {% for comment in comment_chain %}
-            <!-- Replies -->
-            {% if comment.parent_comment %}    
+    {% for parent_comment, replies in threads.items %}
+        <!-- Print out the parent comment -->
+        <div class="comment">
+            {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
+            <br><br>{{ parent_comment.content}}
+        </div>
+            <!-- Check for replies to the parent comment and print them out -->
+            {% for reply in replies %}  
                 <div class="reply">
                     <!-- Find alternative to avoid line break other than <a> tag? -->
-                    {{ comment.author }} <a class="comment_date"> posted at {{ comment.date_time }}</a>
-                    <br>@{{ comment.parent_comment.author}} from {{ comment.parent_comment.date_time}}
-                    <br><br>{{ comment.content}}    
+                    {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
+                    <br><br>{{ reply.content}}    
                 </div>
-                
-            <!-- Regular comments -->  
-            {% else %}
-                <div class="comment">
-                    {{ comment.author }}<a class="comment_date"> posted at {{ comment.date_time }}</a>
-                    <br><br>{{ comment.content}}
-                </div>
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
     {% endfor %}
     <div>
 </p>

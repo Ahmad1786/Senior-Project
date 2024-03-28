@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .models import Bill, Chore, Event, Comment
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.db.models import Q
+
 
 @login_required
 def bill(request, id):
@@ -54,29 +56,24 @@ def chore(request, id):
 @login_required
 def event(request, id):
     event = Event.objects.get(id=id)
-    comment_chains = []
-    for comment in Comment.objects.filter(event_id=event.id):
-        if comment.parent_comment == None:
-            chain = []
-            # The parent comments
-            chain.append(comment)
-            # The reply chain under the parent
-            # chain.append(Comment.objects.filter(comment.id = comment.parent_comment_id))
-            comment_chains.append(chain)
-            
-            #print(comment.content)
+    threads = {}
+    # Get parent comments that belong to this event
+    parent_comments =  Comment.objects.filter(Q(event_id=event.id) & Q(parent_comment=None))
+    for comment in parent_comments:
+        # Append the dictionary so that the key is a parent and the value contains the replies
+        threads[comment] = Comment.objects.filter(parent_comment=comment)
 
     post_name = event.post_name
     description = event.description
     date_created = event.date_created
     time = event.date_time
     creator = event.creator
-
+    
     return render(request, "posts/event.html", {
         "post_name": post_name,
        "description": description,
        "date_created": date_created,
        "time": time,
        "creator": creator, 
-       "comment_chains": comment_chains,
+       "threads": threads,
     })
