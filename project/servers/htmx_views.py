@@ -147,3 +147,27 @@ def edit_task(request, task_id):
             'form':  EditTaskForm(instance=instance)
             })
 
+# Function to assign a task - done by Luke
+def assign_task(request):
+    if not is_htmx(request):
+        return HttpResponse(status=405)
+    tasks_to_assign = Chore.objects.filter(assigned_date__isnull=True)
+
+    if request.method == 'POST':
+        form = AssignTaskForm(request.POST)
+        if form.is_valid():
+            assigned_task_id = form.cleaned_data['task_id']
+            assigned_users = form.cleaned_data['assigned_users']
+            assigned_task = Chore.objects.get(pk=assigned_task_id)
+            assigned_task.assignee.set(assigned_users)
+            
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+    else:
+        form = AssignTaskForm()
+
+    context = {
+        'form': form,
+        'tasks_to_assign': tasks_to_assign,
+    }
+    return render(request, 'servers/partials/assign-task-form.html', context)
+
