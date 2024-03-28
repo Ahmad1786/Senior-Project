@@ -6,13 +6,13 @@
 
 <form hx-post="{{ request.path }}" class="modal-content">
     {% csrf_token %}
-    <div class="modal-header">
-      <h5 class="modal-title">Add an Event</h5>
+    <div class="modal-header" style="background-color:#6464f7;">
+      <h5 class="modal-title" style="position: relative; left: 175px">Add an Event</h5>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="background-color:#b11ab1;">
       {{ form.as_p }}
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" style="background-color:#6464f7;">
       <button type="button" data-bs-dismiss="modal">Cancel</button>
       <button type="submit">Save</button>
     </div>
