@@ -1,0 +1,84 @@
+body {
+    background-color: rgb(98, 98, 247);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.nav_list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-image: linear-gradient(rgb(98, 98, 247), rgb(249, 111, 249));
+} 
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    padding: 20px 45px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.container{
+    bottom: 0;
+    left: 0;
+    margin-bottom: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    padding-top: 2px;
+    position: absolute;
+    right: 0;
+    top: -2px;
+}
+
+.scroll {
+    background-color: black;
+    border-radius: 13px;
+    width:80vh;
+    height: 80vh;
+    overflow-y: scroll;
+    scrollbar-color: #fff6 #00000026;
+    scrollbar-gutter: stable both-edges;
+    border: 3px solid black;
+    margin-left: 10px;
+}
+
+.right {
+    float: right;
+}
+
+
+#container {
+    padding-top: 50px;
+    display: flex;
+}
+
+.post-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.post-nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    padding: 5px;
+    background-color: #000000;
+}
+
+h3 {
+    display: inline-block;
+    margin-right: 10px;
+} 

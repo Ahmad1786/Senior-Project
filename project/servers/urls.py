@@ -3,7 +3,7 @@ from . import test_servers, views, htmx_views
 
 app_name = "servers"
 urlpatterns = [
-    path('server/<int:server_id>', views.server_page, name="server_page"),
+    path('group-page/<int:server_id>', views.server_page, name="server_page"),
 ]
 
 htmx_routes = [
