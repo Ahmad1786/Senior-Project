@@ -7,9 +7,14 @@ from django.db.models import Q
 
 @login_required
 def bill(request, id):
-
     bill = Bill.objects.get(id=id)
-    
+    threads = {}
+    # Get parent comments that belong to this event
+    parent_comments =  Comment.objects.filter(Q(bill_id=bill.id) & Q(parent_comment=None))
+    for comment in parent_comments:
+        # Append the dictionary so that the key is a parent and the value contains the replies
+        threads[comment] = Comment.objects.filter(parent_comment=comment)
+
     post_name = bill.post_name
     description = bill.description
     date_created = bill.date_created
@@ -27,14 +32,20 @@ def bill(request, id):
         "cost": cost,
         "split": split,
         "individual_portion": individual_portion,
-        "payers": payers
+        "payers": payers,
+         "threads": threads,
     })
 
 @login_required
 def chore(request, id):
-
     chore = Chore.objects.get(id=id)
-    
+    threads = {}
+    # Get parent comments that belong to this event
+    parent_comments =  Comment.objects.filter(Q(chore_id=chore.id) & Q(parent_comment=None))
+    for comment in parent_comments:
+        # Append the dictionary so that the key is a parent and the value contains the replies
+        threads[comment] = Comment.objects.filter(parent_comment=comment)
+
     post_name = chore.post_name
     description = chore.description
     date_created = chore.date_created
@@ -51,6 +62,7 @@ def chore(request, id):
         "due_date": due_date,
         "assigned_to": assigned_to,
         "creator": creator,
+        "threads": threads,
     })
 
 @login_required
