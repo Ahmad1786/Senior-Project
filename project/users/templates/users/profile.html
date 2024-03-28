@@ -5,21 +5,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user }} Profile</title>
-    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+    <link href="{% static 'users/account.css' %}" rel="stylesheet">
 </head>
-<body>
-    <h1 id="red">Note this page is for early development/debugging only</h1>
 
-    <h1>This is the Profile Page of {{ user }} </h1> 
-    
-    <!-- link to logout ... account_logout is the name provided by allauth -->
-    <h2><a href="{% url 'account_logout' %}">Logout</a></h2> 
-    
-    <ul>
-        {% for field_name, field_value in user_fields.items %}
-            <li>{{ field_name }}: {{ field_value }}</li><br>
-        {% endfor %}
-    </ul>
-    
+<body>
+    <div class="account-details-container">
+        <div class="navigation">
+            <!--Navigation Bar-->
+           <ul class="nav_list">
+               <li><a>{{ user }}</a></li>
+               <li><a href="feed">Home</a></li>
+               <li><a href="#aboutyou">About You</a></li>
+               <li><a href="#info">Account Info</a></li>
+               <li><a href="#myPost">My Posts</a></li>
+               <!-- link to logout ... account_logout is the name provided by allauth -->
+               <li><a href="{% url 'account_logout' %}">Logout</a></li>
+           </ul>
+        </div>
+
+        <div>
+            {{ user_fields.profile_picture }}
+        </div>     
+
+        <h4 id="aboutyou">About you:</h4>
+        <div class="about">
+            <span>Full name: {{ user_fields.first_name }} {{ user_fields.last_name }}</span><br/>
+            <span>Email: {{ user_fields.email }}</span><br/>
+            <span>Phone Number: {{ user_fields.phone_number }}</span><br/>
+            <span>Social Media: {{ user_fields.socialaccount }}</span>
+        </div>
+
+        <h4 id="info">Account Info:</h4>
+        <div class="accountInfo">
+            <span>Username: {{ user_fields.username }}</span><br/>
+            <span class="pass">Password: {{ user_fields.password }}</span><br/>
+            <span>Member Since: {{ user_fields.date_joined }}</span><br/>
+            <span>Last Login: {{ user_fields.last_login }}</span><br/>
+            <span>Active: {{ user_fields.is_active }}</span><br/>
+            <span>Server: {{ user_fields.servers }}</span><br/>
+            <span>Groups: {{ user_fields.groups }}</span><br/>
+            <span>Admin Privelage: {{ user_fields.is_superuser }}</span>
+        </div>
+
+        <h4 id="myPost" >My Posts:</h4>
+        <div class="post">
+            <span>Chores: {{ user_fields.assigned_chores }}</span><br/>
+            <span>Bills: {{ user_fields.bills }}</span><br/>
+            <span>Events: {{ user_fields.posts_event_related }}</span><br/>
+            <span>Comments: {{ user_fields.comments }}</span>
+        </div>
+    </div>
 </body>
 </html>
