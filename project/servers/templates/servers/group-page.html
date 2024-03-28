@@ -16,7 +16,7 @@
    
 </head>
 <body>
-
+<button hx-get="{% url 'servers:invitation' server_id=server_id %}" hx-target="#dialog" class="btn btn-primary">Invite to group</button>
     <div id="container">
         <div id="tasks" class="scroll posts">
             <div id="task-nav" class="post-nav">

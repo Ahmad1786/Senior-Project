@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
-from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm
+from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm
 from posts.models import Bill, Event, Chore
 from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
+from django.contrib import messages
 
 # some quick server side validation
 # was trying to see if I could use a decorator for ease but those are complicated
@@ -155,9 +156,30 @@ def join_server(request):
         if invitation and not invitation.expired:
             server = invitation.server
             user = request.user
-            Participation.objects.create(user=user, server=server, is_owner=False)
-            invitation.delete()
-            return JsonResponse({'message': 'Successfully joined the server.'})
+            display_name = f"{user.first_name} {user.last_name}"
+            participation = Participation(user=user, server=server, display_name=display_name, is_owner=False)
+            participation.save()
+            return redirect('server_page', server_id=server.id)
         else:
-            return JsonResponse({'error': 'Invalid or expired token.'}, status=400)
-    return JsonResponse({'error': 'Invalid request.'}, status=400)
+            messages.error(request, 'Invalid Invitation Code')
+            return render(request, 'servers/partials/join-server-modal.html')
+    return render(request, 'servers/partials/join-server-modal.html')
+
+def invitation(request, server_id):
+    if not is_htmx(request):
+        return HttpResponse(status=405)
+    
+    server_instance = Server.objects.get(pk=server_id)
+    
+    if request.method == 'GET':
+        invitation = Invitation.create_invitation(server_instance)
+        token = invitation.token
+        expiration_time = invitation.expiration_time
+        # Render a modal showing the invitation token and expiration time
+        return render(request, 'servers/partials/invitation-modal.html', {
+            'token': token,
+            'expiration_time': expiration_time,
+        })
+    
+    return render(request, 'servers/partials/invitation-modal.html')
+

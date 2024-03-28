@@ -9,12 +9,13 @@
     rel="stylesheet">
 </head>
 
-<div id="joinServerModal" class="fixed z-10 inset-0 overflow-y-auto hidden bg-gray-500 bg-opacity-75 flex justify-center items-center">
-  <div class="bg-white p-4 rounded shadow-md w-1/3">
-    <form id="joinServerForm" hx-post="{% url 'join_server' %}" hx-target="#joinServerModal">
-      <label for="token">Invitation Token:</label>
-      <input type="text" id="token" name="token" class="border rounded px-2 py-1 mb-2 block w-full">
-      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Join Server</button>
-    </form>
-  </div>
-</div>
+<form hx-post="{{ request.path }}" class="modal-content">
+    <div class="modal-content">
+        <h2>Enter your invitation code</h2>
+            {% csrf_token %}
+            <input type="text" name="invitation_code" required>
+            <button type="submit">Join</button>
+            <button type="button" onclick="closeModal()">Cancel</button>
+    </div>
+</form>
+

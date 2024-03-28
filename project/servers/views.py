@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from posts.models import Bill, Chore, Event
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
 from servers.models import Server, Participation, Invitation
 from itertools import chain
@@ -56,3 +57,29 @@ def join_server(request):
         else:
             return JsonResponse({'error': 'Invalid or expired token.'}, status=400)
     return JsonResponse({'error': 'Invalid request.'}, status=400)
+
+@login_required
+def create_server(request):
+    if request.method == 'POST':
+        server_name = request.POST.get('server_name')
+        invite_emails = request.POST.get('invite_emails')
+        # Create the server
+        server = Server.objects.create(group_name=server_name)
+        # Process invite emails (you'll need to implement this logic)
+        # For now, just return a success message
+        return JsonResponse({'message': 'Server created successfully.'})
+    return JsonResponse({'error': 'Invalid request.'}, status=400)
+
+@require_POST
+def create_invitation(request):
+    server_id = request.POST.get('server_id')
+    invited_email = request.POST.get('invite_email')
+    
+    # Assuming you have a way to get the server object based on server_id
+    server = Server.objects.get(id=server_id)
+    
+    # Create the invitation
+    invitation = Invitation.create_invitation(server, invited_email)
+    
+    # You can return a success message or any relevant data
+    return JsonResponse({'message': 'Invitation created successfully'})
