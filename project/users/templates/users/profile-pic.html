@@ -7,6 +7,7 @@
 </head>
 <body>
     
+    <h1>Upload Picture Form:</h1>
     <form action="{% url 'users:profile_pic' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="profile_pic">
@@ -19,7 +20,7 @@
     
     <img src="{{ user.profile_picture.url }}" alt="Your Profile Picture" style="width: 200px; height: 200px;">
     
-    {% if user.profile_picture.name == 'default.png' %}
+    {% if user.profile_picture.name == 'profile_pics/default_profile.png' %}
         <p>Using default picture currently. You can upload your own if you like</p>
     {% endif %}
 

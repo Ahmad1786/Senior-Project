@@ -61,7 +61,7 @@ def event(request, id):
             # The parent comments
             chain.append(comment)
             # The reply chain under the parent
-            chain.append(Comment.objects.filter(comment.id = comment.parent_comment_id))
+            # chain.append(Comment.objects.filter(comment.id = comment.parent_comment_id))
             comment_chains.append(chain)
             
             #print(comment.content)
