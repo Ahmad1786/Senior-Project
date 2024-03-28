@@ -41,7 +41,7 @@ def chore(request, id):
     chore = Chore.objects.get(id=id)
     threads = {}
     # Get parent comments that belong to this event
-    parent_comments =  Comment.objects.filter(Q(chore_id=chore.id) & Q(parent_comment=None))
+    parent_comments =  Comment.objects.filter(Q(task_id=chore.id) & Q(parent_comment=None))
     for comment in parent_comments:
         # Append the dictionary so that the key is a parent and the value contains the replies
         threads[comment] = Comment.objects.filter(parent_comment=comment)
