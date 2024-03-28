@@ -4,6 +4,7 @@ from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, 
 from posts.models import Bill, Event, Chore
 from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
+from django.utils import timezone
 from django.contrib import messages
 
 # some quick server side validation
@@ -153,7 +154,7 @@ def join_server(request):
     if request.method == 'POST':
         token = request.POST.get('token')
         invitation = Invitation.objects.filter(token=token).first()
-        if invitation and not invitation.expired:
+        if invitation and invitation.expiration_time > timezone.now():
             server = invitation.server
             user = request.user
             display_name = f"{user.first_name} {user.last_name}"
@@ -162,8 +163,6 @@ def join_server(request):
             return redirect('server_page', server_id=server.id)
         else:
             messages.error(request, 'Invalid Invitation Code')
-            return render(request, 'servers/partials/join-server-modal.html')
-    return render(request, 'servers/partials/join-server-modal.html')
 
 def invitation(request, server_id):
     if not is_htmx(request):
