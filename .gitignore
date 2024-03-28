@@ -1,5 +1,10 @@
 venv
 
+**/media/*
+!**/media/profile_pics/
+**/media/profile_pics/*
+!**/media/profile_pics/default_profile.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
