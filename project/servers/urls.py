@@ -12,7 +12,7 @@ htmx_routes = [
     path('add-task/<int:server_id>', htmx_views.add_task, name="add_task"),
     path('edit-task/<int:task_id>', htmx_views.edit_task, name="edit_task"),
     path('add-event/<int:server_id>', htmx_views.add_event, name="add_event"),
-    path('edit-event/<int:event_id>', htmx_views.edit_event, name ="edit_event")
+    path('edit-event/<int:event_id>', htmx_views.edit_event, name ="edit_event"),
     path('assign-task/', htmx_views.assign_task, name="assign_task")
     
 ]
