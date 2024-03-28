@@ -34,6 +34,12 @@
             {% if t.assigner == request.user %}
                 <a class="btn btn-sm btn-outline-primary" hx-get="{%url 'servers:edit_task' t.id %}" hx-target="#dialog">Edit Task</a>
             {% endif %}
+             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
+                Assign Task
+               
+            </button>
+           
+            {% include 'servers/partials/assign-task-form.html' %}
 
                 <ul>
                     <li> description: {{ t.description }} </li>
