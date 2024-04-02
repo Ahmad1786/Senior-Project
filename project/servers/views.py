@@ -17,6 +17,9 @@ def server_page(request, server_id):
     if not is_in_server(request.user, server_id):
         return HttpResponse(status=403)
 
+    # get server participation for request user to ppopulate sidebar
+    servers = Server.objects.filter(participations__user=request.user)
+    
     # get all the bills for the server
     bills = Bill.objects.filter(server_id=server_id).order_by('-date_created') # latest first
     for b in bills:
@@ -40,6 +43,7 @@ def server_page(request, server_id):
         "tasks": tasks,
         "events": events,
         "server_id": server_id,
+        "servers": servers
     } 
     return render(request, "servers/group-page.html", context=context)
 
