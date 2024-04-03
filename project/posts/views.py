@@ -91,3 +91,12 @@ def event(request, id):
        "creator": creator, 
        "threads": threads,
     })
+
+
+def add_reply(request, id):
+    comment = Comment.objects.get(id=id)
+    
+    return render(request, "posts/add-reply.html", {
+        "parent_comment": comment,
+
+    })

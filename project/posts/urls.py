@@ -6,6 +6,7 @@ urlpatterns = [
     path('bill/<int:id>', views.bill, name="bill"),
     path('chore/<int:id>', views.chore, name="chore"),
     path('event/<int:id>', views.event, name="event"),
+    path("add-reply/<int:id>", views.add_reply, name="add_reply")
 ]
 
 testing_routes = [

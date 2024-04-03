@@ -10,10 +10,12 @@ is_htmx = lambda request: request.headers.get('HX-Request', False)
 def add_comment(request, post_id):
     if not is_htmx(request):
         return HttpResponse(status=405)
-    post = Post.objects.get(pk=post_id)
+    
+    #post = Post.objects.get(pk=post_id)
     current_user = request.user
+    
     if request.method == 'POST':
-        form = CommentForm(request.POST, current_user=current_user)
+        form = CommentForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.creator = request.user
@@ -24,3 +26,8 @@ def add_comment(request, post_id):
             return render(request, 'posts/bill.html', {
                 'form': form,
             })
+    
+    form = CommentForm()
+    return render(request, 'posts/comment-form.html', {
+        'form': form,
+    })

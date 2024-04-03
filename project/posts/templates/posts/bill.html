@@ -22,11 +22,11 @@
 <br> <b>Your Portion:</b> ${{ individual_portion }}
 <br> <b>Who To Pay:</b> <!-- Field not ready yet -->
 </p>
-<a hx-get="{% url 'posts:add_comment' post_id %}" hx-target="#dialog" class="">
-    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-      </svg>
-</a>
+<form method="post" hx-post="{% url 'posts:add_comment' post_id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Comment</button>
+</form>
 
 
 <p>
@@ -37,13 +37,15 @@
         <div class="comment">
             {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
             <br><br>{{ parent_comment.content}}
+            <button>Reply</button>
         </div>
             <!-- Check for replies to the parent comment and print them out -->
             {% for reply in replies %}  
                 <div class="reply">
                     <!-- Find alternative to avoid line break other than <a> tag? -->
                     {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
-                    <br><br>{{ reply.content}}    
+                    <br><br>{{ reply.content}}
+                    <a href="{% url 'posts:add_reply' parent_comment.id %}"> Reply</a>
                 </div>
             {% endfor %}
     {% endfor %}

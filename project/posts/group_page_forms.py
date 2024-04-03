@@ -10,13 +10,9 @@ import datetime
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = (
-            "author", "parent_comment", "description"
-        )
+        fields = ("content",)
         widgets = {
-            "author": forms.TextInput(attrs={'class': 'form-control'}),
-            "parent_comment": forms.TextInput(attrs={'class': 'form-control'}),
-            "description": forms.TextInput(attrs={'class': 'form-control'}),
+            "content": forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 

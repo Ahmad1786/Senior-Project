@@ -63,5 +63,14 @@ p {
 
 .comment_date {
     float: right;
-    
+}
+
+/* Initially hide the div */
+.toggle-div {
+    display: none;
+}
+
+/* When the checkbox is checked, show the div */
+input[type="checkbox"]:checked + label + .toggle-div {
+    display: block;
 }
