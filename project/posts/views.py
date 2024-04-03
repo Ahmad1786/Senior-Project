@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Bill, Chore, Event, Comment
+from .models import Bill, Chore, Event, Comment, Post
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.db.models import Q
 from posts.group_page_forms import CommentForm
 
@@ -94,15 +94,30 @@ def event(request, id):
     })
 
 
-def add_reply(request, id):
-    comment = Comment.objects.get(id=id)
+def add_reply(request, post_type, post_id, parent_comment_id):
+    # The parent of the comment chain this reply will belong to
+    parent_comment = Comment.objects.get(id=parent_comment_id)
     if request.method == "POST":
         # Finish this later
         form = CommentForm(request.POST)
     else:
-        form = CommentForm()
+        initial_data = {
+            "author": request.user,
+            "parent_comment": parent_comment,
+        }
+        # Check what type of post this comment will be on and then retrieve it.
+        # Store the post as a foreign key in the initial data (links the comment to the post)
+        if post_type == "bill":
+            initial_data["bill"] = Bill.objects.get(id=post_id)
+        elif post_type == "chore":
+            initial_data["task"] = Chore.objects.get(id=post_id)
+        elif post_type == "event":
+            initial_data["event"] = Event.objects.get(id=post_id)
+        else:
+            raise Http404("Error: " + post_type + " is not a valid post_type")
+        
+        form = CommentForm(initial=initial_data)
     return render(request, "posts/add-reply.html", {
-        "parent_comment": comment,
+        "parent_comment": parent_comment,
         "form": form,
-
     })

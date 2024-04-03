@@ -10,7 +10,8 @@ import datetime
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ["content",]
+        # Remove all but content when done with testing.
+        fields = ["author", "task", "event", "bill", "parent_comment", "content",]
         widgets = {
             "content": forms.TextInput(attrs={'class': 'form-control'}),
         }

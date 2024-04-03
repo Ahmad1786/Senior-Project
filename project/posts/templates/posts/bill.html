@@ -37,7 +37,7 @@
         <div class="comment">
             {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
             <br><br>{{ parent_comment.content}}
-            <button>Reply</button>
+            <a href="{% url 'posts:add_reply' 'bill' post_id parent_comment.id %}"> Reply</a>
         </div>
             <!-- Check for replies to the parent comment and print them out -->
             {% for reply in replies %}  
@@ -45,7 +45,7 @@
                     <!-- Find alternative to avoid line break other than <a> tag? -->
                     {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
                     <br><br>{{ reply.content}}
-                    <a href="{% url 'posts:add_reply' parent_comment.id %}"> Reply</a>
+                    <a href="{% url 'posts:add_reply' 'bill' post_id parent_comment.id %}"> Reply</a>
                 </div>
             {% endfor %}
     {% endfor %}
