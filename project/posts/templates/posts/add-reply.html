@@ -2,6 +2,6 @@ Replying to {{ parent_comment.author }}'s chain.
 
 <form>
     {% csrf_token %}
-    {{ comment_form.as_p }}
+    {{ form.as_p }}
     <button type="submit">Submit</button>
 </form>

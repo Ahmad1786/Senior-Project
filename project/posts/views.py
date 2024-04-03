@@ -3,6 +3,7 @@ from .models import Bill, Chore, Event, Comment
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.db.models import Q
+from posts.group_page_forms import CommentForm
 
 
 @login_required
@@ -95,8 +96,13 @@ def event(request, id):
 
 def add_reply(request, id):
     comment = Comment.objects.get(id=id)
-    
+    if request.method == "POST":
+        # Finish this later
+        form = CommentForm(request.POST)
+    else:
+        form = CommentForm()
     return render(request, "posts/add-reply.html", {
         "parent_comment": comment,
+        "form": form,
 
     })
