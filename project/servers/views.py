@@ -20,6 +20,18 @@ def server_page(request, server_id):
     # get server participation for request user to ppopulate sidebar
     servers = Server.objects.filter(participations__user=request.user)
     
+     # Get the server instance
+    server = Server.objects.get(id=server_id)
+
+    # Get the owner's participation
+    owner_participation = Participation.objects.filter(server=server, is_owner=True)
+
+    # Get the rest of the participations
+    other_participations = Participation.objects.filter(server=server, is_owner=False)
+
+    # Concatenate the two querysets
+    participation = owner_participation | other_participations
+ 
     # get all the bills for the server
     bills = Bill.objects.filter(server_id=server_id).order_by('-date_created') # latest first
     for b in bills:
@@ -43,7 +55,8 @@ def server_page(request, server_id):
         "tasks": tasks,
         "events": events,
         "server_id": server_id,
-        "servers": servers
+        "servers": servers,
+        "participation": participation,
     } 
     return render(request, "servers/group-page.html", context=context)
 
