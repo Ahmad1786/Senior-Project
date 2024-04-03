@@ -1,5 +1,5 @@
 from django.urls import path
-from . import test_posts, views
+from . import test_posts, views, htmx_views
 
 app_name = "posts"
 urlpatterns = [
@@ -15,7 +15,9 @@ testing_routes = [
     path('test-comment/<int:id>', test_posts.test_comment, name="test_comment"),
 ]
 
-htmx_routes = []
+htmx_routes = [
+    path('add-comment/<int:post_id>', htmx_views.add_comment, name="add_comment"),
+]
 
 
 urlpatterns += testing_routes

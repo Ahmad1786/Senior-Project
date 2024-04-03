@@ -2,11 +2,23 @@
 # THESE WILL BE USED TO MAKE an instance of THE 3 MAIN POSTS IN THE GROUP PAGE
 
 from django import forms
-from posts.models import Bill, Event, Chore
+from posts.models import Bill, Event, Chore, Comment
 import datetime
 
 # NOTE: MADE these forms kind of "fast", so they may not be the 
 # best/most efficient way to do things, but good enough for now
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = (
+            "author", "parent_comment", "description"
+        )
+        widgets = {
+            "author": forms.TextInput(attrs={'class': 'form-control'}),
+            "parent_comment": forms.TextInput(attrs={'class': 'form-control'}),
+            "description": forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 class BillForm(forms.ModelForm):
     

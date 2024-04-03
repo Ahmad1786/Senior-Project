@@ -22,6 +22,12 @@
 <br> <b>Your Portion:</b> ${{ individual_portion }}
 <br> <b>Who To Pay:</b> <!-- Field not ready yet -->
 </p>
+<a hx-get="{% url 'posts:add_comment' post_id %}" hx-target="#dialog" class="">
+    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+      </svg>
+</a>
+
 
 <p>
     <div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">

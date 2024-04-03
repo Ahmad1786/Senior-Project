@@ -15,6 +15,7 @@ def bill(request, id):
         # Append the dictionary so that the key is a parent and the value contains the replies
         threads[comment] = Comment.objects.filter(parent_comment=comment)
 
+    post_id = id
     post_name = bill.post_name
     description = bill.description
     date_created = bill.date_created
@@ -26,6 +27,7 @@ def bill(request, id):
     #payee = bill.payee
 
     return render(request, "posts/bill.html", {
+        "post_id": post_id,
         "post_name": post_name,
         "description": description,
         "date_created": date_created,
