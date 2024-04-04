@@ -27,10 +27,10 @@ def profile_pic(request):
             context = {
                 "form": ProfilePicForm(),
             }
-            return render(request, "users/profile-pic.html", context=context)
+            return render(request, "users/profile.html", context=context)
     
     # else GET request
     context = {
         "form": ProfilePicForm(),
     }
-    return render(request, "users/profile-pic.html", context=context)
+    return render(request, "users/profile.html", context=context)
