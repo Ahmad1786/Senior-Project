@@ -135,12 +135,12 @@ class EditTaskForm(forms.ModelForm):
         
     class Meta:
         model = Chore
+        fields = ['post_name', 'description', 'assignee', 'due_date']
+        widgets = {
+            'due_date':forms.TextInput(attrs={'type':'date'}),
+        }
 
 # Form for assigning tasks - done by Luke
 class AssignTaskForm(forms.ModelForm):
     task = forms.ModelChoiceField(queryset=None, empty_label=None)
     assigned_users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple)
-        fields = ['post_name', 'description', 'assignee', 'due_date']
-        widgets = {
-            'due_date':forms.TextInput(attrs={'type':'date'}),
-        }
