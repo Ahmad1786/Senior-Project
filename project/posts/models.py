@@ -114,7 +114,7 @@ class Comment(models.Model):
 # Model for notifications so a user of the group is notified when they are assigned a task? It will be connected to def assign_task to 
 # trigger a notification when a user is assigned a task
 class Notification(models.Model):
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     message = models.CharField(max_length = 100)
     read = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
