@@ -1,36 +1,17 @@
-from django.shortcuts import render
-from .models import User
 from django.contrib.auth.decorators import login_required
-from django import forms
-
+from django.views.decorators.http import require_POST
+from django.shortcuts import redirect
 
 # form to upload a profile picture
-class ProfilePicForm(forms.Form):
-    profile_pic = forms.ImageField()
+#class ProfilePicForm(forms.Form):
+#    profile_pic = forms.ImageField()
 
-# basic page that allows users to upload a profile picture
-# and shows their current profile picture or the default one
+# use the html form to upload a profile picture
 @login_required
+@require_POST
 def profile_pic(request):
-    
-    user = request.user
-    picture = user.profile_picture
-
-    # print all fields of picture
-    print(picture.__dict__)
-
-    if request.method == "POST":
-        form = ProfilePicForm(request.POST, request.FILES)
-        if form.is_valid():
-            user.profile_picture = form.cleaned_data["profile_pic"]
-            user.save()
-            context = {
-                "form": ProfilePicForm(),
-            }
-            return render(request, "users/profile-pic.html", context=context)
-    
-    # else GET request
-    context = {
-        "form": ProfilePicForm(),
-    }
-    return render(request, "users/profile-pic.html", context=context)
+    if request.FILES:
+        picture = request.FILES['profile_pic']
+        request.user.profile_picture = picture
+        request.user.save()
+    return redirect('users:profile')
