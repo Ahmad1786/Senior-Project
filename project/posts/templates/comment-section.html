@@ -33,9 +33,14 @@
                 {% csrf_token %}
                 <button type="submit" style="font-size: smaller;">Reply</button>
             </form>
+            
 
-            <!-- If the user is the creator of the comment, allow them the option to delete it. -->
+            <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
             {% if parent_comment.author == current_user %}
+                <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
+                    {% csrf_token %}
+                    <button type="submit" style="font-size: smaller;">Edit Comment</button>
+                </form>
                 <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
                     {% csrf_token %}
                     <button type="submit" style="font-size: smaller;">Delete Comment</button>
@@ -56,8 +61,12 @@
                         <button type="submit" style="font-size: smaller;">Reply</button>
                     </form>
 
-                    <!-- If the user is the creator of the comment, allow them the option to delete it. -->
+                    <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                     {% if reply.author == current_user %}
+                        <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
+                            {% csrf_token %}
+                            <button type="submit" style="font-size: smaller;">Edit Comment</button>
+                        </form>
                         <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
                             {% csrf_token %}
                             <button type="submit" style="font-size: smaller;">Delete Comment</button>

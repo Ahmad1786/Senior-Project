@@ -173,7 +173,18 @@ def add_comment(request, post_type, post_id):
 
 def edit_comment(request, post_type, post_id, comment_id):
     comment = Comment.objects.get(id=comment_id)
+    if request.method == "POST":
+        new_content = request.POST.get("new_content")
+        comment.content = new_content
+        comment.save()
+        return redirect("/posts/" + post_type + "/" + str(post_id))
     
+    return render(request, "posts/edit-comment.html", {
+        "comment": comment,
+        "post_type": post_type,
+        "post_id": post_id,
+        "comment_id": comment_id,
+    })
 
 def delete_comment(request, post_type, post_id, comment_id):
     if request.method == "POST":
