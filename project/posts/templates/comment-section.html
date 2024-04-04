@@ -22,8 +22,12 @@
             {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
             <br><br>{{ parent_comment.content}}
             <a href="{% url 'posts:add_reply' post_type post_id parent_comment.id %}"> Reply</a>
+            <!-- If the user is the creator of the comment, allow them the option to delete it. -->
             {% if parent_comment.author == current_user %}
-                <button class="comment_date">Delete Comment</button>
+                <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
+                    {% csrf_token %}
+                    <button type="submit" style="font-size: smaller;">Delete Comment</button>
+                </form>
             {% endif %}
         </div>
             <!-- Check for replies to the parent comment and print them out -->
@@ -33,8 +37,12 @@
                     {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
                     <br><br>{{ reply.content}}
                     <a href="{% url 'posts:add_reply' post_type post_id parent_comment.id %}"> Reply</a>
+                    <!-- If the user is the creator of the comment, allow them the option to delete it. -->
                     {% if reply.author == current_user %}
-                        <button class="comment_date">Delete Comment</button>
+                        <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
+                            {% csrf_token %}
+                            <button type="submit" style="font-size: smaller;">Delete Comment</button>
+                        </form>
                     {% endif %}
                 </div>
             {% endfor %}

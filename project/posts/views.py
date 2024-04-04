@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Bill, Chore, Event, Comment, Post
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
@@ -107,8 +107,8 @@ def add_reply(request, post_type, post_id, parent_comment_id):
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
-            form.instance.parent_comment = parent_comment
             form.save(commit=True)
+            return redirect("/posts/" + post_type + "/" + str(post_id))
         else:
             raise Http404("Form is not valid")
     else:
@@ -143,6 +143,7 @@ def add_comment(request, post_type, post_id):
         form = CommentForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
+            return redirect("/posts/" + post_type + "/" + str(post_id))
         else:
             raise Http404("Form is not valid")
     else:
@@ -168,3 +169,9 @@ def add_comment(request, post_type, post_id):
         "post_type": post_type,
         "post_id": post_id,
     })
+
+def delete_comment(request, post_type, post_id, comment_id):
+    if request.method == "POST":
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+        return redirect("/posts/" + post_type + "/" + str(post_id))
