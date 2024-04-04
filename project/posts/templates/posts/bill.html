@@ -22,12 +22,7 @@
 <br> <b>Your Portion:</b> ${{ individual_portion }}
 <br> <b>Who To Pay:</b> <!-- Field not ready yet -->
 </p>
-<form method="post" hx-post="{% url 'posts:add_comment' post_id %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Comment</button>
-</form>
-
+<a href="{% url 'posts:add_comment' 'bill' post_id %}"> Comment Here</a>
 
 <p>
     <div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">

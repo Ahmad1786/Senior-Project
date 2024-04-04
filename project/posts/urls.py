@@ -6,7 +6,8 @@ urlpatterns = [
     path('bill/<int:id>', views.bill, name="bill"),
     path('chore/<int:id>', views.chore, name="chore"),
     path('event/<int:id>', views.event, name="event"),
-    path("add-reply/<str:post_type>/<int:post_id>/<int:parent_comment_id>", views.add_reply, name="add_reply")
+    path("add-reply/<str:post_type>/<int:post_id>/<int:parent_comment_id>", views.add_reply, name="add_reply"),
+    path("add-comment/<str:post_type>/<int:post_id>", views.add_comment, name="add_comment"),
 ]
 
 testing_routes = [
