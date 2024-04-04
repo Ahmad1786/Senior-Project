@@ -100,8 +100,11 @@ def add_reply(request, post_type, post_id, parent_comment_id):
     if request.method == "POST":
         # Finish this later
         form = CommentForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=True)
     else:
         initial_data = {
+            # The creator of the new reply.
             "author": request.user,
             "parent_comment": parent_comment,
         }
