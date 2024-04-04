@@ -209,3 +209,12 @@ def invitation(request, server_id):
 
 def close_modal(request):
     return HttpResponse('')
+
+# Function to create a notification 
+def create_notification(receiever, message, sender):
+    notification = Notification.objects.create(
+        receiever=receiever, 
+        message=message,
+        sender=sender
+        )
+    return notification
