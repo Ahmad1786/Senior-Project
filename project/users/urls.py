@@ -6,7 +6,7 @@ urlpatterns = [
     path('profile', views.profile, name="profile"),
     path('send-test-mail', views.send_test_mail, name="send_test_mail"),
     path('feed', feed_views.feed_view, name="feed_view"),
-    path('profile', profile_pic_view.profile_pic, name="profile_pic"),
+    path('upload-profile-pic', profile_pic_view.profile_pic, name="profile_pic"),
 ]
 
 testing_routes = [
