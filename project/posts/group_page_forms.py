@@ -2,12 +2,23 @@
 # THESE WILL BE USED TO MAKE an instance of THE 3 MAIN POSTS IN THE GROUP PAGE
 
 from django import forms
-from posts.models import Bill, Event, Chore
+
+from posts.models import Bill, Event, Chore, Comment
+from users.models import User
 from servers.models import Invitation, Participation
 import datetime
 
 # NOTE: MADE these forms kind of "fast", so they may not be the 
 # best/most efficient way to do things, but good enough for now
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        # Remove all but content when done with testing.
+        fields = ["author", "task", "event", "bill", "parent_comment", "content",]
+        widgets = {
+            "content": forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 class BillForm(forms.ModelForm):
     
@@ -130,6 +141,12 @@ class EditTaskForm(forms.ModelForm):
         widgets = {
             'due_date':forms.TextInput(attrs={'type':'date'}),
         }
+
+
+# Form for assigning tasks - done by Luke
+class AssignTaskForm(forms.ModelForm):
+    task = forms.ModelChoiceField(queryset=None, empty_label=None)
+    assigned_users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple)
         
 class InvitationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -146,3 +163,4 @@ class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
         fields = ['invited_email']
+

@@ -1,0 +1,112 @@
+body {
+    background-color: black;
+    font-size: 14px;
+    color: black;
+    width: 100%;
+}
+
+.account-details-container {
+    width: 77%;
+    float: right;
+    padding: 20px;
+    background-color: rgb(79 70 229);
+}
+
+#upload {
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 24px
+}
+
+#aboutyou {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 24px
+}
+
+#info {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+#myPost {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.nav_list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+}
+
+li {
+    float: left;
+    font-weight: bold;
+}
+
+.right {
+    float: right;
+}
+
+li a {
+    display: block;
+    color: black;
+    padding: 20px 45px;
+    text-align: center;
+    text-decoration: none;
+}
+
+li a:hover {
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
+    background-color: azure;
+}
+
+.profile_pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+
+.profilePicForm {
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+}
+
+.about {
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+}
+
+.upbutton {
+    background-color: rgb(79 70 229);
+    width: 25%;
+    border-radius: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.accountInfo {
+    overflow: hidden;
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+}
+
+span {
+    overflow: hidden;
+}
+
+.post {
+    padding: 10px;
+    border-radius: 25px;
+    background-color: white;
+}

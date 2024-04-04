@@ -1,11 +1,12 @@
 from django.urls import path
-from . import test_posts, views
+from . import test_posts, views, htmx_views
 
 app_name = "posts"
 urlpatterns = [
     path('bill/<int:id>', views.bill, name="bill"),
     path('chore/<int:id>', views.chore, name="chore"),
     path('event/<int:id>', views.event, name="event"),
+    path("add-reply/<str:post_type>/<int:post_id>/<int:parent_comment_id>", views.add_reply, name="add_reply")
 ]
 
 testing_routes = [
@@ -15,7 +16,9 @@ testing_routes = [
     path('test-comment/<int:id>', test_posts.test_comment, name="test_comment"),
 ]
 
-htmx_routes = []
+htmx_routes = [
+    path('add-comment/<int:post_id>', htmx_views.add_comment, name="add_comment"),
+]
 
 
 urlpatterns += testing_routes

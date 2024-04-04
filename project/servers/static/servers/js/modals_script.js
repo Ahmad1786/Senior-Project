@@ -1,7 +1,7 @@
 /* Followed Modal Forms Tutorial */
 /* https://blog.benoitblanchon.fr/django-htmx-modal-form/ */
 
-const modal = new bootstrap.Modal(document.getElementById("modal"))
+//const modal = new bootstrap.Modal(document.getElementById("modal"))
 
 htmx.on("htmx:afterSwap", (e) => {
     // Response targeting #dialog => show the modal
@@ -25,3 +25,4 @@ htmx.on("hidden.bs.modal", () => {
 document.body.addEventListener('PageRefreshNeeded', () => {
     window.location.reload();
 });
+

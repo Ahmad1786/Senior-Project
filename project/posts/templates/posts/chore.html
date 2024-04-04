@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chore</title>
-    <link href="{% static 'posts/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <!-- htmx script -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
@@ -20,4 +20,25 @@
 <br> <b>Date Due:</b> {{ due_date }}
 <br> <b>Assigned To:</b> {{ assigned_to }}
 <br> <b>Created By:</b> {{ creator }}
+</p>
+
+<p>
+    <div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">
+    <b>Comments:</b>
+    {% for parent_comment, replies in threads.items %}
+        <!-- Print out the parent comment -->
+        <div class="comment">
+            {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
+            <br><br>{{ parent_comment.content}}
+        </div>
+            <!-- Check for replies to the parent comment and print them out -->
+            {% for reply in replies %}  
+                <div class="reply">
+                    <!-- Find alternative to avoid line break other than <a> tag? -->
+                    {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
+                    <br><br>{{ reply.content}}    
+                </div>
+            {% endfor %}
+    {% endfor %}
+    <div>
 </p>

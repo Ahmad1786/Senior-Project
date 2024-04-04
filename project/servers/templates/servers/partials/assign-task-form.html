@@ -1,0 +1,35 @@
+<div class="modal fade" id="assignTaskModal" tabindex="-1" aria-labelledby="assignTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignTaskModalLabel">Assign Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" hx-post="{% url 'servers:assign_task' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="task_select" class="form-label">Select Task</label>
+                        <select class="form-select" id="task_select" name="task_id">
+                            {% for task in tasks %}
+                                <option value="{{ task.id }}">{{ task.post_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_select" class="form-label">Select User(s)</label>
+                        <select class="form-select" id="user_select" name="assigned_users"> 
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" hx-post="{% url 'servers:close_modal' %}" class="text-gray-500 hover:text-gray-700">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Assign Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

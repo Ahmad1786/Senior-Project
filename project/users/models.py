@@ -5,8 +5,8 @@ from django.db import models
 # extend the User model by extending AbstractUser: see link for details
 # https://docs.djangoproject.com/en/5.0/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
 class User(AbstractUser):
-    phone_number = PhoneNumberField()
-    profile_picture = models.ImageField(blank=True, null=True)
+    phone_number = PhoneNumberField(blank=True, null=True)
+    profile_picture = models.ImageField(blank=True, null=True, default='profile_pics/default_profile.png', upload_to='profile_pics')
 
     def save(self, *args, **kwargs):
         # since we are not using username it will just be something hidden to user

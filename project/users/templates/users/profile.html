@@ -5,21 +5,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user }} Profile</title>
-    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet">
+    <link href="{% static 'users/account.css' %}" rel="stylesheet">
 </head>
-<body>
-    <h1 id="red">Note this page is for early development/debugging only</h1>
 
-    <h1>This is the Profile Page of {{ user }} </h1> 
-    
-    <!-- link to logout ... account_logout is the name provided by allauth -->
-    <h2><a href="{% url 'account_logout' %}">Logout</a></h2> 
-    
-    <ul>
-        {% for field_name, field_value in user_fields.items %}
-            <li>{{ field_name }}: {{ field_value }}</li><br>
-        {% endfor %}
-    </ul>
-    
+<div class="bg-blue-600  font-[Poppins] w-1/5">
+    <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="Openbar()">
+      <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
+    </span>
+    <div class="sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] duration-1000
+      p-2 w-[300px] overflow-y-auto text-center bg-gray-900 shadow h-screen">
+      <div class="text-gray-100 text-xl">
+        <div class="p-2.5 mt-1 flex items-center rounded-md ">
+          <i class="bi bi-app-indicator px-2 py-1 bg-blue-600 rounded-md"></i>
+          <h1 class="text-[15px]  ml-3 text-xl text-gray-200 font-bold">CoHabitat</h1>
+          <i class="bi bi-x ml-20 cursor-pointer lg:hidden" onclick="Openbar()"></i>
+        </div>
+        <hr class="my-2 text-gray-600">
+  
+        <div>
+  
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            
+            <i class="bi bi-card-text"></i>
+            <span class="text-[15px] ml-4 text-gray-200">Feed</span>
+          </div>
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-houses-fill"></i>
+            <div class="flex justify-between w-full items-center" onclick="dropDown()">
+              <span class="text-[15px] ml-4 text-gray-200">Groups</span>
+              <span class="text-sm rotate-180" id="arrow">
+                <i class="bi bi-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+          <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto" id="submenu">
+            {% for server in servers %}
+              <h1 class="cursor-pointer p-2 hover:bg-gray-700 rounded-md mt-1"><a href="{% url 'servers:server_page' server_id=server.id %}">{{ server.group_name }}</a></h1>     
+            {% endfor %}
+          </div>
+          <hr class="my-4 text-gray-600">
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-person-circle"></i>
+            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
+          </div>
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-person-circle"></i>
+            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile_pic' %}">Profile Pic (Testing)</a></span>
+          </div>
+  
+          
+          
+          <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  
+    <script>
+      function dropDown() {
+        document.querySelector('#submenu').classList.toggle('hidden')
+        document.querySelector('#arrow').classList.toggle('rotate-0')
+      }
+      dropDown()
+  
+      function Openbar() {
+        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+      }
+    </script>
+  </div>
+
+<body>
+    <div class="account-details-container font-[Poppins] ">
+        <div class="navigation">
+            <!--Navigation Bar-->
+           <ul class="nav_list">
+               <li><a>{{ user }}</a></li>
+               <li><a href="feed">Home</a></li>
+               <li><a href="#aboutyou">About You</a></li>
+               <li><a href="#info">Account Info</a></li>
+               <li><a href="#myPost">My Posts</a></li>
+           </ul>
+        </div>
+
+        <div>
+            {{ user_fields.profile_picture }}
+        </div>     
+
+        <h4 id="aboutyou">About you:</h4>
+        <div class="about">
+            <span>Full name: {{ user_fields.first_name }} {{ user_fields.last_name }}</span><br/>
+            <span>Email: {{ user_fields.email }}</span><br/>
+            <span>Phone Number: {{ user_fields.phone_number }}</span><br/>
+            <span>Social Media: {{ user_fields.socialaccount }}</span>
+        </div>
+
+        <h4 id="info">Account Info:</h4>
+        <div class="accountInfo">
+            <span>Username: {{ user_fields.username }}</span><br/>
+            <span class="pass">Password: {{ user_fields.password }}</span><br/>
+            <span>Member Since: {{ user_fields.date_joined }}</span><br/>
+            <span>Last Login: {{ user_fields.last_login }}</span><br/>
+            <span>Active: {{ user_fields.is_active }}</span><br/>
+            <span>Server: {{ user_fields.servers }}</span><br/>
+            <span>Groups: {{ user_fields.groups }}</span><br/>
+            <span>Admin Privelage: {{ user_fields.is_superuser }}</span>
+        </div>
+
+        <h4 id="myPost" >My Posts:</h4>
+        <div class="post">
+            <span>Chores: {{ user_fields.assigned_chores }}</span><br/>
+            <span>Bills: {{ user_fields.bills }}</span><br/>
+            <span>Events: {{ user_fields.posts_event_related }}</span><br/>
+            <span>Comments: {{ user_fields.comments }}</span>
+        </div>
+    </div>
 </body>
 </html>

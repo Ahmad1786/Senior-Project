@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users import views, feed_views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,3 +28,6 @@ urlpatterns = [
     path('posts/', include('posts.urls')),
     path('', feed_views.feed_view, name='feed_view'),
 ]
+
+# for picture uploads
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
