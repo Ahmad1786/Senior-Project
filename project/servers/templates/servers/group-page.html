@@ -3,138 +3,296 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server {{ server_id }}</title>
+    <title>{% block title %}CoHabitat{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- htmx -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap"
+    rel="stylesheet">
+    <link href="{% static 'servers/style.css' %}" rel="stylesheet">
     <script src="{% static 'servers/js/modals_script.js' %}" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.js"></script>
-    <link href="{% static 'servers/css/style.css' %}" rel="stylesheet">
-    <style>
-       
-    </style>
-   
-</head>
-<body>
-
-    <div id="container">
-        <div id="tasks" class="scroll posts">
-            <div id="task-nav" class="post-nav">
-                <h2 style="text-align: center;">Tasks for {{ tasks.first.server.group_name }}</h2>
-                <a hx-get="{% url 'servers:add_task' tasks.first.server.id %}" hx-target="#dialog" class="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                      </svg>
-                </a>
-            </div>
-
-            {% for t in tasks %}
-            <a href="{% url 'posts:test_chore' t.id %}"><h3>{{ t.post_name }}</h3></a>
-            <a class="btn btn-sm btn-info" href="{%url 'posts:chore' t.id %}">See Post</a>
-            {% if t.assigner == request.user %}
-                <a class="btn btn-sm btn-outline-primary" hx-get="{%url 'servers:edit_task' t.id %}" hx-target="#dialog">Edit Task</a>
-            {% endif %}
-             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
-                Assign Task
-               
-            </button>
-           
-            {% include 'servers/partials/assign-task-form.html' %}
-
-                <ul>
-                    <li> description: {{ t.description }} </li>
-                    <li> Assigned date (post created): {{ t.assigned_date | date:"l F d, Y" }} </li>   
-                    <li> Assigner / Post Creator: {% if request.user == t.assigner %} You {% else %} {{ t.post_creator }} {% endif %} </li> 
-                    <li> People Assigned to this task: {% for p in t.assignee.all %} 
-                        {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{% if not forloop.last %},{% endif %}{% empty %} none 
-                        {% endfor %} 
-                    </li>
-                    <li> People Assigned to this task (display names): {{ t.assignee_string }}</li>
-                    <li> Due date: {{ t.due_date | date:"l F d, Y" }} </li>
-                    {% if t.completed %}
-                        <li> Completed: Yes </li>
-                    {% else %}
-                        <li> Completed: No </li>
-                    {% endif %}
-                </ul>
-                
-            {% endfor %}
-        </div>
-
-        <div id="bills" class="scroll posts">
-            <div id="bill-nav" class="post-nav">
-                <h2 style="text-align: center; font-weight: bold; font-size: 28px; ">Bills/Supplies for {{ bills.first.server.group_name }}</h2>
-                <a hx-get="{% url 'servers:add_bill' bills.first.server.id %}" hx-target="#dialog" class="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                      </svg>
-                </a>
-            </div>
-
-            {% for b in bills %}
-            <a href="{% url 'posts:test_bill' b.id %}"><h3>{{ b.post_name }}</h3></a>
-            <a class="btn btn-sm btn-info" href="{%url 'posts:bill' b.id %}">See Post</a>
-            {% if b.bill_creator == request.user %}
-                <a class="btn btn-sm btn-outline-primary" hx-get="{%url 'servers:edit_bill' b.id %}" hx-target="#dialog">Edit Bill</a>
-            {% endif %}
-                <ul>
-                    <li> description: {{ b.description }} </li>
-                    <li> date posted: {{ b.posted_date | date:"l F d, Y" }} </li>   
-                    <li> creator: {% if request.user == b.bill_creator %} You {% else %} {{ b.post_creator }} {% endif %} </li> 
-                    <li> cost:  {{ b.cost }} </li>   
-                    <li> payers: 
-                        {% for p in b.payers.all %} 
-                        {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{% if not forloop.last %},{% endif %}{% empty %}none 
-                        {% endfor %} 
-                    </li>
-                    <li>payers (display names): {{ b.payers_string }}</li>
-                    {% if b.split %}
-                        <li> Your split: {{ b.portion }} </li>
-                    {% else %}
-                        <li> bill is not being split </li>
-                    {% endif %}
-                    {% if b.completed %}
-                        <li> Paid: Yes </li>
-                    {% else %}
-                        <li> Paid: No </li>
-                    {% endif %}
-                </ul>
-                
-            {% endfor %}
-        </div>
     
+</head>
 
-        <div id="events" class="scroll posts">
-            <div id="event-nav" class="post-nav">
-                <h2 style="text-align: center;">Events for {{ events.first.server.group_name }}</h2>
-                <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                      </svg>
-                </a>
+<div class="bg-blue-600  font-[Poppins] w-1/6">
+  <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="Openbar()">
+    <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
+  </span>
+  <div class="sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] duration-1000
+    p-2 w-[300px] overflow-y-auto text-center bg-gray-900 shadow h-screen">
+    <div class="text-gray-100 text-xl">
+      <div class="p-2.5 mt-1 flex items-center rounded-md ">
+        <i class="bi bi-app-indicator px-2 py-1 bg-blue-600 rounded-md"></i>
+        <h1 class="text-[15px]  ml-3 text-xl text-gray-200 font-bold">CoHabitat</h1>
+        <i class="bi bi-x ml-20 cursor-pointer lg:hidden" onclick="Openbar()"></i>
+      </div>
+      <hr class="my-2 text-gray-600">
+
+      <div>
+
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          
+          <i class="bi bi-card-text"></i>
+          <span class="text-[15px] ml-4 text-gray-200">Feed</span>
+        </div>
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <i class="bi bi-houses-fill"></i>
+          <div class="flex justify-between w-full items-center" onclick="dropDown()">
+            <span class="text-[15px] ml-4 text-gray-200">Groups</span>
+            <span class="text-sm rotate-180" id="arrow">
+              <i class="bi bi-chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto" id="submenu">
+          {% for server in servers %}
+            <h1 class="cursor-pointer p-2 hover:bg-gray-700 rounded-md mt-1"><a href="{% url 'servers:server_page' server_id=server.id %}">{{ server.group_name }}</a></h1>     
+          {% endfor %}
+        </div>
+        <hr class="my-4 text-gray-600">
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <i class="bi bi-person-circle"></i>
+          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account (test version)</a></span>
+        </div>
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+                onclick="toggleJoinForm()">
+                <i class="bi bi-person-circle"></i>
+                <span class="text-[15px] ml-4 text-gray-200">Join Server</span>
             </div>
-
-            {% for e in events %}
-            <a href="{% url 'posts:test_event' e.id %}"><h3>{{ e.post_name }}</h3></a>
-            <a class="btn btn-sm btn-info" href="{%url 'posts:event' e.id %}">See Post</a>
-            {% if e.creator == request.user %}
-                <a class="btn btn-sm btn-outline-primary" hx-get="{%url 'servers:edit_event' e.id %}" hx-target="#dialog">Edit Event</a>
-            {% endif %}
-                <ul>
-                    <li> description: {{ e.description }} </li> 
-                    <li> date posted: {{ e.date_created | date:"l F d, Y" }} </li>    
-                    <li> When is it: {{ e.date_time | date:"l F d, Y, h:i A"  }} </li>
-                    <li> Original poster: {% if request.user == e.creator %} You {% else %} {{ e.post_creator }} {% endif %} </li>
-                </ul>
-            {% endfor %}
-
+            
+            <!-- Join Server Form -->
+        <form id="joinServerForm" class="hidden" hx-post="{% url 'servers:join_server' %}">
+          {% csrf_token %}
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            <input type="text" name="token" placeholder="Enter Invitation Code" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
+          </div>
+          <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            Join
+          </button>
+        </form> 
+        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
         </div>
 
-    </div>
-
-    <div id="modal" class="modal fade">
-        <div id="dialog" class="modal-dialog" hx-target="this"></div>
       </div>
+    </div>
+  </div>
 
+
+  <script>
+        function toggleJoinForm() {
+        var form = document.getElementById('joinServerForm');
+        form.classList.toggle('hidden');
+    }
+
+    function Openbar() {
+        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+    }
+    function dropDown() {
+      document.querySelector('#submenu').classList.toggle('hidden')
+      document.querySelector('#arrow').classList.toggle('rotate-0')
+    }
+    dropDown()
+
+    function Openbar() {
+      document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+    }
+
+  </script>
+
+
+</div>
+
+<body class="flex min-h-screen bg-blue-600">
+    <main class="flex-1 grid grid-cols-3 gap-10 overflow-hidden p-10 mr-20">
+        <!-- First Scrollable Container -->
+        <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]">
+            <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>
+            {% for t in tasks %}
+
+            <a href="{% url 'posts:chore' t.id %}">
+                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                    <h3 class="text-xl font-bold">{{ t.post_name }}</h3>
+                    <p class="text-gray-600">{{ t.description }}</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-sm text-gray-400">{{ t.assigned_date | date:"l F d, Y" }}</span>
+                        <div class="flex space-x-2">
+                            {% if t.assigner == request.user %}
+                            <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
+                                hx-target="#dialog">Edit Task</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <hr class="my-2 border-gray-300">
+                    <ul class="text-sm text-gray-600">
+                        <li>Assigner / Post Creator: {% if request.user == t.assigner %} You {% else %} {{t.post_creator }} {% endif %}
+                        </li>
+                        <li>People Assigned to this task: {% for p in t.assignee.all %}
+                            {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{%if not forloop.last%},
+                            {% endif %}{% empty %} none
+                            {% endfor %}
+                        </li>
+                        <li>Due date: {{ t.due_date | date:"l F d, Y" }} </li>
+                        <li>Completed: {% if t.completed %}Yes{% else %}No{% endif %}</li>
+                    </ul>
+                </div>
+            </a>
+            {% endfor %}
+            <a hx-get="{% url 'servers:add_task' events.first.server.id %}" hx-target="#dialog" class="">
+                <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
+                    <p class="text-lg font-bold text-center">Add Task & Chore</p>
+                </div>
+            </a>
+        </div>
+
+
+
+        <!-- Second Scrollable Container -->
+        <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]" style="scrollbar-width: thin; /* Firefox */ scrollbar-color: rgba(155, 155, 155, 0.5) rgba(0, 0, 0, 0.1);">
+            <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Bills</h2>
+            {% for b in bills %}
+            <a href="{% url 'posts:bill' b.id %}">
+                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                    <h3 class="text-xl font-bold">{{ b.post_name }}</h3>
+                    <p class="text-gray-600">{{ b.description }}</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-sm text-gray-400">{{ b.posted_date | date:"l F d, Y" }}</span>
+                        <div class="flex space-x-2">
+                            {% if b.bill_creator == request.user %}
+                            <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                href="{%url 'servers:edit_bill' b.id %}" hx-get="{%url 'servers:edit_bill' b.id %}"
+                                hx-target="#dialog">Edit Bill</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <hr class="my-2 border-gray-300">
+                    <ul class="text-sm text-gray-600">
+                        <li>Creator: {% if request.user == b.bill_creator %} You {% else %} {{ b.post_creator }} {% endif %}</li>
+                        <li>Cost: {{ b.cost }}</li>
+                        <li>Payers:
+                            {% for p in b.payers.all %}
+                            {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{%if not forloop.last%},
+                            {% endif %}{% empty %}none
+                            {% endfor %}
+                        </li>
+                        <li>Payers (display names): {{ b.payers_string }}</li>
+                        {% if b.split %}
+                        <li>Your split: {{ b.portion }}</li>
+                        {% else %}
+                        <li>Bill is not being split</li>
+                        {% endif %}
+                        {% if b.completed %}
+                        <li>Paid: Yes</li>
+                        {% else %}
+                        <li>Paid: No</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </a>
+            {% endfor %}
+            <a hx-get="{% url 'servers:add_bill' events.first.server.id %}" hx-target="#dialog" class="">
+                <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
+                    <p class="text-lg font-bold text-center">Add Bill</p>
+                </div>
+            </a>
+        </div>
+
+
+
+
+        <!-- Third Scrollable Container -->
+        <div class="grid grid-cols-1 gap-8 h-[calc(100vh-5rem)]">
+            <!-- People Container -->
+            <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)*1/3]">
+                <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">People</h2>
+                {% for p in participation %}
+                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-bold">{{ p.display_name }}</h3>
+                        {% if p.is_owner %}
+                        <span class="text-sm font-bold text-gray-400">Owner</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-gray-600">Joined: {{ p.date_joined }}</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Events Container -->
+            <div class="bg-gray-300 overflow-y-auto rounded-lg h-[calc(100vh-5rem)*2/3]">
+                <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Events</h2>
+                {% for e in events %}
+                <a href="{% url 'posts:event' e.id %}">
+                    <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                        <h3 class="text-xl font-bold">{{ e.post_name }}</h3>
+                        <p class="text-gray-600">{{ e.description }}</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm text-gray-400">{{ e.date_created | date:"l F d, Y" }}</span>
+                            <div class="flex space-x-2">
+                                {% if e.creator == request.user %}
+                                <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                    href="{%url 'servers:edit_event' e.id %}" hx-get="{%url 'servers:edit_event' e.id %}"
+                                    hx-target="#dialog">Edit Event</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <hr class="my-2 border-gray-300">
+                        <ul class="text-sm text-gray-600">
+                            <li>When is it: {{ e.date_time | date:"l F d, Y, h:i A" }}</li>
+                            <li>Original poster: {% if request.user == e.creator %} You {% else %} {{ e.post_creator }} {% endif %}</li>
+                        </ul>
+                    </div>
+                </a>
+                {% endfor %}
+                <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
+                    <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
+                        <p class="text-lg font-bold text-center">Add Event</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+
+
+
+        
+        <div id="modal" class="modal fade">
+            <div id="dialog" class="modal-dialog" hx-target="this"></div>
+        </div>
+        
+    </main>
+    
 </body>
+
+<style>
+            /* WebKit */
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background-color: rgba(155, 155, 155, 0.5);
+                border-radius: 3px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+
+            /* Firefox */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(155, 155, 155, 0.5) rgba(0, 0, 0, 0.1);
+</style>
+
+
+
 </html>
+

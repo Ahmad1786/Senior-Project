@@ -4,6 +4,7 @@ from . import test_servers, views, htmx_views
 app_name = "servers"
 urlpatterns = [
     path('group-page/<int:server_id>', views.server_page, name="server_page"),
+    path('join-server', views.join_server, name="join_server"),
 ]
 
 htmx_routes = [
@@ -14,7 +15,8 @@ htmx_routes = [
     path('add-event/<int:server_id>', htmx_views.add_event, name="add_event"),
     path('edit-event/<int:event_id>', htmx_views.edit_event, name ="edit_event"),
     path('assign-task/', htmx_views.assign_task, name="assign_task")
-    
+    path('invitation/<int:server_id>', htmx_views.invitation, name ="invitation"),
+    path('join-server/', htmx_views.join_server, name ="join_server"),
 ]
 
 urlpatterns += htmx_routes

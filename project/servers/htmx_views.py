@@ -1,9 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, JsonResponse
+from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm
 from posts.models import Bill, Event, Chore
-from servers.models import Server
+from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
+from django.utils import timezone
+from django.contrib import messages
 
 # some quick server side validation
 # was trying to see if I could use a decorator for ease but those are complicated
@@ -147,6 +149,7 @@ def edit_task(request, task_id):
             'form':  EditTaskForm(instance=instance)
             })
 
+
 # Function to assign a task - done by Luke
 def assign_task(request):
     if not is_htmx(request):
@@ -170,4 +173,38 @@ def assign_task(request):
         'tasks_to_assign': tasks_to_assign,
     }
     return render(request, 'servers/partials/assign-task-form.html', context)
+
+#Function for joining a server
+def join_server(request):
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        invitation = Invitation.objects.filter(token=token).first()
+        if invitation and invitation.expiration_time > timezone.now():
+            server = invitation.server
+            user = request.user
+            display_name = f"{user.first_name} {user.last_name}"
+            participation = Participation(user=user, server=server, display_name=display_name, is_owner=False)
+            participation.save()
+            return redirect('server_page', server_id=server.id)
+        else:
+            messages.error(request, 'Invalid Invitation Code')
+
+def invitation(request, server_id):
+    if not is_htmx(request):
+        return HttpResponse(status=405)
+    
+    server_instance = Server.objects.get(pk=server_id)
+    
+    if request.method == 'GET':
+        invitation = Invitation.create_invitation(server_instance)
+        token = invitation.token
+        expiration_time = invitation.expiration_time
+        # Render a modal showing the invitation token and expiration time
+        return render(request, 'servers/partials/invitation-modal.html', {
+            'token': token,
+            'expiration_time': expiration_time,
+        })
+    
+    return render(request, 'servers/partials/invitation-modal.html')
+
 
