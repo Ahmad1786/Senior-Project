@@ -12,12 +12,12 @@ class ProfilePicForm(forms.Form):
 # and shows their current profile picture or the default one
 @login_required
 def profile_pic(request):
-    
+
     user = request.user
-    picture = user.profile_picture
+    # picture = user.profile_picture
 
     # print all fields of picture
-    print(picture.__dict__)
+    # print(picture.__dict__)
 
     if request.method == "POST":
         form = ProfilePicForm(request.POST, request.FILES)
