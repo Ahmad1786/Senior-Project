@@ -2,8 +2,10 @@
 # THESE WILL BE USED TO MAKE an instance of THE 3 MAIN POSTS IN THE GROUP PAGE
 
 from django import forms
+
 from posts.models import Bill, Event, Chore, Comment
 from users.models import User
+from servers.models import Invitation, Participation
 import datetime
 
 # NOTE: MADE these forms kind of "fast", so they may not be the 
@@ -155,3 +157,19 @@ class AssignTaskForm(forms.ModelForm):
     class Meta:
         model = Chore
         fields = ['task', 'assigned_users']
+
+class InvitationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        server_instance = kwargs.pop('server_instance', None)
+        super(InvitationForm, self).__init__(*args, **kwargs)
+        self.server_instance = server_instance
+
+    def clean_invited_email(self):
+        invited_email = self.cleaned_data.get('invited_email')
+        if Participation.objects.filter(server=self.server_instance, user__email=invited_email).exists():
+            raise forms.ValidationError("This email is already associated with a user participating in the server.")
+        return invited_email
+
+    class Meta:
+        model = Invitation
+        fields = ['invited_email']

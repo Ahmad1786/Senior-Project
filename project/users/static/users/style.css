@@ -41,3 +41,38 @@
 h3 {
     color: lightcoral;
 }
+
+.scroll {
+    height: 75vh;
+    overflow-y: scroll;
+}
+
+#container {
+    padding-top: 50px;
+    display: flex;
+}
+
+.posts {
+    border: 1px solid red;
+    flex: 1;
+}
+
+.post-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.post-nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    padding: 5px;
+    background-color: #000000;
+}
+
+h3 {
+    display: inline-block;
+    margin-right: 10px;
+}

@@ -3,10 +3,10 @@ body {
     font-size: 14px;
     color: black;
     width: 100%;
-  }
+}
 
-.account-details-container{
-    width: 77%; 
+.account-details-container {
+    width: 77%;
     float: right;
     padding: 20px;
     background-color: rgb(79 70 229);
@@ -42,7 +42,7 @@ body {
     padding: 0;
     overflow: hidden;
     background-color: white;
-} 
+}
 
 li {
     float: left;
@@ -68,7 +68,7 @@ li a:hover {
 }
 
 .profile_pic {
-    width: 200px; 
+    width: 200px;
     height: 200px;
     border-radius: 50%;
 }
@@ -87,14 +87,14 @@ li a:hover {
 
 .upbutton {
     background-color: rgb(79 70 229);
-    width:25%;
+    width: 25%;
     border-radius: 20px;
     margin-top: 20px;
     font-weight: bold;
     color: white;
 }
 
-.accountInfo{
+.accountInfo {
     overflow: hidden;
     padding: 10px;
     background-color: white;
@@ -105,7 +105,7 @@ span {
     overflow: hidden;
 }
 
-.post{
+.post {
     padding: 10px;
     border-radius: 25px;
     background-color: white;
