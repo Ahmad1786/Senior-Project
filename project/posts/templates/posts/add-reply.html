@@ -1,7 +1,7 @@
 Replying to {{ parent_comment.author }}'s chain.
 
-<form>
+<form method="post" action="{% url 'posts:add_reply' post_type post_id parent_comment_id %}">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.content }}
     <button type="submit">Submit</button>
 </form>

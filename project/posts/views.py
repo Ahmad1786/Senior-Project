@@ -101,7 +101,10 @@ def add_reply(request, post_type, post_id, parent_comment_id):
         # Finish this later
         form = CommentForm(request.POST)
         if form.is_valid():
-            obj = form.save(commit=True)
+            form.instance.parent_comment = parent_comment
+            form.save(commit=True)
+        else:
+            raise Http404("Form is not valid")
     else:
         initial_data = {
             # The creator of the new reply.
@@ -120,7 +123,11 @@ def add_reply(request, post_type, post_id, parent_comment_id):
             raise Http404("Error: " + post_type + " is not a valid post_type")
         
         form = CommentForm(initial=initial_data)
+
     return render(request, "posts/add-reply.html", {
         "parent_comment": parent_comment,
         "form": form,
+        "post_type": post_type,
+        "post_id": post_id,
+        "parent_comment_id": parent_comment_id,
     })
