@@ -142,12 +142,22 @@ class EditTaskForm(forms.ModelForm):
             'due_date':forms.TextInput(attrs={'type':'date'}),
         }
 
-
 # Form for assigning tasks - done by Luke
 class AssignTaskForm(forms.ModelForm):
-    task = forms.ModelChoiceField(queryset=None, empty_label=None)
-    assigned_users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple)
-        
+    task = forms.ModelChoiceField(queryset=None, empty_label=None, label="Select Task")
+    assigned_users = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
+
+    def __init__(self, *args, **kwargs):
+        super(AssignTaskForm, self).__init__(*args, **kwargs)
+        tasks = Chore.objects.all()  
+        users = User.objects.all()  
+        self.fields['task'].queryset = tasks
+        self.fields['assigned_users'].queryset = users
+
+    class Meta:
+        model = Chore
+        fields = ['task', 'assigned_users']
+
 class InvitationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         server_instance = kwargs.pop('server_instance', None)
@@ -163,4 +173,3 @@ class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
         fields = ['invited_email']
-
