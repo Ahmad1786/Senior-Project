@@ -30,6 +30,7 @@ def bill(request, id):
     return render(request, "posts/bill.html", {
         "post_id": post_id,
         "post_name": post_name,
+        "post_type": "bill",
         "description": description,
         "date_created": date_created,
         "cost": cost,
@@ -60,8 +61,10 @@ def chore(request, id):
     creator = chore.creator
 
     return render(request, "posts/chore.html", {
+        "post_id": id,
         "post_name": post_name,
         "description": description,
+        "post_type": "chore",
         "date_created": date_created,
         "due_date": due_date,
         "assigned_to": assigned_to,
@@ -87,7 +90,8 @@ def event(request, id):
     creator = event.creator
     
     return render(request, "posts/event.html", {
-        "post_name": post_name,
+       "post_name": post_name,
+       "post_type": "event",
        "description": description,
        "date_created": date_created,
        "time": time,
