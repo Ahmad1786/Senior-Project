@@ -3,6 +3,7 @@
 
 from django import forms
 from posts.models import Bill, Event, Chore, Comment
+from users.models import User
 import datetime
 
 # NOTE: MADE these forms kind of "fast", so they may not be the 
@@ -134,6 +135,11 @@ class EditTaskForm(forms.ModelForm):
         
     class Meta:
         model = Chore
+
+# Form for assigning tasks - done by Luke
+class AssignTaskForm(forms.ModelForm):
+    task = forms.ModelChoiceField(queryset=None, empty_label=None)
+    assigned_users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple)
         fields = ['post_name', 'description', 'assignee', 'due_date']
         widgets = {
             'due_date':forms.TextInput(attrs={'type':'date'}),
