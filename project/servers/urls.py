@@ -17,6 +17,7 @@ htmx_routes = [
     path('assign-task/', htmx_views.assign_task, name="assign_task"),
     path('invitation/<int:server_id>', htmx_views.invitation, name ="invitation"),
     path('join-server/', htmx_views.join_server, name ="join_server"),
+    path('close-modal/', htmx_views.close_modal, name ="close_modal"),
 ]
 
 urlpatterns += htmx_routes
