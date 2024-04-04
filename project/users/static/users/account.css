@@ -12,10 +12,16 @@ body {
     background-color: rgb(79 70 229);
 }
 
+#upload {
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 24px
+}
+
 #aboutyou {
     margin-top: 20px;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 24px
 }
 
 #info {
@@ -43,6 +49,10 @@ li {
     font-weight: bold;
 }
 
+.right {
+    float: right;
+}
+
 li a {
     display: block;
     color: black;
@@ -57,12 +67,32 @@ li a:hover {
     background-color: azure;
 }
 
+.profile_pic {
+    width: 200px; 
+    height: 200px;
+    border-radius: 50%;
+}
+
+.profilePicForm {
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+}
+
 .about {
     padding: 10px;
     background-color: white;
     border-radius: 25px;
 }
 
+.upbutton {
+    background-color: rgb(79 70 229);
+    width:25%;
+    border-radius: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: white;
+}
 
 .accountInfo{
     overflow: hidden;
