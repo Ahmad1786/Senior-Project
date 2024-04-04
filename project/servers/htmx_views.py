@@ -163,7 +163,9 @@ def assign_task(request):
             assigned_users = form.cleaned_data['assigned_users']
             assigned_task = Chore.objects.get(pk=assigned_task_id)
             assigned_task.assignee.set(assigned_users)
-            
+            for user in assigned_users:
+                message = f"You have a chore to complete!: {assigned_task.post_name}"
+                create_notification(user, message)
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
         form = AssignTaskForm()
