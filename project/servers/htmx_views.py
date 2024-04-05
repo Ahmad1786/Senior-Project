@@ -188,7 +188,7 @@ def join_server(request):
             display_name = f"{user.first_name} {user.last_name}"
             participation = Participation(user=user, server=server, display_name=display_name, is_owner=False)
             participation.save()
-            return redirect('server_page', server_id=server.id)
+            return redirect('servers:server_page', server_id=server.id)
         else:
             messages.error(request, 'Invalid Invitation Code')
 
