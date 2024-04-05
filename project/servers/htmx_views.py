@@ -152,30 +152,26 @@ def edit_task(request, task_id):
 
 
 # Function to assign a task - done by Luke
-def assign_task(request):
+def assign_task(request, task_id):
+    assigned_task = Chore.objects.get(pk=task_id)
     if not is_htmx(request):
         return HttpResponse(status=405)
-    tasks_to_assign = Chore.objects.filter(assigned_date__isnull=True)
-
+    if not can_edit(request.user, assigned_task):
+        return HttpResponse(status=403)
     if request.method == 'POST':
         form = AssignTaskForm(request.POST)
         if form.is_valid():
-            assigned_task_id = form.cleaned_data['task_id']
             assigned_users = form.cleaned_data['assigned_users']
-            assigned_task = Chore.objects.get(pk=assigned_task_id)
             assigned_task.assignee.set(assigned_users)
-            for user in assigned_users:
-                message = f"You have a chore to complete!: {assigned_task.post_name}"
-                create_notification(user, message)
+            assigned_task.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
-        form = AssignTaskForm()
+       form = AssignTaskForm()
 
-    context = {
+    return render(request, 'servers/partials/assign-task-form.html', {
         'form': form,
-        'tasks_to_assign': tasks_to_assign,
-    }
-    return render(request, 'servers/partials/assign-task-form.html', context)
+    
+    })     
 
 #Function for joining a server
 def join_server(request):
