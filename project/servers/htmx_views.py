@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm, AssignTaskForm
+from .forms import EmailForm
 from posts.models import Bill, Event, Chore
 from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
@@ -199,13 +200,25 @@ def invitation(request, server_id):
         invitation = Invitation.create_invitation(server_instance)
         token = invitation.token
         expiration_time = invitation.expiration_time
+        email_form = EmailForm()
+        server_id=server_id
         # Render a modal showing the invitation token and expiration time
         return render(request, 'servers/partials/invitation-modal.html', {
             'token': token,
             'expiration_time': expiration_time,
+            'email_form': email_form,
+            'server_id': server_id
         })
     
+    elif request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            emails = form.cleaned_data['emails'].split(',')
+            response = Invitation.send_invitation_emails(server_instance, emails)
+            return response
+        else:
+            return HttpResponse(status=400)  # Bad request if form is invalid
+    
     return render(request, 'servers/partials/invitation-modal.html')
-
 def close_modal(request):
     return HttpResponse('')
