@@ -144,19 +144,18 @@ class EditTaskForm(forms.ModelForm):
 
 # Form for assigning tasks - done by Luke
 class AssignTaskForm(forms.ModelForm):
-    task = forms.ModelChoiceField(queryset=None, empty_label=None, label="Select Task")
+    task_id = forms.ModelChoiceField(queryset=None, empty_label=None, label="Select Task")
     assigned_users = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
-
-    def __init__(self, *args, **kwargs):
-        super(AssignTaskForm, self).__init__(*args, **kwargs)
-        tasks = Chore.objects.all()  
-        users = User.objects.all()  
-        self.fields['task'].queryset = tasks
-        self.fields['assigned_users'].queryset = users
+    due_date = forms.DateField()
 
     class Meta:
         model = Chore
-        fields = ['task', 'assigned_users']
+        fields = ['task_id', 'assigned_users']
+
+    def __init__(self, *args, **kwargs):
+        super(AssignTaskForm, self).__init__(*args, **kwargs)
+        self.fields['task_id'].queryset = Chore.objects.all() 
+        self.fields['assigned_users'].queryset = User.objects.all() 
 
 class InvitationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
