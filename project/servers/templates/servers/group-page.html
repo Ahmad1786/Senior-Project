@@ -141,6 +141,11 @@
                                 href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
                                 hx-target="#dialog">Edit Task</a>
                             {% endif %}
+                            {% if t.assigner == request.user %}
+                            <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                href="{%url 'servers:assign_task' t.id %}" hx-get="{%url 'servers:assign_task' t.id %}"
+                                hx-target="#dialog">Assign Task</a>
+                             {% endif %}
                         </div>
                     </div>
                     <hr class="my-2 border-gray-300">
