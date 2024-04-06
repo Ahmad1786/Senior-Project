@@ -146,16 +146,15 @@ class EditTaskForm(forms.ModelForm):
 class AssignTaskForm(forms.ModelForm):
     task_id = forms.ModelChoiceField(queryset=None, empty_label=None, label="Select Task")
     assigned_users = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
-    due_date = forms.DateField()
-
     class Meta:
         model = Chore
         fields = ['task_id', 'assigned_users']
-
+        
     def __init__(self, *args, **kwargs):
         super(AssignTaskForm, self).__init__(*args, **kwargs)
         self.fields['task_id'].queryset = Chore.objects.all() 
-        self.fields['assigned_users'].queryset = User.objects.all() 
+        self.fields['assigned_users'].queryset = User.objects.exclude(is_superuser=True)
+       
 
 class InvitationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
