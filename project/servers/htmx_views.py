@@ -222,3 +222,4 @@ def invitation(request, server_id):
     return render(request, 'servers/partials/invitation-modal.html')
 def close_modal(request):
     return HttpResponse('')
+
