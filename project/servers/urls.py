@@ -19,6 +19,7 @@ htmx_routes = [
     path('invitation/<int:server_id>', htmx_views.invitation, name ="invitation"),
     path('join-server/', htmx_views.join_server, name ="join_server"),
     path('close-modal/', htmx_views.close_modal, name ="close_modal"),
+    path('create/', htmx_views.create_server, name='create_server'),
 ]
 
 urlpatterns += htmx_routes

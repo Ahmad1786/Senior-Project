@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm, AssignTaskForm
-from .forms import EmailForm
+from .forms import EmailForm, ServerForm
 from posts.models import Bill, Event, Chore
 from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
@@ -187,6 +187,21 @@ def join_server(request):
             return redirect('servers:server_page', server_id=server.id)
         else:
             messages.error(request, 'Invalid Invitation Code')
+
+#Function to Create a server
+# will create it as a htmx view later
+def create_server(request):
+    if request.method == 'POST':
+        form = ServerForm(request.POST)
+        if form.is_valid():
+            server = form.save()
+            p = Participation(user=request.user, server=server, is_owner=True)
+            p.save()
+            return redirect('servers:server_page', server_id=server.id)
+    else:
+        form = ServerForm()
+    
+    return render(request, 'servers/create_server.html', {'form': form})
 
 def invitation(request, server_id):
     if not is_htmx(request):
