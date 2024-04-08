@@ -123,7 +123,7 @@
         <!-- First Scrollable Container -->
         <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]">
             <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>
-            <a hx-get="{% url 'servers:add_task' events.first.server.id %}" hx-target="#dialog" class="">
+            <a hx-get="{% url 'servers:add_task' server_id %}" hx-target="#dialog" class="">
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                     <p class="text-lg font-bold text-center">Add Task & Chore</p>
                 </div>
@@ -170,7 +170,7 @@
         <!-- Second Scrollable Container -->
         <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]" style="scrollbar-width: thin; /* Firefox */ scrollbar-color: rgba(155, 155, 155, 0.5) rgba(0, 0, 0, 0.1);">
             <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Bills</h2>
-            <a hx-get="{% url 'servers:add_bill' events.first.server.id %}" hx-target="#dialog" class="">
+            <a hx-get="{% url 'servers:add_bill' server_id %}" hx-target="#dialog" class="">
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                     <p class="text-lg font-bold text-center">Add Bill</p>
                 </div>
@@ -247,7 +247,7 @@
             <!-- Events Container -->
             <div class="bg-gray-300 overflow-y-auto rounded-lg h-[calc(100vh-5rem)*2/3]">
                 <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Events</h2>
-                <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
+                <a hx-get="{% url 'servers:add_event' server_id %}" hx-target="#dialog" class="">
                     <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                         <p class="text-lg font-bold text-center">Add Event</p>
                     </div>
