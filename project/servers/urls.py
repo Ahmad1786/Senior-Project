@@ -1,11 +1,10 @@
 from django.urls import path
-from . import test_servers, views, htmx_views, views2
+from . import test_servers, views, htmx_views
 
 app_name = "servers"
 urlpatterns = [
     path('group-page/<int:server_id>', views.server_page, name="server_page"),
     path('join-server', views.join_server, name="join_server"),
-    path('group-page2/<int:server_id>', views2.server_page, name="server_page2"),
 ]
 
 htmx_routes = [

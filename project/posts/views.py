@@ -90,6 +90,7 @@ def event(request, id):
     creator = event.creator
     
     return render(request, "posts/event.html", {
+       "post_id": id, 
        "post_name": post_name,
        "post_type": "event",
        "description": description,
