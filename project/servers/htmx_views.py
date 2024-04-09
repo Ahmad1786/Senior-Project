@@ -235,12 +235,3 @@ def invitation(request, server_id):
     return render(request, 'servers/partials/invitation-modal.html')
 def close_modal(request):
     return HttpResponse('')
-
-# Function to create a notification 
-def create_notification(receiever, message, sender):
-    notification = Notification.objects.create(
-        receiever=receiever, 
-        message=message,
-        sender=sender
-        )
-    return notification
