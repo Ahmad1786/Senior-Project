@@ -123,7 +123,17 @@
         <!-- First Scrollable Container -->
         <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]">
             <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>
+            
+            <!-- Temporary placed button for recurring tasks -->
+            <button class="bg-red-500 text-white px-2 py-1 rounded ml-4" 
+                hx-target="#dialog" hx-get="{%url 'posts:create_recurring_task' server_id %}">
+                Add a Recurring Task 
+            </button>
+            
+
+
             <a hx-get="{% url 'servers:add_task' server_id %}" hx-target="#dialog" class="">
+
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                     <p class="text-lg font-bold text-center">Add Task & Chore</p>
                 </div>

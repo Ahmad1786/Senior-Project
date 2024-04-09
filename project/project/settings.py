@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # More third party apps
     "widget_tweaks", # dependency for allauth_ui
     "phonenumber_field", # for phone number field in user model
+    # 'django_crontab', # for automatic running of code
 
     # apps that come with Django by default
     'django.contrib.admin',
@@ -202,3 +203,7 @@ EMAIL_HOST_PASSWORD = 'oypgzzgdkiuaogry' # This is a google app password (not th
 # Set up django for file uploads
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+#CRONJOBS = [
+#    ('*/1 * * * *', 'servers.cron.my_scheduled_job'),
+# ]

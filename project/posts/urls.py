@@ -1,5 +1,5 @@
 from django.urls import path
-from . import test_posts, views, htmx_views
+from . import test_posts, views, htmx_views, recurring_task_views
 
 app_name = "posts"
 urlpatterns = [
@@ -10,6 +10,7 @@ urlpatterns = [
     path("add-comment/<str:post_type>/<int:post_id>", views.add_comment, name="add_comment"),
     path("edit-comment/<str:post_type>/<int:post_id>/<int:comment_id>", views.edit_comment, name="edit_comment"),
     path("delete-comment/<str:post_type>/<int:post_id>/<int:comment_id>", views.delete_comment, name="delete_comment"), 
+    path("create-recurring-task/<int:server_id>", recurring_task_views.create_recurring_task, name="create_recurring_task"),
 ]
 
 testing_routes = [

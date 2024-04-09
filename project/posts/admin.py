@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Bill, Chore, Comment
+from .models import Event, Bill, Chore, Comment, RecurringTask
 
 # Configurations - These give more control in the admin panel
 # list_display - what fields show up admin panel
@@ -33,8 +33,13 @@ class CommentAdmin(admin.ModelAdmin):
     def post(self, obj):
         return obj.task or obj.event or obj.bill
 
+class RecurringTaskAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'server', 'creator', 'due_date')
+    filter_horizontal = ('assignee',)
+
 # Register models
 admin.site.register(Event, EventAdmin)
 admin.site.register(Bill, BillAdmin)
 admin.site.register(Chore, ChoreAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(RecurringTask, RecurringTaskAdmin)
