@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser 
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db import models
+from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 # extend the User model by extending AbstractUser: see link for details
 # https://docs.djangoproject.com/en/5.0/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project
@@ -30,11 +33,13 @@ class User(AbstractUser):
         participation = self.participations.get(server=server)
         return participation.display_name
 
-# Done by Luke
-# Should wait until we have a better understanding of the project to implement this - Muhammad
-# Model for Notification
-# class Notification():
-       # user = models.ForeignKey(User, on_delete=models.CASCADE) - This should probably be a MtoM though - Muhammad
-       # message = models.TextField()
-       # created = models.DateTimeField(default=timezone.now)
-    
+
+class Notification(models.Model):
+    receivers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="notifications")
+    message = models.TextField()
+    read = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    content_object = GenericForeignKey('content_type', 'object_id')
