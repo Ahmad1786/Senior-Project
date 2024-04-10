@@ -110,3 +110,79 @@ class Comment(models.Model):
     def __str__(self):
         post = self.task or self.event or self.bill
         return f"Comment by {self.author} in {post.post_name}"
+
+
+class SwapRequest(models.Model):
+    # Foreign keys
+    chore = models.ForeignKey("Chore", on_delete=models.CASCADE, related_name="swap_requests")
+    requester = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="swap_requests")
+    offer = models.ForeignKey("Chore", on_delete=models.CASCADE, null=True, blank=True, related_name="swap_offers")
+    status_choices = [
+        ('PENDING', 'Pending'),
+        ('ACCEPTED', 'Accepted'),
+        ('DECLINED', 'Declined')
+    ]
+    status = models.CharField(max_length=10, choices=status_choices, default='PENDING')
+    date_requested = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Swap request by {self.requester} for {self.chore}"
+
+    def accept_offer(self, offer_chore):
+        if self.status == 'PENDING':
+            self.status = 'ACCEPTED'
+            self.offer = offer_chore
+            self.save()
+        else:
+            raise ValueError("Cannot accept offer for a swap request that is not pending.")
+
+    def decline_offer(self):
+        if self.status == 'PENDING':
+            self.status = 'DECLINED'
+            self.save()
+        else:
+            raise ValueError("Cannot decline offer for a swap request that is not pending.")
+        
+class SwapOffer(models.Model):
+    swap_request = models.ForeignKey(SwapRequest, on_delete=models.CASCADE, related_name='swap_offers')
+    offer_chore = models.ForeignKey(Chore, on_delete=models.CASCADE, related_name='swap_offers')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status_choices = [
+        ('PENDING', 'Pending'),
+        ('ACCEPTED', 'Accepted'),
+        ('DECLINED', 'Declined')
+    ]
+    status = models.CharField(max_length=10, choices=status_choices, default='PENDING')
+
+    def accept_offer(self):
+        if self.status == 'PENDING':
+            if self.offer_chore:
+                # Replace the specific assignee of offer_chore with the requester of swap_request
+                offer_chore_assignees = self.offer_chore.assignee.all()
+                offer_chore_assignees = [self.swap_request.requester if assignee == self.user else assignee for assignee in offer_chore_assignees if assignee != self.user]
+                self.offer_chore.assignee.set(offer_chore_assignees)
+
+                # Replace the specific assignee of swap_request.chore with the user associated with the swap offer
+                swap_request_chore_assignees = self.swap_request.chore.assignee.all()
+                swap_request_chore_assignees = [self.user if assignee == self.swap_request.requester else assignee for assignee in swap_request_chore_assignees]
+                self.swap_request.chore.assignee.set(swap_request_chore_assignees)
+
+                self.status = 'ACCEPTED'
+                self.save()
+                self.swap_request.accept_offer(self.offer_chore)
+            else:
+                # Automatically accept the offer with no chore in return
+                self.swap_request.chore.assignee.remove(self.swap_request.requester)
+                self.swap_request.chore.assignee.add(self.user)
+                self.status = 'ACCEPTED'
+                self.save()
+                self.swap_request.accept_offer(self.offer_chore)
+        else:
+            raise ValueError("Cannot accept offer that is not pending.")
+
+    def decline_offer(self):
+        if self.status == 'PENDING':
+            self.status = 'DECLINED'
+            self.save()
+        else:
+            raise ValueError("Cannot decline offer that is not pending.")
