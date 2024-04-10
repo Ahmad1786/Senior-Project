@@ -32,5 +32,34 @@ def add_comment(request, post_id):
         'form': form,
     })
 
-def comment_box(request):
-    return render(request, "comment-box.html")
+def comment_box(request, post_type, post_id):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save(commit=True)
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+        else:
+            raise Http404("Form is not valid")
+    else:
+        initial_data = {
+            # The creator of the comment.
+            "author": request.user,
+        }
+        # Check what type of post this comment will be on and then retrieve it.
+        # Store the post as a foreign key in the initial data (links the comment to the post)
+        if post_type == "bill":
+            initial_data["bill"] = Bill.objects.get(id=post_id)
+        elif post_type == "chore":
+            initial_data["task"] = Chore.objects.get(id=post_id)
+        elif post_type == "event":
+            initial_data["event"] = Event.objects.get(id=post_id)
+        else:
+            raise Http404("Error: " + post_type + " is not a valid post_type")
+        
+        form = CommentForm(initial=initial_data)
+
+        return render(request, "comment-box.html", {
+            "form": form,
+            "post_type": post_type,
+            "post_id": post_id,
+        })

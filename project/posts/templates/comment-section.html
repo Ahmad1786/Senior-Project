@@ -16,7 +16,7 @@
     <b>Comment Section:</b>
 
     <!-- Create an original comment. -->
-    <button hx-get="{%url 'posts:comment_box' %}" hx-target="#input-container">Open Input Box</button>
+    <button hx-get="{%url 'posts:comment_box' post_type post_id %}" hx-target="#input-container">Open Input Box</button>
     <div id="input-container"></div>
 
     <form method="get" action="{% url 'posts:add_comment' post_type post_id %}">

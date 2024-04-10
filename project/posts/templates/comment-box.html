@@ -1,5 +1,14 @@
-<form method="post">
+<form method="post" action="{% url 'posts:comment_box' post_type post_id %}">
     {% csrf_token %}
-    <input type="text"></input>
+    Comment: {{ form.content }}
+    <!-- These fields are "on" the html page but you can't see them. I need them included here or I get an
+    invalid form error. I spent a long time trying to fix it but can't find a way. I even tried manually
+    setting the values in the view but that wasn't working either.-->
+    <div style="display: none;">
+        {{ form.author }}
+        {{ form.task }}
+        {{ form.bill }}
+        {{ form.event }}
+    </div>
     <button type="submit">Submit</button>
 </form>
