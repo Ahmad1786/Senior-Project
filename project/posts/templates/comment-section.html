@@ -12,16 +12,16 @@
 
 <!-- htmx csrf_token passage -->
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></body>
-<p>
-    <div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">
+<div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">
     <b>Comment Section:</b>
 
     <!-- Create an original comment. -->
+    <button hx-get="/comment-box" hx-target="#input-container">Open Input Box</button>
+    <div id="input-container"></div>
     <form method="get" action="{% url 'posts:add_comment' post_type post_id %}">
         {% csrf_token %}
         <button type="submit" style="font-size: smaller;">Click to comment</button>
     </form>
-
     {% for parent_comment, replies in threads.items %}
         <!-- Print out the parent comment -->
         <div class="comment">
@@ -75,5 +75,5 @@
                 </div>
             {% endfor %} <!-- End replies loop -->
     {% endfor %} <!-- End parent loop -->
-    <div>
-</p>
+    
+</div>

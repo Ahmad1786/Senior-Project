@@ -31,3 +31,8 @@ def add_comment(request, post_id):
     return render(request, 'posts/comment-form.html', {
         'form': form,
     })
+
+def comment_box(request):
+    comment_box_html = """ hi
+    """
+    return HttpResponse(comment_box_html)

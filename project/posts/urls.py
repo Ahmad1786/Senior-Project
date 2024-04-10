@@ -22,6 +22,7 @@ testing_routes = [
 
 htmx_routes = [
     path('add-comment/<int:post_id>', htmx_views.add_comment, name="add_comment"),
+    path("/comment-box", htmx_views.comment_box, name="comment_box")
 ]
 
 
