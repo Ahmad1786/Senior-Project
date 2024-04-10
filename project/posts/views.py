@@ -37,8 +37,6 @@ def bill(request, id):
         "split": split,
         "individual_portion": individual_portion,
         "payers": payers,
-        "threads": threads,
-        "current_user": request.user
     })
 
 @login_required
@@ -69,8 +67,6 @@ def chore(request, id):
         "due_date": due_date,
         "assigned_to": assigned_to,
         "creator": creator,
-        "threads": threads,
-        "current_user": request.user
     })
 
 @login_required
@@ -97,8 +93,6 @@ def event(request, id):
        "date_created": date_created,
        "time": time,
        "creator": creator, 
-       "threads": threads,
-       "current_user": request.user
     })
 
 

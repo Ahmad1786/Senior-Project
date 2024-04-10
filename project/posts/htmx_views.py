@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse
 from posts.group_page_forms import CommentForm
-from posts.models import Bill, Event, Chore
-from posts.models import Post
+from posts.models import Bill, Event, Chore, Comment
+from django.db.models import Q
 from django.utils.timezone import get_current_timezone
 
 is_htmx = lambda request: request.headers.get('HX-Request', False)
@@ -32,12 +32,37 @@ def add_comment(request, post_id):
         'form': form,
     })
 
+def get_comment_section(request, post_type, post_id):
+    
+    if post_type == "bill":
+        post = Bill.objects.get(id=post_id)
+    elif post_type == "chore":
+        post = Chore.objects.get(id=post_id)
+    elif post_type == "event":
+        post = Event.objects.get(id=post_id)
+    else:
+        raise Http404("Error: " + post_type + " is not a valid post_type")
+    
+    threads = {}
+    # Get parent comments that belong to this event
+    parent_comments =  Comment.objects.filter(Q(bill_id=post.id) & Q(parent_comment=None))
+    for comment in parent_comments:
+        # Append the dictionary so that the key is a parent and the value contains the replies
+        threads[comment] = Comment.objects.filter(parent_comment=comment)
+
+    return render(request, "comment-section.html", {
+        "post_type": post_type,
+        "post_id": post_id,
+        "threads": threads,
+        "current_user": request.user
+    })
+
+# Used to generate a comment box to provide input
 def comment_box(request, post_type, post_id):
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
         else:
             raise Http404("Form is not valid")
     else:
