@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from posts.group_page_forms import CommentForm
 from posts.models import Bill, Event, Chore
 from posts.models import Post
@@ -33,6 +33,4 @@ def add_comment(request, post_id):
     })
 
 def comment_box(request):
-    comment_box_html = """ hi
-    """
-    return HttpResponse(comment_box_html)
+    return render(request, "comment-box.html")
