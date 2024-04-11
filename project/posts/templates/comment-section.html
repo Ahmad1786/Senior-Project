@@ -11,70 +11,72 @@
 </head>
 
 <!-- htmx csrf_token passage -->
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></body>
-<div style="width: 100%; margin: auto; border: 2px solid; color: rgb(252, 0, 0);">
-    <b>Comment Section:</b>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <h1 style=" font-size:20px; font-weight:bold;">Comment Section:</h1>
+    <div class="commentcontainer" style="background-color:white; border-radius: 15px;"> 
 
-    <!-- Create an original comment. -->
-    <button hx-get="{%url 'posts:comment_box' post_type post_id %}" hx-target="#input-container">Open Input Box</button>
-    <div id="input-container"></div>
+        <!-- Create an original comment. -->
+        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:comment_box' post_type post_id %}" hx-target="#input-container">Open Input Box</button>
+        <div id="input-container"></div>
 
-    <form method="get" action="{% url 'posts:add_comment' post_type post_id %}">
-        {% csrf_token %}
-        <button type="submit" style="font-size: smaller;">Click to comment</button>
-    </form>
-    {% for parent_comment, replies in threads.items %}
-        <!-- Print out the parent comment -->
-        <div class="comment">
-            {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
-            <br><br>{{ parent_comment.content}}
+        <form method="get" action="{% url 'posts:add_comment' post_type post_id %}">
+            {% csrf_token %}
+            <button type="submit" style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold">Click to comment</button>
+        </form>
+        {% for parent_comment, replies in threads.items %}
+            <!-- Print out the parent comment -->
+            <div class="comment">
+                {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
+                <br><br>{{ parent_comment.content}}
 
-            <!-- A button to make a reply. -->
-            <form method="get" action="{% url 'posts:add_reply' post_type post_id parent_comment.id %}">
-                {% csrf_token %}
-                <button type="submit" style="font-size: smaller;">Reply</button>
-            </form>
-            
-
-            <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
-            {% if parent_comment.author == current_user %}
-                <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
+                <!-- A button to make a reply. -->
+                <form method="get" action="{% url 'posts:add_reply' post_type post_id parent_comment.id %}">
                     {% csrf_token %}
-                    <button type="submit" style="font-size: smaller;">Edit Comment</button>
+                    <button type="submit" style="font-size: smaller;">Reply</button>
                 </form>
-                <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
-                    {% csrf_token %}
-                    <button type="submit" style="font-size: smaller;">Delete Comment</button>
-                </form>
-            {% endif %}
-        </div>
+                
 
-            <!-- Check for replies to the parent comment and print them out -->
-            {% for reply in replies %}  
-                <div class="reply">
-                    <!-- Find alternative to avoid line break other than <a> tag? -->
-                    {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
-                    <br><br>{{ reply.content}}
-
-                    <!-- A button to make a reply. -->
-                    <form method="get" action="{% url 'posts:add_reply' post_type post_id parent_comment.id %}">
+                <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
+                {% if parent_comment.author == current_user %}
+                    <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
                         {% csrf_token %}
-                        <button type="submit" style="font-size: smaller;">Reply</button>
+                        <button type="submit" style="font-size: smaller;">Edit Comment</button>
                     </form>
+                    <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="font-size: smaller;">Delete Comment</button>
+                    </form>
+                {% endif %}
+            </div>
 
-                    <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
-                    {% if reply.author == current_user %}
-                        <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
+                <!-- Check for replies to the parent comment and print them out -->
+                {% for reply in replies %}  
+                    <div class="reply">
+                        <!-- Find alternative to avoid line break other than <a> tag? -->
+                        {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
+                        <br><br>{{ reply.content}}
+
+                        <!-- A button to make a reply. -->
+                        <form method="get" action="{% url 'posts:add_reply' post_type post_id parent_comment.id %}">
                             {% csrf_token %}
-                            <button type="submit" style="font-size: smaller;">Edit Comment</button>
+                            <button type="submit" style="font-size: smaller;">Reply</button>
                         </form>
-                        <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
-                            {% csrf_token %}
-                            <button type="submit" style="font-size: smaller;">Delete Comment</button>
-                        </form>
-                    {% endif %}
-                </div>
-            {% endfor %} <!-- End replies loop -->
-    {% endfor %} <!-- End parent loop -->
-    
-</div>
+
+                        <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
+                        {% if reply.author == current_user %}
+                            <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
+                                {% csrf_token %}
+                                <button type="submit" style="font-size: smaller;">Edit Comment</button>
+                            </form>
+                            <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
+                                {% csrf_token %}
+                                <button type="submit" style="font-size: smaller;">Delete Comment</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %} <!-- End replies loop -->
+        {% endfor %} <!-- End parent loop -->
+        
+    </div>
+</body>
+</html>
