@@ -171,3 +171,16 @@ class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
         fields = ['invited_email']
+
+
+# model for leaderboard 
+class LeaderboardForm(forms.ModelForm):
+    users = forms.ModelChoiceField(queryset=User.objects.exclude(is_superuser=True), empty_label=None, label="Select User for Points Earned")
+
+    class Meta:
+        model = Participation
+        fields = ['users']
+    def __init__(self, *args, **kwargs):
+        super(LeaderboardForm, self).__init__(*args, **kwargs)
+        self.fields['users'].queryset = User.objects.exclude(is_superuser=True) 
+       
