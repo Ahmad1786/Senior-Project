@@ -93,6 +93,23 @@ class Chore(Post):
             return f"You, {', '.join([a.display_name(self.server) for a in self.assignee.all() if a != user])}"
         return ', '.join([a.display_name(self.server) for a in self.assignee.all()]) 
 
+    #@property
+    #def point_value(self):
+
+        if self.completed:
+            return 10
+        else:
+            # Calculate points based on due date
+            days_remaining = (self.due_date - datetime.now().date()).days
+            if days_remaining < 1:
+                # Point system based on how early a task is completed?
+                return 0
+            elif days_remaining <= 3:
+                return 8
+            elif days_remaining <= 7:
+                return 5
+            else:
+                return 3
 
 
     def __str__(self):
