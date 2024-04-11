@@ -63,6 +63,7 @@ def comment_box(request, post_type, post_id):
         form = CommentForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
+            return HttpResponse(status=204)
         else:
             raise Http404("Form is not valid")
     else:
