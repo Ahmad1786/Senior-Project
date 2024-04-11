@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from servers.models import Server
+from posts.models import *
 from decimal import Decimal, ROUND_HALF_UP
 
 class Post(models.Model):
@@ -128,6 +129,16 @@ class SwapRequest(models.Model):
     def __str__(self):
         return f"Swap request by {self.requester} for {self.chore}"
 
+    def set_status(self):
+        total_users = self.server.members.count()
+        declined_offers = SwapOffer.objects.filter(swap_request=self, status='DECLINED').count()
+
+        if declined_offers == total_users - 1:
+            self.status = 'DECLINED'
+        elif self.status != 'ACCEPTED':
+            self.status = 'PENDING'
+        self.save()
+
     def accept_offer(self, offer_chore):
         if self.status == 'PENDING':
             self.status = 'ACCEPTED'
@@ -154,18 +165,23 @@ class SwapOffer(models.Model):
     ]
     status = models.CharField(max_length=10, choices=status_choices, default='PENDING')
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.swap_request.set_status()
+    
     def accept_offer(self):
         if self.status == 'PENDING':
             if self.offer_chore:
-                # Replace the specific assignee of offer_chore with the requester of swap_request
-                offer_chore_assignees = self.offer_chore.assignee.all()
-                offer_chore_assignees = [self.swap_request.requester if assignee == self.user else assignee for assignee in offer_chore_assignees if assignee != self.user]
-                self.offer_chore.assignee.set(offer_chore_assignees)
-
-                # Replace the specific assignee of swap_request.chore with the user associated with the swap offer
-                swap_request_chore_assignees = self.swap_request.chore.assignee.all()
-                swap_request_chore_assignees = [self.user if assignee == self.swap_request.requester else assignee for assignee in swap_request_chore_assignees]
-                self.swap_request.chore.assignee.set(swap_request_chore_assignees)
+                
+                #Add Swap offer user to assignees for chore they are swapping with
+                self.offer_chore.assignee.add(self.swap_request.chore.requester)
+                #Remove user who made swap offer from the chore they are trying to swap out of
+                self.offer_chore.assignee.remove(self.user)
+                
+                #Add swap request user to assignees of chore they are swapping into
+                self.swap_request.chore.assignee.add(self.user)
+                #Remove swap request user from chore they are swapping out of
+                self.swap_request.chore.assignee.remove(self.swap_request.user)
 
                 self.status = 'ACCEPTED'
                 self.save()
