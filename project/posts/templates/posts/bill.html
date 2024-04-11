@@ -172,10 +172,9 @@
                 Who To Pay:<!-- Field not ready yet -->
             </span>
         </div>
-        <button hx-trigger="load" hx-get="{%url 'posts:comment_section' post_type post_id %}" hx-target="#comment-section">Open Comments</button>
-        <div id="comment-section">
-
-        </div>
+        {% block comment_section %}
+          {% include 'comment-section.html' %}
+        {% endblock %}
     </div>
 </body>
 </html>
