@@ -5,24 +5,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <!-- htmx script -->
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+     <!-- Tailwind CSS -->
+     <script src="https://cdn.tailwindcss.com"></script>
+     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+     <!-- htmx -->
+     <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.min.js"></script>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap"rel="stylesheet">
+     <link href="{% static 'posts/bill.css' %}" rel="stylesheet">
 </head>
 
+<!-- Beginning Of Sidebar -->
+
+<div class="bg-blue-600  font-[Poppins] w-1/5">
+    <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="Openbar()">
+      <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
+    </span>
+    <div class="sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] duration-1000
+      p-2 w-[300px] overflow-y-auto text-center bg-gray-900 shadow h-screen">
+      <div class="text-gray-100 text-xl">
+        <div class="p-2.5 mt-1 flex items-center rounded-md ">
+          <i class="bi bi-app-indicator px-2 py-1 bg-blue-600 rounded-md"></i>
+          <h1 class="text-[15px]  ml-3 text-xl text-gray-200 font-bold">CoHabitat</h1>
+          <i class="bi bi-x ml-20 cursor-pointer lg:hidden" onclick="Openbar()"></i>
+        </div>
+        <hr class="my-2 text-gray-600">
+  
+        <div>
+  
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            
+            <i class="bi bi-card-text"></i>
+            <span class="text-[15px] ml-4 text-gray-200"><a href="../../">Feed</span>
+          </div>
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-houses-fill"></i>
+            <div class="flex justify-between w-full items-center" onclick="dropDown()">
+              <span class="text-[15px] ml-4 text-gray-200">Groups</span>
+              <span class="text-sm rotate-180" id="arrow">
+                <i class="bi bi-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+          <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto" id="submenu">
+            {% for server in servers %}
+              <h1 class="cursor-pointer p-2 hover:bg-gray-700 rounded-md mt-1"><a href="{% url 'servers:server_page' server_id=server.id %}">{{ server.group_name }}</a></h1>     
+            {% endfor %}
+          </div>
+          <hr class="my-4 text-gray-600">
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            <i class="bi bi-person-circle"></i>
+            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
+          </div>
+  
+          <!-- Notifications -->
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+          hx-get="{% url 'users:unread_notification_count' %}" hx-trigger="every 3s" hx-swap="innerHTML" hx-target="#unread-count">
+            <i class="bi bi-bell"></i>
+            <span class="ml-1 text-sm font-semibold text-red-500" id="unread-count"></span>
+            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:notification_page' %}">Notifications</a></span>
+          </div>
+          
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+                  onclick="toggleJoinForm()">
+                  <i class="bi bi-person-circle"></i>
+                  <span class="text-[15px] ml-4 text-gray-200">Join Server</span>
+              </div>
+              
+              <!-- Join Server Form -->
+          <form id="joinServerForm" class="hidden" hx-post="{% url 'servers:join_server' %}">
+            {% csrf_token %}
+            <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+              <input type="text" name="token" placeholder="Enter Invitation Code" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
+            </div>
+            <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+              Join
+            </button>
+          </form> 
+  
+          <!-- Link to create server form / page  -->
+          <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'servers:create_server' %}">Create Server</a></span>
+          </div>
+  
+          <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  
+  
+    <script>
+          function toggleJoinForm() {
+          var form = document.getElementById('joinServerForm');
+          form.classList.toggle('hidden');
+      }
+  
+      function Openbar() {
+          document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+      }
+      function dropDown() {
+        document.querySelector('#submenu').classList.toggle('hidden')
+        document.querySelector('#arrow').classList.toggle('rotate-0')
+      }
+      dropDown()
+  
+      function Openbar() {
+        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+      }
+  
+      const modal = new bootstrap.Modal(document.getElementById("modal"))
+  
+      htmx.on("htmx:afterSwap", (e) => {
+          // Response targeting #dialog => show the modal
+          if (e.detail.target.id == "dialog") { modal.show() }
+      })
+  
+      htmx.on("htmx:beforeSwap", (e) => {
+          // Empty response targeting #dialog => hide the modal
+          if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+              modal.hide()
+              e.detail.shouldSwap = false
+          }
+      })
+  
+      htmx.on("hidden.bs.modal", () => {
+          document.getElementById("dialog").innerHTML = ""
+      })
+  
+      // Auto reload page when new post gets added or gets edited 
+      // Or any other change that requires a page refresh to see new changes
+      document.body.addEventListener('PageRefreshNeeded', () => {
+          window.location.reload();
+      });
+    </script>
+  </div>
+  <!-- End Of Sidebar -->
+
 <!-- htmx csrf_token passage -->
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></body>
+<body class="font-[Poppins]  bg-blue-600" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="billcontainer font-[Poppins]" >
+        <h1 class="head">{{ post_name }}</h1>
+        <div class="billcontent font-[Poppins]">
+            <span class="billdescrip font-[Poppins]">
+                Description: {{ description }}
+            </span><br/>
+            <span class="billdescrip font-[Poppins]">
+                Date Posted: {{ date_created }}
+            </span><br/>
+            <span class="billdescrip font-[Poppins]">
+                Cost: ${{ cost }}
+            </span><br/>
+            <span class="billdescrip font-[Poppins]">
+                Split?: {{ split }}
+            </span><br/>
+            <span class="billdescrip font-[Poppins]">
+                Your Portion: ${{ individual_portion }}
+            </span><br/>
+            <span class="billdescrip font-[Poppins]"> 
+                Who To Pay:<!-- Field not ready yet -->
+            </span>
+        </div>
+        <button hx-trigger="load" hx-get="{%url 'posts:comment_section' post_type post_id %}" hx-target="#comment-section">Open Comments</button>
+        <div id="comment-section">
 
-<p>
-    <b> {{ post_name }} </b>
-<br> <b>Description:</b> {{ description }}
-<br> <b>Date Posted:</b> {{ date_created }}
-<br> <b>Cost:</b> ${{ cost }}
-<br> <b>Split?:</b> {{ split }}
-<br> <b>Your Portion:</b> ${{ individual_portion }}
-<br> <b>Who To Pay:</b> <!-- Field not ready yet -->
-</p>
-
-
-<button hx-trigger="load" hx-get="{%url 'posts:comment_section' post_type post_id %}" hx-target="#comment-section">Open Comments</button>
-    <div id="comment-section"></div>
+        </div>
+    </div>
+</body>
+</html>
