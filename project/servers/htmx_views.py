@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm, AssignTaskForm
 from .forms import EmailForm
-from posts.models import Bill, Event, Chore
+from posts.models import Bill, Event, Chore, SwapOffer, SwapRequest
 from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
 from django.utils import timezone
@@ -220,6 +220,35 @@ def invitation(request, server_id):
             return HttpResponse(status=400)  # Bad request if form is invalid
     
     return render(request, 'servers/partials/invitation-modal.html')
+
+
+def swap_request(request, task_id):
+    if not is_htmx(request):
+        return HttpResponse(status=405)
+    
+    chore_instance = Chore.objects.get(pk=task_id)
+    context = {
+        "chore": chore_instance
+    }
+    
+    if request.method == 'POST':
+        SwapRequest.create_swap_request(chore_instance, request.user)
+        context['success'] = True
+    
+    return render(request, 'servers/partials/swap-request-modal.html', context=context)
+
+
+def manage_swap_offers(request, swap_request_id):
+    if not is_htmx(request):
+        return HttpResponse(status=405)   
+    
+    swap_request_instance = SwapRequest.objects.filter(pk=swap_request_id)
+    
+    
+
+
 def close_modal(request):
     return HttpResponse('')
 
+def reload_window(request):
+    return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})

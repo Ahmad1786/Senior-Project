@@ -17,7 +17,9 @@ htmx_routes = [
     path('assign-task/', htmx_views.assign_task, name="assign_task"),
     path('invitation/<int:server_id>', htmx_views.invitation, name ="invitation"),
     path('join-server/', htmx_views.join_server, name ="join_server"),
+    path('swap-request/<int:task_id>', htmx_views.swap_request, name ="swap_request"),
     path('close-modal/', htmx_views.close_modal, name ="close_modal"),
+    path('reload-window/', htmx_views.reload_window, name ="reload_window"),
 ]
 
 urlpatterns += htmx_routes

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from posts.models import Bill, Chore, Event
+from posts.models import Bill, Chore, Event, SwapRequest, SwapOffer
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
@@ -40,12 +40,19 @@ def server_page(request, server_id):
     # now do the same for tasks and events
     tasks = Chore.objects.filter(server_id=server_id).order_by('-date_created')
     events = Event.objects.filter(server_id=server_id).order_by('-date_created')
+    
+    # Get all the swap requests and swap offers associated with the server
+    swap_requests = SwapRequest.objects.filter(chore__server_id=server_id)
+    swap_offers = SwapOffer.objects.filter(offer_chore__server_id=server_id)
 
     # show server specific display names instead of user's name
     for b in bills:
         b.payers_string = b.payers_string(request.user)
     for t in tasks:
         t.assignee_string = t.assignee_string(request.user)
+
+    for t in tasks:
+        t.swap_requests = SwapRequest.objects.filter(requester=request.user, chore=t, status='PENDING').exists()
 
     for p in chain(bills, tasks, events):
         p.post_creator = p.creator.display_name(Server.objects.get(id=server_id))
@@ -57,6 +64,8 @@ def server_page(request, server_id):
         "server_id": server_id,
         "servers": servers,
         "participation": participation,
+        "swap_requests": swap_requests,
+        "swap_offers": swap_offers
     } 
     return render(request, "servers/group-page.html", context=context)
 
