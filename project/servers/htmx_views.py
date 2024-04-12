@@ -241,14 +241,10 @@ def close_modal(request):
 def leaderboard(request):
     if not is_htmx(request):
         return HttpResponse(status=405)
-    
+
     if request.method == 'POST':
         form = LeaderboardForm(request.POST)
-        if form.is_valid():
-            selected_user = form.cleaned_data['users']
-            user_points = Participation.objects.get(user=selected_user).points
-            return render(request, 'servers/partials/leaderboard.html', {'points': user_points})
     else:
         form = LeaderboardForm()
-    
+
     return render(request, 'servers/partials/leaderboard.html', {'form': form})
