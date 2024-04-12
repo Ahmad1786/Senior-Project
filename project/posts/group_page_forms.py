@@ -174,13 +174,13 @@ class InvitationForm(forms.ModelForm):
 
 
 # model for leaderboard 
-class LeaderboardForm(forms.ModelForm):
-    users = forms.ModelChoiceField(queryset=User.objects.exclude(is_superuser=True), empty_label=None, label="Select User for Points Earned")
-
-    class Meta:
-        model = Participation
-        fields = ['users']
+class LeaderboardForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(LeaderboardForm, self).__init__(*args, **kwargs)
-        self.fields['users'].queryset = User.objects.exclude(is_superuser=True) 
+
+        users_with_points = Participation.objects.all().values_list('display_name', 'points')
+
+        leaderboard_text = '\n'.join([f"{display_name}: {points}" for display_name, points in users_with_points])
+        
+        self.fields['leaderboard'] = forms.CharField(initial=leaderboard_text, widget=forms.Textarea(attrs={'readonly': 'readonly'}))
        
