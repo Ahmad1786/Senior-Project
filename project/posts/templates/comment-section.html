@@ -16,13 +16,9 @@
     <div class="commentcontainer" style="background-color:white; border-radius: 15px;"> 
 
         <!-- Create an original comment. -->
-        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:comment_box' post_type post_id %}" hx-target="#input-container">Open Input Box</button>
+        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:comment_box' post_type post_id %}" hx-target="#input-container">Click to Comment</button>
         <div id="input-container"></div>
 
-        <form method="get" action="{% url 'posts:add_comment' post_type post_id %}">
-            {% csrf_token %}
-            <button type="submit" style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold">Click to comment</button>
-        </form>
         {% for parent_comment, replies in threads.items %}
             <!-- Print out the parent comment -->
             <div class="comment">
