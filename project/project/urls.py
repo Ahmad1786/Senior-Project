@@ -26,7 +26,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('servers/', include('servers.urls')),
     path('posts/', include('posts.urls')),
-    path('', feed_views.feed_view, name='feed_view'),
+    #path('', feed_views.feed_view, name='feed_view'),
+    path('', feed_views.index, name='index'),
 ]
 
 # for picture uploads
