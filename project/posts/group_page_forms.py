@@ -4,7 +4,6 @@
 from django import forms
 
 from posts.models import Bill, Event, Chore, Comment
-from users.models import User
 from servers.models import Invitation, Participation
 import datetime
 
@@ -153,7 +152,7 @@ class AssignTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AssignTaskForm, self).__init__(*args, **kwargs)
         self.fields['task_id'].queryset = Chore.objects.all() 
-        self.fields['assigned_users'].queryset = User.objects.exclude(is_superuser=True)
+        self.fields['assigned_users'].queryset = self.instance.server.members.all()
        
 
 class InvitationForm(forms.ModelForm):

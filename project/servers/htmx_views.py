@@ -158,15 +158,18 @@ def assign_task(request, task_id):
         return HttpResponse(status=405)
     if not can_edit(request.user, assigned_task):
         return HttpResponse(status=403)
+    
+    instance = Chore.objects.get(id=task_id)
+    
     if request.method == 'POST':
-        form = AssignTaskForm(request.POST)
+        form = AssignTaskForm(request.POST, instance=instance)
         if form.is_valid():
             assigned_users = form.cleaned_data['assigned_users']
             assigned_task.assignee.set(assigned_users)
             assigned_task.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
-       form = AssignTaskForm()
+       form = AssignTaskForm(instance=instance)
 
     return render(request, 'servers/partials/assign-task-form.html', {
         'form': form,
