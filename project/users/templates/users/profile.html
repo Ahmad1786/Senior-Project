@@ -179,20 +179,16 @@
         <div class="about">
             <span>Full name: {{ user_fields.first_name }} {{ user_fields.last_name }}</span><br/>
             <span>Email: {{ user_fields.email }}</span><br/>
-            <span>Phone Number: {{ user_fields.phone_number }}</span><br/>
-            <span>Social Media: {{ user_fields.socialaccount }}</span>
+            <span>Phone Number: <span id="phone-content"> {{ user_fields.phone_number }}</span></span> 
+            <!-- edit phone number -->
+            <button class="border border-gray-300 px-4 rounded"  hx-get="{% url 'users:edit_phone_number' %}" hx-target="#dialog">Edit</button>
+            <div id="dialog"></div>
         </div>
 
         <h4 id="info">Account Info:</h4>
         <div class="accountInfo">
-            <span>Username: {{ user_fields.username }}</span><br/>
-            <span class="pass">Password: {{ user_fields.password }}</span><br/>
-            <span>Member Since: {{ user_fields.date_joined }}</span><br/>
+            <span>Joined CoHabitat on: {{ user_fields.date_joined }}</span><br/>
             <span>Last Login: {{ user_fields.last_login }}</span><br/>
-            <span>Active: {{ user_fields.is_active }}</span><br/>
-            <span>Server: {{ user_fields.servers }}</span><br/>
-            <span>Groups: {{ user_fields.groups }}</span><br/>
-            <span>Admin Privelage: {{ user_fields.is_superuser }}</span>
         </div>
 
         <h4 id="myPost" >My Posts:</h4>

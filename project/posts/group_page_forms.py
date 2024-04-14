@@ -1,15 +1,9 @@
-# THESE ARE THE INITIAL FORMS FOR THE SERVERS APP
-# THESE WILL BE USED TO MAKE an instance of THE 3 MAIN POSTS IN THE GROUP PAGE
-
-from typing import Any
 from django import forms
 
 from posts.models import Bill, Event, Chore, Comment
 from servers.models import Invitation, Participation
 import datetime
 
-# NOTE: MADE these forms kind of "fast", so they may not be the 
-# best/most efficient way to do things, but good enough for now
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -76,10 +70,6 @@ class TaskForm(forms.ModelForm):
         #self.fields['assignee'].choices = [(member.id, member.display_name(self.server_instance)) for member in members]
         self.fields['due_date'].initial = datetime.datetime.now().strftime('%Y-%m-%d')
         
-    #def clean(self):
-    #    cleaned_data = super().clean()
-    #    # validation if needed can go here
-    #    return cleaned_data
     class Meta:
         model = Chore
         fields = ['post_name', 'description', 'assignee', 'due_date']
@@ -96,11 +86,6 @@ class EventForm(forms.ModelForm):
         self.fields['date_time'].label = "Date and Time"
         self.fields['date_time'].initial = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
         
-    #def clean(self):
-    #    cleaned_data = super().clean()
-    #    # validation if needed can go here
-    #    return cleaned_data"""
-
     class Meta:
         model = Event
         fields = ['post_name', 'description', 'date_time']
@@ -108,7 +93,6 @@ class EventForm(forms.ModelForm):
             'date_time':forms.TextInput(attrs={'type':'datetime-local'}),
         }
 
-# Function for editing event form - done by Luke
 class EditEventForm(forms.ModelForm):
     class Meta:
         model = Event
@@ -117,7 +101,6 @@ class EditEventForm(forms.ModelForm):
             'date_time':forms.TextInput(attrs={'type':'datetime-local'}),
         }
 
-# Function for editing the bill form - done by Luke
 class EditBillForm(forms.ModelForm):
     payers = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
     def __init__(self, *args, **kwargs):
@@ -147,7 +130,7 @@ class EditBillForm(forms.ModelForm):
         model = Bill
         fields = ['post_name', 'description', 'cost', 'split', 'payers']
 
-# Function for editing the task form - done by Luke
+
 class EditTaskForm(forms.ModelForm):
     assignee = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
 
@@ -165,7 +148,7 @@ class EditTaskForm(forms.ModelForm):
             'due_date':forms.TextInput(attrs={'type':'date'}),
         }
 
-# Form for assigning tasks - done by Luke
+
 class AssignTaskForm(forms.ModelForm):
     task_id = forms.ModelChoiceField(queryset=None, empty_label=None, label="Select Task")
     assigned_users = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
@@ -196,7 +179,7 @@ class InvitationForm(forms.ModelForm):
         fields = ['invited_email']
 
 
-# model for leaderboard 
+# form for leaderboard 
 class LeaderboardForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(LeaderboardForm, self).__init__(*args, **kwargs)

@@ -43,7 +43,7 @@ INSTALLED_APPS = [
 
     # third party apps
 
-    # Temporary 3rd party UI for allauth - We should add our own custom UI later
+    # Temporary 3rd party UI for allauth 
     # https://github.com/danihodovic/django-allauth-ui
     "allauth_ui", # Needs to be added before allauth
 
