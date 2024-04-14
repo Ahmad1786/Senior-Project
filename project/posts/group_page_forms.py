@@ -20,6 +20,7 @@ class CommentForm(forms.ModelForm):
 
 
 class BillForm(forms.ModelForm):
+    payers = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
     
     def __init__(self, *args, **kwargs):
         self.server_instance = kwargs.pop('server_instance', None)
@@ -27,8 +28,9 @@ class BillForm(forms.ModelForm):
         super(BillForm, self).__init__(*args, **kwargs)
         
         members = self.server_instance.members.all()
-        #self.fields['payers'].queryset = members
-        self.fields['payers'].choices = [(member.id, member.display_name(self.server_instance)) for member in members]
+        self.fields['payers'].queryset = members
+        #self.fields['payers'].choices = [(member.id, member.display_name(self.server_instance)) for member in members]
+        #self.fields['payers'].choices = [member.display_name(self.server_instance) for member in members]
         self.fields['payers'].initial = self.current_user
         
     def clean(self):
@@ -62,13 +64,15 @@ class BillForm(forms.ModelForm):
 
 
 class TaskForm(forms.ModelForm):
+    assignee = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
+
     def __init__(self, *args, **kwargs):
         self.server_instance = kwargs.pop('server_instance', None)
         super(TaskForm, self).__init__(*args, **kwargs)
         
         members = self.server_instance.members.all()
-        # self.fields['assignee'].queryset = members
-        self.fields['assignee'].choices = [(member.id, member.display_name(self.server_instance)) for member in members]
+        self.fields['assignee'].queryset = members
+        #self.fields['assignee'].choices = [(member.id, member.display_name(self.server_instance)) for member in members]
         self.fields['due_date'].initial = datetime.datetime.now().strftime('%Y-%m-%d')
         
     #def clean(self):
@@ -114,12 +118,13 @@ class EditEventForm(forms.ModelForm):
 
 # Function for editing the bill form - done by Luke
 class EditBillForm(forms.ModelForm):
+    payers = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
     def __init__(self, *args, **kwargs):
         super(EditBillForm, self).__init__(*args, **kwargs)
 
         members = self.instance.server.members.all()
-        #self.fields['payers'].queryset = members
-        self.fields['payers'].choices = [(member.id, member.display_name(self.instance.server)) for member in members]
+        self.fields['payers'].queryset = members
+        #self.fields['payers'].choices = [(member.id, member.display_name(self.instance.server)) for member in members]
 
     class Meta:
         model = Bill
@@ -127,12 +132,14 @@ class EditBillForm(forms.ModelForm):
 
 # Function for editing the task form - done by Luke
 class EditTaskForm(forms.ModelForm):
+    assignee = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
+
     def __init__(self, *args, **kwargs):
         super(EditTaskForm, self).__init__(*args, **kwargs)
 
         members = self.instance.server.members.all()
-        # self.fields['assignee'].queryset = members
-        self.fields['assignee'].choices = [(member.id, member.display_name(self.instance.server)) for member in members]
+        self.fields['assignee'].queryset = members
+        #self.fields['assignee'].choices = [(member.id, member.display_name(self.instance.server)) for member in members]
         
     class Meta:
         model = Chore
