@@ -1,6 +1,7 @@
 # THESE ARE THE INITIAL FORMS FOR THE SERVERS APP
 # THESE WILL BE USED TO MAKE an instance of THE 3 MAIN POSTS IN THE GROUP PAGE
 
+from typing import Any
 from django import forms
 
 from posts.models import Bill, Event, Chore, Comment
@@ -125,6 +126,22 @@ class EditBillForm(forms.ModelForm):
         members = self.instance.server.members.all()
         self.fields['payers'].queryset = members
         #self.fields['payers'].choices = [(member.id, member.display_name(self.instance.server)) for member in members]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # currently allowing for cost of 0 but not empty
+        if cleaned_data.get('cost', None) is None:
+            self.add_error('cost', 'There must be a cost for the bill')
+
+        if cleaned_data.get('cost', None) is not None and cleaned_data['cost'] < 0:
+            self.add_error('cost', 'The cost must be a positive value')
+        
+        if not cleaned_data['split'] and len(cleaned_data['payers']) > 1:
+            self.add_error('payers', 'Can not split bill between multiple people if split is not checked')
+
+        if cleaned_data['split'] and len(cleaned_data['payers']) == 1:
+            self.add_error('payers', 'Must split bill between multiple people if split is checked')
 
     class Meta:
         model = Bill

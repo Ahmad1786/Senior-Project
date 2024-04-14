@@ -126,6 +126,10 @@ def edit_bill(request, bill_id):
         if form.is_valid():
             form.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+        else:
+            return render(request, 'servers/partials/edit-bill-form.html', {
+                'form': form
+                })
     else:
         return render(request, 'servers/partials/edit-bill-form.html', {
             'form': EditBillForm(instance=instance)
