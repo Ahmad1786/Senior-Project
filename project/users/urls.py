@@ -1,5 +1,5 @@
 from django.urls import path
-from . import notification_views, test_users, views, feed_views, profile_pic_view
+from . import notification_views, views, feed_views, profile_pic_view
 
 app_name = "users"
 urlpatterns = [
@@ -13,9 +13,3 @@ urlpatterns = [
     path('edit-phone-number', views.edit_phone_number, name="edit_phone_number"),
     path('empty', views.empty_response, name="empty_response"),
 ]
-
-testing_routes = [
-    path('user/<int:id>', test_users.test_user, name="test_user")
-]
-
-urlpatterns += testing_routes
