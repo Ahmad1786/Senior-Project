@@ -172,9 +172,10 @@
                 Who To Pay:<!-- Field not ready yet -->
             </span>
         </div>
-        {% block comment_section %}
-          {% include 'comment-section.html' %}
-        {% endblock %}
+        
+        <!-- Gets comment section -->
+        <div id="comment-section" hx-trigger="load" hx-get="{% url 'posts:comment_section' post_type post_id %}"></div>
+
     </div>
 </body>
 </html>
