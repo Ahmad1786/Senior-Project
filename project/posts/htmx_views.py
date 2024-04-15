@@ -60,8 +60,8 @@ def get_comment_section(request, post_type, post_id):
         "current_user": request.user
     })
 
-# Used to generate a comment box to provide input
-def comment_box(request, post_type, post_id):
+# Used to generate a comment box to provide input and make a comment
+def add_comment(request, post_type, post_id):
     if request.method == "POST":
         try:
             content = request.POST['content']

@@ -2,6 +2,6 @@
 <input type="text" id="content" name="content" placeholder="Comment here" style="border: 1px solid"></input>
 
 <!-- Post the data and then take the return data (the newly loaded comment section) to display in the comment section div. -->
-<button hx-post="{% url 'posts:comment_box' post_type=post_type post_id=post_id %}" hx-trigger="click" hx-target="#comment-section" hx-include="#content">
+<button hx-post="{% url 'posts:add_comment' post_type=post_type post_id=post_id %}" hx-trigger="click" hx-target="#comment-section" hx-include="#content">
     Submit
 </button>
