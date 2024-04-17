@@ -1,5 +1,5 @@
 from django.urls import path
-from . import test_servers, views, htmx_views
+from . import views, htmx_views
 
 app_name = "servers"
 urlpatterns = [
@@ -23,9 +23,3 @@ htmx_routes = [
 ]
 
 urlpatterns += htmx_routes
-
-test_routes = [
-    path('test-server/<int:id>', test_servers.test_server, name="test_server"),
-]
-
-urlpatterns += test_routes

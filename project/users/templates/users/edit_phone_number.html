@@ -1,0 +1,10 @@
+<div class="flex items-center">
+    <form id="phone-form" hx-post="{{ request.path }}" hx-swap="innerHTML" class="flex flex-grow">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="border border-gray-300 px-4 rounded" type="submit">Save</button>
+        <button class="border border-gray-300 px-4 rounded" 
+            hx-get="{%url 'users:empty_response' %}" hx-target="#phone-form" hx-swap="outerHTML"> &nbsp;Close
+        </button>
+    </form>
+</div>

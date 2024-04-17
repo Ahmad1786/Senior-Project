@@ -137,6 +137,9 @@
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                     <p class="text-lg font-bold text-center">Add Task & Chore</p>
                 </div>
+                <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                href="{%url 'servers:leaderboard' %}" hx-get="{%url 'servers:leaderboard' %}"
+                hx-target="#dialog">Leaderboard</a>
             </a>            
             {% for t in tasks %}
             <a href="{% url 'posts:chore' t.id %}">

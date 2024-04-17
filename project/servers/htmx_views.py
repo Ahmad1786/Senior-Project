@@ -126,6 +126,10 @@ def edit_bill(request, bill_id):
         if form.is_valid():
             form.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+        else:
+            return render(request, 'servers/partials/edit-bill-form.html', {
+                'form': form
+                })
     else:
         return render(request, 'servers/partials/edit-bill-form.html', {
             'form': EditBillForm(instance=instance)
@@ -158,15 +162,18 @@ def assign_task(request, task_id):
         return HttpResponse(status=405)
     if not can_edit(request.user, assigned_task):
         return HttpResponse(status=403)
+    
+    instance = Chore.objects.get(id=task_id)
+    
     if request.method == 'POST':
-        form = AssignTaskForm(request.POST)
+        form = AssignTaskForm(request.POST, instance=instance)
         if form.is_valid():
             assigned_users = form.cleaned_data['assigned_users']
             assigned_task.assignee.set(assigned_users)
             assigned_task.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
-       form = AssignTaskForm()
+       form = AssignTaskForm(instance=instance)
 
     return render(request, 'servers/partials/assign-task-form.html', {
         'form': form,
@@ -241,14 +248,10 @@ def close_modal(request):
 def leaderboard(request):
     if not is_htmx(request):
         return HttpResponse(status=405)
-    
+
     if request.method == 'POST':
         form = LeaderboardForm(request.POST)
-        if form.is_valid():
-            selected_user = form.cleaned_data['users']
-            user_points = Participation.objects.get(user=selected_user).points
-            return render(request, 'servers/partials/leaderboard.html', {'points': user_points})
     else:
         form = LeaderboardForm()
-    
+
     return render(request, 'servers/partials/leaderboard.html', {'form': form})
