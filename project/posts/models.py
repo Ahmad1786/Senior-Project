@@ -94,7 +94,7 @@ class Chore(Post):
         return ', '.join([a.display_name(self.server) for a in self.assignee.all()]) 
 
     @property
-    def point_value(self):
+    def point_val(self):
 
         if self.completed:
             return 10
