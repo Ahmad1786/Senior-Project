@@ -23,17 +23,15 @@
             <!-- Print out the parent comment -->
             <div class="comment">
                 {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
-                <br><br>{{ parent_comment.content}}
+                <div id="parent-comment{{ parent_comment.id }}">{{ parent_comment.content}}</div>
 
                 <!-- A button to make a reply. -->
                 <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id%}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
 
                 <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                 {% if parent_comment.author == current_user %}
-                    <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
-                        {% csrf_token %}
-                        <button type="submit" style="font-size: smaller;">Edit Comment</button>
-                    </form>
+                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:edit_comment' post_type post_id parent_comment.id %}" hx-target="#parent-comment{{ parent_comment.id }}">Edit</button>
+
                     <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
                         {% csrf_token %}
                         <button type="submit" style="font-size: smaller;">Delete Comment</button>

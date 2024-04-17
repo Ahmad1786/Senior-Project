@@ -111,3 +111,22 @@ def add_reply(request, post_type, post_id, parent_comment_id):
             "post_id": post_id,
         })
     
+def edit_comment(request, post_type, post_id, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    comment_content = comment.content
+    if request.method == "POST":
+        try:
+            new_content = request.POST['content']
+        except:
+            raise ("Error, there was no value for the field \"content\" supplied.")
+        comment.content = new_content
+        comment.save()
+        return get_comment_section(request, post_type, post_id)
+    
+    return render(request, "posts/edit-comment-box.html", {
+        "content": comment_content,
+        "post_type": post_type,
+        "post_id": post_id,
+        "comment_id": comment_id,
+    })
+    
