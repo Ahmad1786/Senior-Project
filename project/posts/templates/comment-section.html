@@ -16,32 +16,25 @@
     <div class="commentcontainer" style="background-color:white; border-radius: 15px;"> 
 
         <!-- Create an original comment. -->
-        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:add_comment' post_type post_id %}" hx-target="#input-container">Click to Comment</button>
-        <div id="input-container"></div>
+        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:add_comment' post_type post_id %}" hx-target="#comment-container">Click to Comment</button>
+        <div id="comment-container"></div>
 
         {% for parent_comment, replies in threads.items %}
             <!-- Print out the parent comment -->
             <div class="comment">
                 {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
-                <br><br>{{ parent_comment.content}}
+                <div id="parent-comment{{ parent_comment.id }}">{{ parent_comment.content}}</div>
 
                 <!-- A button to make a reply. -->
-                <form method="get" action="{% url 'posts:add_reply' post_type post_id parent_comment.id %}">
-                    {% csrf_token %}
-                    <button type="submit" style="font-size: smaller;">Reply</button>
-                </form>
-                
+                <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id%}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
 
                 <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                 {% if parent_comment.author == current_user %}
-                    <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
-                        {% csrf_token %}
-                        <button type="submit" style="font-size: smaller;">Edit Comment</button>
-                    </form>
-                    <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
-                        {% csrf_token %}
-                        <button type="submit" style="font-size: smaller;">Delete Comment</button>
-                    </form>
+                    <!-- Edit button -->
+                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{% url 'posts:edit_comment' post_type post_id parent_comment.id %}" hx-target="#parent-comment{{ parent_comment.id }}">Edit</button>
+
+                    <!-- Delete button -->
+                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-post="{% url 'posts:delete_comment' post_type post_id parent_comment.id %}" hx-target="#comment-section">Delete</button>
                 {% endif %}
             </div>
 
@@ -50,27 +43,22 @@
                     <div class="reply">
                         <!-- Find alternative to avoid line break other than <a> tag? -->
                         {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
-                        <br><br>{{ reply.content}}
+                        <div id="reply-comment{{ reply.id }}">{{ reply.content}}</div>
 
                         <!-- A button to make a reply. -->
-                        <form method="get" action="{% url 'posts:add_reply' post_type post_id parent_comment.id %}">
-                            {% csrf_token %}
-                            <button type="submit" style="font-size: smaller;">Reply</button>
-                        </form>
+                        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(204, 111, 6); color:white; font-weight:bold" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id %}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
 
                         <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                         {% if reply.author == current_user %}
-                            <form method="get" action="{% url 'posts:edit_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
-                                {% csrf_token %}
-                                <button type="submit" style="font-size: smaller;">Edit Comment</button>
-                            </form>
-                            <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=reply.id %}">
-                                {% csrf_token %}
-                                <button type="submit" style="font-size: smaller;">Delete Comment</button>
-                            </form>
+                            <!-- Edit button -->
+                            <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(204, 111, 6); color:white; font-weight:bold" hx-get="{% url 'posts:edit_comment' post_type post_id reply.id %}" hx-target="#reply-comment{{ reply.id }}">Edit</button>
+
+                            <!-- Delete button -->
+                            <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(204, 111, 6); color:white; font-weight:bold" hx-post="{% url 'posts:delete_comment' post_type post_id reply.id %}" hx-target="#comment-section">Delete</button>
                         {% endif %}
                     </div>
                 {% endfor %} <!-- End replies loop -->
+                <div id="reply-container{{ parent_comment.id }}"></div>
         {% endfor %} <!-- End parent loop -->
         
     </div>

@@ -6,31 +6,6 @@ from django.db.models import Q
 
 is_htmx = lambda request: request.headers.get('HX-Request', False)
 
-def add_comment(request, post_id):
-    if not is_htmx(request):
-        return HttpResponse(status=405)
-    
-    #post = Post.objects.get(pk=post_id)
-    current_user = request.user
-    
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.creator = request.user
-            obj.save()
-            form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
-        else:
-            return render(request, 'posts/bill.html', {
-                'form': form,
-            })
-    
-    form = CommentForm()
-    return render(request, 'posts/comment-form.html', {
-        'form': form,
-    })
-
 def get_comment_section(request, post_type, post_id):
     
     if post_type == "bill":
@@ -95,4 +70,70 @@ def add_comment(request, post_type, post_id):
             "post_type": post_type,
             "post_id": post_id,
         })
+    
+def add_reply(request, post_type, post_id, parent_comment_id):
+    if request.method == "POST":
+        try:
+            content = request.POST['content']
+        except:
+            raise ("Error, there was no value for the field \"content\" supplied.")
+        
+         # The parent of the comment chain this reply will belong to
+        parent_comment = Comment.objects.get(id=parent_comment_id)
+
+        form_data = {
+            # The creator of the new reply.
+            "author": request.user,
+            "parent_comment": parent_comment,
+            "content": content,
+        }
+        # Check what type of post this comment will be on and then retrieve it.
+        # Store the post as a foreign key in the initial data (links the comment to the post)
+        if post_type == "bill":
+            form_data["bill"] = Bill.objects.get(id=post_id)
+        elif post_type == "chore":
+            form_data["task"] = Chore.objects.get(id=post_id)
+        elif post_type == "event":
+            form_data["event"] = Event.objects.get(id=post_id)
+        else:
+            raise Http404("Error: " + post_type + " is not a valid post_type")
+        
+        form = CommentForm(form_data)
+
+        if form.is_valid():
+            form.save(commit=True)
+            return get_comment_section(request, post_type, post_id)
+        else:
+            raise Http404("Form is not valid")
+    else:
+        return render(request, "reply-comment-box.html", {
+            "post_type": post_type,
+            "post_id": post_id,
+            "parent_comment_id": parent_comment_id,
+        })
+    
+def edit_comment(request, post_type, post_id, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    comment_content = comment.content
+    if request.method == "POST":
+        try:
+            new_content = request.POST['content']
+        except:
+            raise ("Error, there was no value for the field \"content\" supplied.")
+        comment.content = new_content
+        comment.save()
+        return get_comment_section(request, post_type, post_id)
+    
+    return render(request, "posts/edit-comment-box.html", {
+        "content": comment_content,
+        "post_type": post_type,
+        "post_id": post_id,
+        "comment_id": comment_id,
+    })
+
+def delete_comment(request, post_type, post_id, comment_id):
+    if request.method == "POST":
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+        return get_comment_section(request, post_type, post_id)
     
