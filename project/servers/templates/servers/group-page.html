@@ -140,7 +140,11 @@
                 <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                 href="{%url 'servers:leaderboard' %}" hx-get="{%url 'servers:leaderboard' %}"
                 hx-target="#dialog">Leaderboard</a>
-            </a>            
+
+                <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                href="{%url 'servers:complete_task' %}" hx-get="{%url 'servers:complete_task' %}"
+                hx-target="#dialog">Complete Task</a>
+            </a>           
             {% for t in tasks %}
             <a href="{% url 'posts:chore' t.id %}">
                 <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
