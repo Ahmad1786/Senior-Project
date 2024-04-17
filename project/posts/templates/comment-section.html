@@ -30,12 +30,11 @@
 
                 <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                 {% if parent_comment.author == current_user %}
-                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:edit_comment' post_type post_id parent_comment.id %}" hx-target="#parent-comment{{ parent_comment.id }}">Edit</button>
+                    <!-- Edit button -->
+                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{% url 'posts:edit_comment' post_type post_id parent_comment.id %}" hx-target="#parent-comment{{ parent_comment.id }}">Edit</button>
 
-                    <form method="post" action="{% url 'posts:delete_comment' post_type=post_type post_id=post_id comment_id=parent_comment.id %}">
-                        {% csrf_token %}
-                        <button type="submit" style="font-size: smaller;">Delete Comment</button>
-                    </form>
+                    <!-- Delete button -->
+                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-post="{% url 'posts:delete_comment' post_type post_id parent_comment.id %}" hx-target="#comment-section">Delete</button>
                 {% endif %}
             </div>
 

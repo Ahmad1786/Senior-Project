@@ -129,4 +129,10 @@ def edit_comment(request, post_type, post_id, comment_id):
         "post_id": post_id,
         "comment_id": comment_id,
     })
+
+def delete_comment(request, post_type, post_id, comment_id):
+    if request.method == "POST":
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+        return get_comment_section(request, post_type, post_id)
     
