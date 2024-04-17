@@ -93,8 +93,8 @@ class Chore(Post):
             return f"You, {', '.join([a.display_name(self.server) for a in self.assignee.all() if a != user])}"
         return ', '.join([a.display_name(self.server) for a in self.assignee.all()]) 
 
-    #@property
-    #def point_value(self):
+    @property
+    def point_value(self):
 
         if self.completed:
             return 10
