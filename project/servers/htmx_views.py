@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
-from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm, AssignTaskForm, LeaderboardForm
+from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm, AssignTaskForm, LeaderboardForm, CompleteTaskForm
 from .forms import EmailForm, ServerForm
 from posts.models import Bill, Event, Chore
 from servers.models import Server, Participation, Invitation
@@ -255,3 +255,31 @@ def leaderboard(request):
         form = LeaderboardForm()
 
     return render(request, 'servers/partials/leaderboard.html', {'form': form})
+
+def complete_task(request):
+    if request.method == 'POST':
+        form = CompleteTaskForm(request.POST)
+        if form.is_valid():
+            task = form.cleaned_data['task_id']
+            try:
+                task.completed = True
+                task.save()
+                server = task.server
+                participations = Participation.objects.filter(server=server)
+                
+                # Calculate and award points to each participation
+                for participation in participations:
+                    if participation.user == request.user:
+                        # Award points to the user who completed the task and delete the task since it is completed
+                        participation.points += task.point_val
+                        task.delete()
+                        return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+                    else:
+                        pass
+                    participation.save()
+                    
+            except Chore.DoesNotExist:
+                return HttpResponse("Task not found", status=404)
+    else:
+        form = CompleteTaskForm()
+    return render(request, 'servers/partials/complete-task.html', {'form': form})
