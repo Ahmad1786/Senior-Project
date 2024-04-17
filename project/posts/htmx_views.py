@@ -6,31 +6,6 @@ from django.db.models import Q
 
 is_htmx = lambda request: request.headers.get('HX-Request', False)
 
-def add_comment(request, post_id):
-    if not is_htmx(request):
-        return HttpResponse(status=405)
-    
-    #post = Post.objects.get(pk=post_id)
-    current_user = request.user
-    
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.creator = request.user
-            obj.save()
-            form.save_m2m()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
-        else:
-            return render(request, 'posts/bill.html', {
-                'form': form,
-            })
-    
-    form = CommentForm()
-    return render(request, 'posts/comment-form.html', {
-        'form': form,
-    })
-
 def get_comment_section(request, post_type, post_id):
     
     if post_type == "bill":
