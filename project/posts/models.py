@@ -138,7 +138,7 @@ class SwapRequest(models.Model):
             self.status = 'PENDING'
         self.save()
 
-    def accept_offer(self, offer_chore):
+    def accept_offer(self):
         if self.status == 'PENDING':
             self.status = 'ACCEPTED'
             self.save()
@@ -154,7 +154,7 @@ class SwapRequest(models.Model):
         
 class SwapOffer(models.Model):
     swap_request = models.ForeignKey(SwapRequest, on_delete=models.CASCADE, related_name='swap_offers')
-    offer_chore = models.ForeignKey(Chore, on_delete=models.CASCADE, related_name='swap_offers_related')  # Change related_name value
+    offer_chore = models.ForeignKey(Chore, on_delete=models.CASCADE, null=True, blank=True, related_name='swap_offers_related')  # Change related_name value
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status_choices = [
         ('PENDING', 'Pending'),
@@ -190,7 +190,7 @@ class SwapOffer(models.Model):
                 self.swap_request.chore.assignee.add(self.user)
                 self.status = 'ACCEPTED'
                 self.save()
-                self.swap_request.accept_offer(self.offer_chore)
+                self.swap_request.accept_offer()
         else:
             raise ValueError("Cannot accept offer that is not pending.")
 
@@ -203,10 +203,10 @@ class SwapOffer(models.Model):
             raise ValueError("Cannot decline offer that is not pending.")
         
     @classmethod
-    def create_offer(cls, swap_request, offer_chore, user):
+    def create_offer(cls, swap_request, offer_chore, status, user):
         if isinstance(swap_request, SwapRequest) and swap_request.status == 'PENDING':
             if offer_chore is not None:
-                offer = cls(swap_request=swap_request, offer_chore=offer_chore, user=user)
+                offer = cls(swap_request=swap_request, status = status, offer_chore=offer_chore, user=user)
                 offer.save()
                 swap_request.set_status()
                 return offer

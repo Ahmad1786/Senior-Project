@@ -52,8 +52,11 @@ def server_page(request, server_id):
         t.assignee_string = t.assignee_string(request.user)
 
     for t in tasks:
-        t.swap_requests = SwapRequest.objects.filter(requester=request.user, chore=t, status='PENDING').exists()
-
+        t.swap_requests = SwapRequest.objects.filter(chore=t, status='PENDING').exists()
+        swap_request = SwapRequest.objects.filter(chore=t, status='PENDING').first()
+        t.swap_request = swap_request
+        if t.swap_requests:
+            t.user_swap_offers = SwapOffer.objects.filter(swap_request=t.swap_request, user=request.user)
     for p in chain(bills, tasks, events):
         p.post_creator = p.creator.display_name(Server.objects.get(id=server_id))
 

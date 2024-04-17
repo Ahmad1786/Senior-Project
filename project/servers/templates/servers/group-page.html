@@ -115,12 +115,25 @@
                                 href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
                                 hx-target="#dialog">Edit Task</a>
                             {% endif %}
+                            {% if t.assigner == request.user and t.swap_requests and t.swap_request.requester == request.user and t.swap_request.status == 'Accepted'%}
+                            <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
+                                hx-target="#dialog">Swap Accepted</a>
+                            {% endif %}
                             <!-- Button for toggling swap request modal -->
-                            {% if request.user in t.assignee.all %}
+                            {% if request.user not in t.assignee.all %}
                                 {% if t.swap_requests %}
                                     <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
-                                    href="{% url 'servers:swap_request' t.id %}"
-                                    hx-get="{% url 'servers:swap_request' t.id %}"
+                                    href="{% url 'servers:swap_offer' task_id=t.id %}"
+                                    hx-get="{% url 'servers:swap_offer' task_id=t.id %}"
+                                    hx-target="#dialog">User is requesting swap</a>
+                                {% endif %}
+                            {% endif %}
+                            {% if request.user in t.assignee.all and t.assignee.count != participation.count %}
+                                {% if t.swap_requests%}
+                                    <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                    href="{% url 'servers:manage_swap_request' swap_request_id=t.swap_request.id %}"
+                                    hx-get="{% url 'servers:manage_swap_request' swap_request_id=t.swap_request.id %}"
                                     hx-target="#dialog">Manage My Swap Request</a>
                                 {% else %}
                                     <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
@@ -129,6 +142,7 @@
                                     hx-target="#dialog">Make a Swap Request</a>
                                 {% endif %}
                             {% endif %}
+
                         </div>
                     </div>
                     <hr class="my-2 border-gray-300">
@@ -147,7 +161,11 @@
             </a>
             {% endfor %}
         </div>
-
+        <script>
+            document.body.addEventListener('htmx:configRequest', (event) => {
+                event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+            })
+        </script>
 
 
         <!-- Second Scrollable Container -->
