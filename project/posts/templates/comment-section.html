@@ -22,7 +22,11 @@
         {% for parent_comment, replies in threads.items %}
             <!-- Print out the parent comment -->
             <div class="comment">
-                {{ parent_comment.author }}<a class="comment_date"> posted at {{ parent_comment.date_time }}</a>
+                <!-- Put the profile picture and comment post info on the same line -->
+                <div style="display: flex; align-items: center;">
+                    <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="max-width: 5%; max-height: 5%; border-radius: 50%">
+                    {{ parent_comment.author }} posted at {{ parent_comment.date_time }}
+                </div>
                 <div id="parent-comment{{ parent_comment.id }}">{{ parent_comment.content}}</div>
 
                 <!-- A button to make a reply. -->
@@ -41,8 +45,11 @@
                 <!-- Check for replies to the parent comment and print them out -->
                 {% for reply in replies %}  
                     <div class="reply">
-                        <!-- Find alternative to avoid line break other than <a> tag? -->
-                        {{ reply.author }} <a class="comment_date"> posted at {{ reply.date_time }}</a>
+                        <!-- Put the profile picture and comment post info on the same line -->
+                        <div style="display: flex; align-items: center;">
+                            <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="max-width: 5%; max-height: 5%; border-radius: 50%">
+                            {{ reply.author }} posted at {{ reply.date_time }}
+                        </div>
                         <div id="reply-comment{{ reply.id }}">{{ reply.content}}</div>
 
                         <!-- A button to make a reply. -->
