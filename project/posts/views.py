@@ -94,9 +94,3 @@ def event(request, id):
        "time": time,
        "creator": creator, 
     })
-
-def delete_comment(request, post_type, post_id, comment_id):
-    if request.method == "POST":
-        comment = Comment.objects.get(id=comment_id)
-        comment.delete()
-        return redirect("/posts/" + post_type + "/" + str(post_id))

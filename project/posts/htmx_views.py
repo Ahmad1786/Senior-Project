@@ -106,9 +106,10 @@ def add_reply(request, post_type, post_id, parent_comment_id):
         else:
             raise Http404("Form is not valid")
     else:
-        return render(request, "comment-box.html", {
+        return render(request, "reply-comment-box.html", {
             "post_type": post_type,
             "post_id": post_id,
+            "parent_comment_id": parent_comment_id,
         })
     
 def edit_comment(request, post_type, post_id, comment_id):
