@@ -91,15 +91,21 @@
         if (mode === 'inviteByEmail') {
             // Handle submit for invite by email mode
             const emails = document.getElementById('emails').value;
-            // Perform hx-post to Django view
-            // Example:
-            // hx.post('/path/to/your/view/', { emails: emails });
         } else if (mode === 'giveInvitationCode') {
-            // Handle submit for give invitation code mode
         }
     });
 
     document.querySelector('[hx-get="{% url 'servers:close_modal' %}"]').addEventListener('click', resetModalState);
 </script>
 
+<style>
+    /* Add black border to form fields with rounded corners */
+    #modal input[type="text"],
+    #modal input[type="number"],
+    #modal textarea,
+    #modal .overflow-scroll {
+        border: 1px solid black;
+        border-radius: 0.25rem; /* Rounded corners */
+    }
+</style>
 

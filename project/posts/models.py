@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.db import models
 from servers.models import Server
+from posts.models import *
 from decimal import Decimal, ROUND_HALF_UP
+from django.utils import timezone
 import datetime
 
 class Post(models.Model):
@@ -132,6 +134,127 @@ class Comment(models.Model):
         return f"Comment by {self.author} in {post.post_name}"
 
 
+class SwapRequest(models.Model):
+    chore = models.ForeignKey("Chore", on_delete=models.CASCADE, related_name="swap_chore")
+    requester = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="swap_requests")
+    status_choices = [
+        ('PENDING', 'Pending'),
+        ('ACCEPTED', 'Accepted'),
+        ('DECLINED', 'Declined')
+    ]
+    status = models.CharField(max_length=10, choices=status_choices, default='PENDING')
+    date_requested = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Swap request by {self.requester} for {self.chore}"
+
+    def set_status(self):
+        total_users = self.chore.server.members.count()
+        declined_offers = SwapOffer.objects.filter(swap_request=self, status='DECLINED').count()
+
+        if declined_offers == total_users - self.chore.assignee.count():
+            self.status = 'DECLINED'
+        elif self.status != 'ACCEPTED':
+            self.status = 'PENDING'
+        self.save()
+
+    def accept_offer(self):
+        if self.status == 'PENDING':
+            self.status = 'ACCEPTED'
+            self.save()
+        else:
+            raise ValueError("Cannot accept offer for a swap request that is not pending.")
+
+    @classmethod
+    def create_swap_request(cls, chore, requester):
+        return cls.objects.create(chore=chore, requester=requester, status='PENDING', date_requested=timezone.now())
+
+    def delete_request(self):
+        self.delete()
+        
+class SwapOffer(models.Model):
+    swap_request = models.ForeignKey(SwapRequest, on_delete=models.CASCADE, related_name='swap_offers')
+    offer_chore = models.ForeignKey(Chore, on_delete=models.CASCADE, null=True, blank=True, related_name='swap_offers_related')  # Change related_name value
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status_choices = [
+        ('PENDING', 'Pending'),
+        ('ACCEPTED', 'Accepted'),
+        ('DECLINED', 'Declined')
+    ]
+    status = models.CharField(max_length=10, choices=status_choices, default='PENDING')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.swap_request.set_status()
+    
+    def accept_offer(self):
+        if self.status == 'PENDING' and self.swap_request.status == 'PENDING':
+            if self.offer_chore:
+                
+                #Add Swap offer user to assignees for chore they are swapping with
+                self.offer_chore.assignee.add(self.swap_request.requester)
+                #Remove user who made swap offer from the chore they are trying to swap out of
+                self.offer_chore.assignee.remove(self.user)
+                
+                #Add swap request user to assignees of chore they are swapping into
+                self.swap_request.chore.assignee.add(self.user)
+                #Remove swap request user from chore they are swapping out of
+                self.swap_request.chore.assignee.remove(self.swap_request.requester)
+
+                self.status = 'ACCEPTED'
+                self.save()
+                self.swap_request.accept_offer()
+            else:
+                # Automatically accept the offer with no chore in return
+                self.swap_request.chore.assignee.remove(self.swap_request.requester)
+                self.swap_request.chore.assignee.add(self.user)
+                self.status = 'ACCEPTED'
+                self.save()
+                self.swap_request.accept_offer()
+        else:
+            raise ValueError("Cannot accept offer that is not pending.")
+
+    def decline_offer(self):
+        if self.status == 'PENDING':
+            self.status = 'DECLINED'
+            self.save()
+            self.swap_request.set_status()
+        else:
+            raise ValueError("Cannot decline offer that is not pending.")
+        
+    @classmethod
+    def create_offer(cls, swap_request, offer_chore, status, user):
+        if isinstance(swap_request, SwapRequest) and swap_request.status == 'PENDING':
+            if offer_chore is not None:
+                offer = cls(swap_request=swap_request, status = status, offer_chore=offer_chore, user=user)
+                offer.save()
+                swap_request.set_status()
+                return offer
+            elif offer_chore is None:
+                offer = cls(swap_request=swap_request, user=user)
+                offer.save()
+                swap_request.accept_offer()
+                return offer
+        else:
+            raise ValueError("Cannot create offer for a swap request that is not pending.")
+    
+    def delete_offer(self):
+        self.delete()
+        self.swap_request.set_status()
+    
+    def update_offer(self, offer_chore=None):
+        if self.status == 'PENDING' and self.swap_request.status == 'PENDING':
+            if offer_chore:
+                self.offer_chore = offer_chore
+                self.save()
+            elif offer_chore:
+                self.swap_request.accept_offer()
+                self.save()
+        else:
+            raise ValueError("Cannot update offer that is not pending.")
+
+        
+
 from datetime import timedelta
 from django.utils import timezone
 from django.utils.timezone import get_current_timezone 
@@ -208,3 +331,4 @@ class RecurringTask(models.Model):
             chore.assignee.add(next_assignee)
             
         return None
+

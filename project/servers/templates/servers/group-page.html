@@ -1,3 +1,5 @@
+
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap"rel="stylesheet">
     <link href="{% static 'servers/style.css' %}" rel="stylesheet">
     <script src="{% static 'servers/js/modals_script.js' %}" defer></script>
-    
+    <script src="{% static 'servers/js/sidebar_script.js' %}" defer></script>
 </head>
 
 <!-- Beginning Of Sidebar -->
@@ -66,7 +68,7 @@
                 <span class="text-[15px] ml-4 text-gray-200">Join Server</span>
             </div>
             
-            <!-- Join Server Form -->
+        <!-- Join Server Form -->
         <form id="joinServerForm" class="hidden" hx-post="{% url 'servers:join_server' %}">
           {% csrf_token %}
           <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
@@ -84,35 +86,6 @@
       </div>
     </div>
   </div>
-
-
-  <script>
-        function toggleJoinForm() {
-        var form = document.getElementById('joinServerForm');
-        form.classList.toggle('hidden');
-    }
-
-    function Openbar() {
-        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
-    }
-    function dropDown() {
-      document.querySelector('#submenu').classList.toggle('hidden')
-      document.querySelector('#arrow').classList.toggle('rotate-0')
-    }
-    dropDown()
-
-    function Openbar() {
-      document.querySelector('.sidebar').classList.toggle('left-[-300px]')
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('cancel-button').addEventListener('click', function() {
-        document.getElementById('modal').remove(); // Remove the modal from the DOM
-    });
-    });
-  </script>
-
-
 </div>
 <!-- End Of Sidebar -->
 
@@ -148,21 +121,65 @@
             {% for t in tasks %}
             <a href="{% url 'posts:chore' t.id %}">
                 <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                    {% if t.has_pending_swap_offer%}
+                    <div class="absolute top-0 right-0 bg-gray-200 text-gray-600 p-2 rounded-lg">
+                        Swap Offer Pending
+                    </div>
+                    {% elif t.has_all_declined_swap_offer %}
+                    <div class="absolute top-0 right-0 bg-red-200 text-red-600 p-2 rounded-lg">
+                        Swap Offer Declined
+                    </div>
+                    {% elif t.has_all_declined_swap_offer %}
+                    <div class="absolute top-0 right-0 bg-green-200 text-green-600 p-2 rounded-lg">
+                        Swap Offer Accepted
+                    </div>
+                    {% endif %}
                     <h3 class="text-xl font-bold">{{ t.post_name }}</h3>
                     <p class="text-gray-600">{{ t.description }}</p>
                     <div class="flex justify-between items-center mt-2">
                         <span class="text-sm text-gray-400">{{ t.assigned_date | date:"l F d, Y" }}</span>
                         <div class="flex space-x-2">
+                            <!-- Button for editing task. Only available if you are creator of task -->
                             {% if t.assigner == request.user %}
                             <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                 href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
                                 hx-target="#dialog">Edit Task</a>
                             {% endif %}
+
+                            {% if t.assigner == request.user and t.swap_requests and t.swap_request.requester == request.user and t.swap_request.status == 'Accepted'%}
+                            <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
+                                hx-target="#dialog">Swap Request Accepted</a>
+                            {% endif %}
+                            <!-- Button for toggling swap request modal -->
+                            {% if request.user not in t.assignee.all %}
+                                {% if t.swap_requests %}
+                                    <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                    href="{% url 'servers:swap_offer' task_id=t.id %}"
+                                    hx-get="{% url 'servers:swap_offer' task_id=t.id %}"
+                                    hx-target="#dialog">User is requesting swap</a>
+                                {% endif %}
+                            {% endif %}
+                            {% if request.user in t.assignee.all and t.assignee.count != participation.count %}
+                                {% if t.user_has_swap_requests%}
+                                    <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                    href="{% url 'servers:manage_swap_request' swap_request_id=t.swap_request.id %}"
+                                    hx-get="{% url 'servers:manage_swap_request' swap_request_id=t.swap_request.id %}"
+                                    hx-target="#dialog">Manage My Swap Request</a>
+                                {% else %}
+                                    <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                    href="{% url 'servers:swap_request' t.id %}"
+                                    hx-get="{% url 'servers:swap_request' t.id %}"
+                                    hx-target="#dialog">Make a Swap Request</a>
+                                {% endif %}
+                            {% endif %}
+
                             {% if t.assigner == request.user %}
                             <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                 href="{%url 'servers:assign_task' t.id %}" hx-get="{%url 'servers:assign_task' t.id %}"
                                 hx-target="#dialog">Assign Task</a>
                             {% endif %}
+
                         </div>
                     </div>
                     <hr class="my-2 border-gray-300">
@@ -181,7 +198,11 @@
             </a>
             {% endfor %}
         </div>
-
+        <script>
+            document.body.addEventListener('htmx:configRequest', (event) => {
+                event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+            })
+        </script>
 
 
         <!-- Second Scrollable Container -->
@@ -200,6 +221,7 @@
                     <div class="flex justify-between items-center mt-2">
                         <span class="text-sm text-gray-400">{{ b.posted_date | date:"l F d, Y" }}</span>
                         <div class="flex space-x-2">
+                            <!-- Button for adding event. Only available on bills you created -->
                             {% if b.bill_creator == request.user %}
                             <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                 href="{%url 'servers:edit_bill' b.id %}" hx-get="{%url 'servers:edit_bill' b.id %}"
@@ -243,6 +265,7 @@
             <!-- People Container -->
             <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)*1/3]">
                 <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">People</h2>
+                <!-- Button for inviting to group -->
                 <a hx-get="{% url 'servers:invitation' server_id=server_id %}" hx-target="#dialog" class="">
                     <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                         <p class="text-lg font-bold text-center">Invite to Group</p>
@@ -264,7 +287,10 @@
             <!-- Events Container -->
             <div class="bg-gray-300 overflow-y-auto rounded-lg h-[calc(100vh-5rem)*2/3]">
                 <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Events</h2>
-                <a hx-get="{% url 'servers:add_event' server_id %}" hx-target="#dialog" class="">
+
+                <!-- Button for adding event -->
+                <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
+
                     <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                         <p class="text-lg font-bold text-center">Add Event</p>
                     </div>
@@ -277,6 +303,7 @@
                         <div class="flex justify-between items-center mt-2">
                             <span class="text-sm text-gray-400">{{ e.date_created | date:"l F d, Y" }}</span>
                             <div class="flex space-x-2">
+                                 <!-- Button for editing event. Only available if you are creator of event -->
                                 {% if e.creator == request.user %}
                                 <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                     href="{%url 'servers:edit_event' e.id %}" hx-get="{%url 'servers:edit_event' e.id %}"
@@ -295,7 +322,8 @@
                 
             </div>
         </div>
-        
+
+        <!-- Target for htmx modal -->
         <div id="modal" class="modal fade">
             <div id="dialog" class="modal-dialog" hx-target="this"></div>
         </div>
@@ -303,26 +331,5 @@
     </main>
     
 </body>
-
-<style>
-            /* WebKit */
-            ::-webkit-scrollbar {
-                width: 6px;
-                height: 6px;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background-color: rgba(155, 155, 155, 0.5);
-                border-radius: 3px;
-            }
-
-            ::-webkit-scrollbar-track {
-                background-color: rgba(0, 0, 0, 0.1);
-            }
-
-            /* Firefox */
-            /* scrollbar-width: thin; */
-            /* scrollbar-color: rgba(155, 155, 155, 0.5) rgba(0, 0, 0, 0.1); */
-</style>
-
 </html>
+
