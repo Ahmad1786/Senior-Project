@@ -8,20 +8,25 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <!-- htmx script -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
 <!-- htmx csrf_token passage -->
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'  >
     <h1 style=" font-size:20px; font-weight:bold;">Comment Section:</h1>
-    <div class="commentcontainer" style="background-color:white; border-radius: 15px;"> 
+    <div class="commentcontainer" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 0.375rem; padding: 1rem; margin-bottom: 1rem;"> 
 
         <!-- Create an original comment. -->
-        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:add_comment' post_type post_id %}" hx-target="#comment-container">Click to Comment</button>
+        <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 10px;" hx-get="{%url 'posts:add_comment' post_type post_id %}" hx-target="#comment-container">Click to Comment</button>
         <div id="comment-container"></div>
 
         {% for parent_comment, replies in threads.items %}
             <!-- Print out the parent comment -->
-            <div class="comment">
+            <div class="comment" style="border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 10px; ">
                 <!-- Put the profile picture and comment post info on the same line -->
                 <div style="display: flex; align-items: center;">
                     <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="max-width: 5%; max-height: 5%; border-radius: 50%">
@@ -30,21 +35,24 @@
                 <div id="parent-comment{{ parent_comment.id }}">{{ parent_comment.content}}</div>
 
                 <!-- A button to make a reply. -->
-                <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id%}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
+                <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+                border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: 2px;" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id%}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
 
                 <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                 {% if parent_comment.author == current_user %}
                     <!-- Edit button -->
-                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-get="{% url 'posts:edit_comment' post_type post_id parent_comment.id %}" hx-target="#parent-comment{{ parent_comment.id }}">Edit</button>
+                    <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+                    border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: 2px;" hx-get="{% url 'posts:edit_comment' post_type post_id parent_comment.id %}" hx-target="#parent-comment{{ parent_comment.id }}">Edit</button>
 
                     <!-- Delete button -->
-                    <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(79 70 229); color:white; font-weight:bold" hx-post="{% url 'posts:delete_comment' post_type post_id parent_comment.id %}" hx-target="#comment-section">Delete</button>
+                    <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+                    border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: 2px;" hx-post="{% url 'posts:delete_comment' post_type post_id parent_comment.id %}" hx-target="#comment-section">Delete</button>
                 {% endif %}
             </div>
 
                 <!-- Check for replies to the parent comment and print them out -->
                 {% for reply in replies %}  
-                    <div class="reply">
+                    <div class="reply" style="position: relative; left: 15px; border-radius: 0.375rem; padding: .1rem; border: 1px solid #2563eb; margin: 10px;">
                         <!-- Put the profile picture and comment post info on the same line -->
                         <div style="display: flex; align-items: center;">
                             <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="max-width: 5%; max-height: 5%; border-radius: 50%">
@@ -53,15 +61,18 @@
                         <div id="reply-comment{{ reply.id }}">{{ reply.content}}</div>
 
                         <!-- A button to make a reply. -->
-                        <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(204, 111, 6); color:white; font-weight:bold" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id %}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
+                        <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+                        border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: .1px;" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id %}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
 
                         <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                         {% if reply.author == current_user %}
                             <!-- Edit button -->
-                            <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(204, 111, 6); color:white; font-weight:bold" hx-get="{% url 'posts:edit_comment' post_type post_id reply.id %}" hx-target="#reply-comment{{ reply.id }}">Edit</button>
+                            <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+                            border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: .1px;" hx-get="{% url 'posts:edit_comment' post_type post_id reply.id %}" hx-target="#reply-comment{{ reply.id }}">Edit</button>
 
                             <!-- Delete button -->
-                            <button style="border-radius: 5px; margin-top: 10px; margin-left: 10px; background-color: rgb(204, 111, 6); color:white; font-weight:bold" hx-post="{% url 'posts:delete_comment' post_type post_id reply.id %}" hx-target="#comment-section">Delete</button>
+                            <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+                            border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: .1px;" hx-post="{% url 'posts:delete_comment' post_type post_id reply.id %}" hx-target="#comment-section">Delete</button>
                         {% endif %}
                     </div>
                 {% endfor %} <!-- End replies loop -->

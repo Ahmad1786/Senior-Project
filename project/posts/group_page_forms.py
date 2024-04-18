@@ -189,4 +189,15 @@ class LeaderboardForm(forms.Form):
         leaderboard_text = '\n'.join([f"{display_name}: {points}" for display_name, points in users_with_points])
         
         self.fields['leaderboard'] = forms.CharField(initial=leaderboard_text, widget=forms.Textarea(attrs={'readonly': 'readonly'}))
+
+# form for completing tasks
+class CompleteTaskForm(forms.ModelForm):
+    task_id = forms.ModelChoiceField(queryset=None, empty_label=None, label="Select task you have completed")
+    class Meta:
+        model = Chore
+        fields = ['task_id']
+        
+    def __init__(self, *args, **kwargs):
+        super(CompleteTaskForm, self).__init__(*args, **kwargs)
+        self.fields['task_id'].queryset = Chore.objects.all() 
        

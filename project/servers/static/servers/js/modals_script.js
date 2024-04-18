@@ -25,4 +25,3 @@ htmx.on("hidden.bs.modal", () => {
 document.body.addEventListener('PageRefreshNeeded', () => {
     window.location.reload();
 });
-
