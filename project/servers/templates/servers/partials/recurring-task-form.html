@@ -7,11 +7,16 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
+<!-- Toggle for Recurring Task -->
 <form id="modal" hx-post="{{ request.path }}" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
     {% csrf_token %}
     <div class="bg-white rounded-lg overflow-hidden shadow-xl w-96">
         <div class="modal-header p-4 bg-gray-200 border-b">
-            <h5 class="modal-title">Add Recurring Task</h5>
+            <h5 class="modal-title">Add a Task & Chore</h5>
+        </div>
+        <div class="flex items-center justify-Beginning px-4 py-2 bg-gray-200 border-b">
+            <label for="recurringTaskToggle" class="mr-2">Recurring Task</label>
+            <input id="recurringTaskToggle" type="checkbox" checked onchange="toggleRecurringTask(this)">
         </div>
         <div class="modal-body p-4">
             {{ form.as_p }}
@@ -34,3 +39,14 @@
     }
 </style>
 
+<script>
+    function toggleRecurringTask(checkbox) {
+        if (checkbox.checked) {
+            // Checkbox is checked (on)
+            // Do nothing (default behavior)
+        } else {
+            // Checkbox is unchecked (off)
+            window.location.href = "{% url 'servers:add_task' server_id %}";
+        }
+    }
+</script>

@@ -58,11 +58,13 @@ def add_task(request, server_id):
         else:
             return render(request, 'servers/partials/task-form.html', {
                 'form': form,
+                'server_id': server_id
             })
     
     form = TaskForm(server_instance=server_instance)
     return render(request, 'servers/partials/task-form.html', {
         'form': form,
+        'server_id': server_id
     })
 
 

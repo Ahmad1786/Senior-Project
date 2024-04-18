@@ -33,7 +33,6 @@ class User(AbstractUser):
         participation = self.participations.get(server=server)
         return participation.display_name
 
-
 class Notification(models.Model):
     receivers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="notifications")
     message = models.TextField()
