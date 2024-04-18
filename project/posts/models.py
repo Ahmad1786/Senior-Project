@@ -132,7 +132,7 @@ class SwapRequest(models.Model):
         total_users = self.chore.server.members.count()
         declined_offers = SwapOffer.objects.filter(swap_request=self, status='DECLINED').count()
 
-        if declined_offers == total_users - 1:
+        if declined_offers == total_users - self.chore.assignee.count():
             self.status = 'DECLINED'
         elif self.status != 'ACCEPTED':
             self.status = 'PENDING'
@@ -172,14 +172,14 @@ class SwapOffer(models.Model):
             if self.offer_chore:
                 
                 #Add Swap offer user to assignees for chore they are swapping with
-                self.offer_chore.assignee.add(self.swap_request.chore.requester)
+                self.offer_chore.assignee.add(self.swap_request.requester)
                 #Remove user who made swap offer from the chore they are trying to swap out of
                 self.offer_chore.assignee.remove(self.user)
                 
                 #Add swap request user to assignees of chore they are swapping into
                 self.swap_request.chore.assignee.add(self.user)
                 #Remove swap request user from chore they are swapping out of
-                self.swap_request.chore.assignee.remove(self.swap_request.user)
+                self.swap_request.chore.assignee.remove(self.swap_request.requester)
 
                 self.status = 'ACCEPTED'
                 self.save()

@@ -250,13 +250,19 @@ def create_swap_offer(request, swap_request_id):
         offer_chore = form.cleaned_data['offer_chore']
         status = form.cleaned_data['status']
         # Create the swap offer
-        SwapOffer.create_offer(swap_request=swap_request, offer_chore=offer_chore, status=status, user=request.user)
+        
         if status == 'ACCEPTED' or status == 'Accepted' and offer_chore != None:
+            SwapOffer.create_offer(swap_request=swap_request, offer_chore=offer_chore, status=status, user=request.user)
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
         elif status == 'ACCEPTED' or status == 'Accepted' and offer_chore==None:
+            SwapOffer.create_offer(swap_request=swap_request, offer_chore=offer_chore, status=status, user=request.user)
             for swap_request_left in all_swap_requests:
                 SwapOffer.create_offer(swap_request=swap_request_left, offer_chore=None, status="DECLINED", user=request.user)
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+        elif status == 'DECLINED' or status == 'Declined':
+            SwapOffer.create_offer(swap_request=swap_request_left, offer_chore=None, status="DECLINED", user=request.user)
+        else:
+            SwapOffer.create_offer(swap_request=swap_request_left, offer_chore=None, status="PENDING", user=request.user)
         return JsonResponse({'status': 'success'}, status=200)
 
 def manage_swap_request(request, swap_request_id):
