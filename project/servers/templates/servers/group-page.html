@@ -60,7 +60,7 @@
         <hr class="my-4 text-gray-600">
         <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
           <i class="bi bi-person-circle"></i>
-          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account (test version)</a></span>
+          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
         </div>
         <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
                 onclick="toggleJoinForm()">
@@ -96,11 +96,28 @@
         <!-- First Scrollable Container -->
         <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]">
             <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>
-            <a hx-get="{% url 'servers:add_task' events.first.server.id %}" hx-target="#dialog" class="">
+            
+            <!-- Temporary placed button for recurring tasks -->
+            <button class="bg-red-500 text-white px-2 py-1 rounded ml-4" 
+                hx-target="#dialog" hx-get="{%url 'posts:create_recurring_task' server_id %}">
+                Add a Recurring Task 
+            </button>
+            
+
+
+            <a hx-get="{% url 'servers:add_task' server_id %}" hx-target="#dialog" class="">
+
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                     <p class="text-lg font-bold text-center">Add Task & Chore</p>
                 </div>
-            </a>            
+                <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                href="{%url 'servers:leaderboard' %}" hx-get="{%url 'servers:leaderboard' %}"
+                hx-target="#dialog">Leaderboard</a>
+
+                <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                href="{%url 'servers:complete_task' %}" hx-get="{%url 'servers:complete_task' %}"
+                hx-target="#dialog">Complete Task</a>
+            </a>           
             {% for t in tasks %}
             <a href="{% url 'posts:chore' t.id %}">
                 <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
@@ -128,6 +145,7 @@
                                 href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
                                 hx-target="#dialog">Edit Task</a>
                             {% endif %}
+
                             {% if t.assigner == request.user and t.swap_requests and t.swap_request.requester == request.user and t.swap_request.status == 'Accepted'%}
                             <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                 href="{%url 'servers:edit_task' t.id %}" hx-get="{%url 'servers:edit_task' t.id %}"
@@ -154,6 +172,12 @@
                                     hx-get="{% url 'servers:swap_request' t.id %}"
                                     hx-target="#dialog">Make a Swap Request</a>
                                 {% endif %}
+                            {% endif %}
+
+                            {% if t.assigner == request.user %}
+                            <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                                href="{%url 'servers:assign_task' t.id %}" hx-get="{%url 'servers:assign_task' t.id %}"
+                                hx-target="#dialog">Assign Task</a>
                             {% endif %}
 
                         </div>
@@ -184,7 +208,7 @@
         <!-- Second Scrollable Container -->
         <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]" style="scrollbar-width: thin; /* Firefox */ scrollbar-color: rgba(155, 155, 155, 0.5) rgba(0, 0, 0, 0.1);">
             <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Bills</h2>
-            <a hx-get="{% url 'servers:add_bill' events.first.server.id %}" hx-target="#dialog" class="">
+            <a hx-get="{% url 'servers:add_bill' server_id %}" hx-target="#dialog" class="">
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                     <p class="text-lg font-bold text-center">Add Bill</p>
                 </div>
@@ -263,8 +287,10 @@
             <!-- Events Container -->
             <div class="bg-gray-300 overflow-y-auto rounded-lg h-[calc(100vh-5rem)*2/3]">
                 <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Events</h2>
+
                 <!-- Button for adding event -->
                 <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
+
                     <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                         <p class="text-lg font-bold text-center">Add Event</p>
                     </div>
@@ -306,3 +332,4 @@
     
 </body>
 </html>
+

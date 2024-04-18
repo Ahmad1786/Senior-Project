@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Bill, Chore, Event, Comment, Post
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
@@ -30,13 +30,13 @@ def bill(request, id):
     return render(request, "posts/bill.html", {
         "post_id": post_id,
         "post_name": post_name,
+        "post_type": "bill",
         "description": description,
         "date_created": date_created,
         "cost": cost,
         "split": split,
         "individual_portion": individual_portion,
         "payers": payers,
-         "threads": threads,
     })
 
 @login_required
@@ -59,13 +59,14 @@ def chore(request, id):
     creator = chore.creator
 
     return render(request, "posts/chore.html", {
+        "post_id": id,
         "post_name": post_name,
         "description": description,
+        "post_type": "chore",
         "date_created": date_created,
         "due_date": due_date,
         "assigned_to": assigned_to,
         "creator": creator,
-        "threads": threads,
     })
 
 @login_required
@@ -85,39 +86,11 @@ def event(request, id):
     creator = event.creator
     
     return render(request, "posts/event.html", {
-        "post_name": post_name,
+       "post_id": id, 
+       "post_name": post_name,
+       "post_type": "event",
        "description": description,
        "date_created": date_created,
        "time": time,
        "creator": creator, 
-       "threads": threads,
-    })
-
-
-def add_reply(request, post_type, post_id, parent_comment_id):
-    # The parent of the comment chain this reply will belong to
-    parent_comment = Comment.objects.get(id=parent_comment_id)
-    if request.method == "POST":
-        # Finish this later
-        form = CommentForm(request.POST)
-    else:
-        initial_data = {
-            "author": request.user,
-            "parent_comment": parent_comment,
-        }
-        # Check what type of post this comment will be on and then retrieve it.
-        # Store the post as a foreign key in the initial data (links the comment to the post)
-        if post_type == "bill":
-            initial_data["bill"] = Bill.objects.get(id=post_id)
-        elif post_type == "chore":
-            initial_data["task"] = Chore.objects.get(id=post_id)
-        elif post_type == "event":
-            initial_data["event"] = Event.objects.get(id=post_id)
-        else:
-            raise Http404("Error: " + post_type + " is not a valid post_type")
-        
-        form = CommentForm(initial=initial_data)
-    return render(request, "posts/add-reply.html", {
-        "parent_comment": parent_comment,
-        "form": form,
     })

@@ -9,7 +9,6 @@ body {
     width: 77%;
     float: right;
     padding: 20px;
-    background-color: rgb(79 70 229);
 }
 
 #upload {
@@ -86,7 +85,6 @@ li a:hover {
 }
 
 .upbutton {
-    background-color: rgb(79 70 229);
     width: 25%;
     border-radius: 20px;
     margin-top: 20px;

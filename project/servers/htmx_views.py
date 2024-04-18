@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
-from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm, AssignTaskForm
-from .forms import EmailForm, SwapOfferForm
+from .forms import EmailForm, SwapOfferForm, ServerForm
 from posts.models import Bill, Event, Chore, SwapOffer, SwapRequest
+from posts.group_page_forms import BillForm, EventForm, TaskForm, EditBillForm, EditEventForm, EditTaskForm, InvitationForm, AssignTaskForm, LeaderboardForm, CompleteTaskForm
 from servers.models import Server, Participation, Invitation
 from django.utils.timezone import get_current_timezone
 from django.utils import timezone
@@ -128,6 +128,10 @@ def edit_bill(request, bill_id):
         if form.is_valid():
             form.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+        else:
+            return render(request, 'servers/partials/edit-bill-form.html', {
+                'form': form
+                })
     else:
         return render(request, 'servers/partials/edit-bill-form.html', {
             'form': EditBillForm(instance=instance)
@@ -154,28 +158,29 @@ def edit_task(request, task_id):
 
 
 # Function to assign a task - done by Luke
-def assign_task(request):
+def assign_task(request, task_id):
+    assigned_task = Chore.objects.get(pk=task_id)
     if not is_htmx(request):
         return HttpResponse(status=405)
-    tasks_to_assign = Chore.objects.filter(assigned_date__isnull=True)
-
+    if not can_edit(request.user, assigned_task):
+        return HttpResponse(status=403)
+    
+    instance = Chore.objects.get(id=task_id)
+    
     if request.method == 'POST':
-        form = AssignTaskForm(request.POST)
+        form = AssignTaskForm(request.POST, instance=instance)
         if form.is_valid():
-            assigned_task_id = form.cleaned_data['task_id']
             assigned_users = form.cleaned_data['assigned_users']
-            assigned_task = Chore.objects.get(pk=assigned_task_id)
             assigned_task.assignee.set(assigned_users)
-            
+            assigned_task.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     else:
-        form = AssignTaskForm()
+       form = AssignTaskForm(instance=instance)
 
-    context = {
+    return render(request, 'servers/partials/assign-task-form.html', {
         'form': form,
-        'tasks_to_assign': tasks_to_assign,
-    }
-    return render(request, 'servers/partials/assign-task-form.html', context)
+    
+    })     
 
 #Function for joining a server
 def join_server(request):
@@ -188,9 +193,28 @@ def join_server(request):
             display_name = f"{user.first_name} {user.last_name}"
             participation = Participation(user=user, server=server, display_name=display_name, is_owner=False)
             participation.save()
+
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+
+            #return redirect('servers:server_page', server_id=server.id)
+
         else:
             messages.error(request, 'Invalid Invitation Code')
+
+#Function to Create a server
+# will create it as a htmx view later
+def create_server(request):
+    if request.method == 'POST':
+        form = ServerForm(request.POST)
+        if form.is_valid():
+            server = form.save()
+            p = Participation(user=request.user, server=server, is_owner=True)
+            p.save()
+            return redirect('servers:server_page', server_id=server.id)
+    else:
+        form = ServerForm()
+    
+    return render(request, 'servers/create_server.html', {'form': form})
 
 def invitation(request, server_id):
     if not is_htmx(request):
@@ -338,5 +362,47 @@ def accept_swap_offer(request, offer_id):
 def close_modal(request):
     return HttpResponse('')
 
+  
 def reload_window(request):
     return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+
+  
+def leaderboard(request):
+    if not is_htmx(request):
+        return HttpResponse(status=405)
+
+    if request.method == 'POST':
+        form = LeaderboardForm(request.POST)
+    else:
+        form = LeaderboardForm()
+
+    return render(request, 'servers/partials/leaderboard.html', {'form': form})
+
+  
+def complete_task(request):
+    if request.method == 'POST':
+        form = CompleteTaskForm(request.POST)
+        if form.is_valid():
+            task = form.cleaned_data['task_id']
+            try:
+                task.completed = True
+                task.save()
+                server = task.server
+                participations = Participation.objects.filter(server=server)
+                
+                # Calculate and award points to each participation
+                for participation in participations:
+                    if participation.user == request.user:
+                        # Award points to the user who completed the task and delete the task since it is completed
+                        participation.points += task.point_val
+                        task.delete()
+                        return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+                    else:
+                        pass
+                    participation.save()
+                    
+            except Chore.DoesNotExist:
+                return HttpResponse("Task not found", status=404)
+    else:
+        form = CompleteTaskForm()
+    return render(request, 'servers/partials/complete-task.html', {'form': form})

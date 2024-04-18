@@ -34,18 +34,6 @@
     flex-grow: 5;
 }
 
-* {
-    font-size: x-large;
-}
-
-h3 {
-    color: lightcoral
-}
-
-p {
-    color: black;
-}
-
 .comment, .reply {
     border: 1px solid blue;
     color: blue;

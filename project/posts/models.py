@@ -4,6 +4,7 @@ from servers.models import Server
 from posts.models import *
 from decimal import Decimal, ROUND_HALF_UP
 from django.utils import timezone
+import datetime
 
 class Post(models.Model):
     """
@@ -93,6 +94,25 @@ class Chore(Post):
         if user in self.assignee.all():
             return f"You, {', '.join([a.display_name(self.server) for a in self.assignee.all() if a != user])}"
         return ', '.join([a.display_name(self.server) for a in self.assignee.all()]) 
+
+    @property
+    def point_val(self):
+
+        if self.completed:
+            return 10
+        else:
+            # Calculate points based on due date
+            days_remaining = (self.due_date - datetime.now().date()).days
+            if days_remaining < 1:
+                # Point system based on how early a task is completed?
+                return 0
+            elif days_remaining <= 3:
+                return 8
+            elif days_remaining <= 7:
+                return 5
+            else:
+                return 3
+
 
     def __str__(self):
         return f"Chore: {self.post_name} in {self.server.group_name}"
@@ -234,3 +254,81 @@ class SwapOffer(models.Model):
             raise ValueError("Cannot update offer that is not pending.")
 
         
+
+from datetime import timedelta
+from django.utils import timezone
+from django.utils.timezone import get_current_timezone 
+
+class RecurringTask(models.Model):
+
+    server = models.ForeignKey(Server, on_delete = models.CASCADE, related_name = "recurring_tasks")
+    assignee = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="assigned_recurring_tasks", blank=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name = "created_recurring_tasks")
+
+    # (null=True, blank=True) for testing purposes
+    title = models.CharField(max_length = 50)
+    description = models.TextField(null=True, blank=True)
+    first_due_date = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateTimeField(null=True, blank=True)
+    point_value = models.IntegerField(default = 0)
+
+    FREQUENCY_CHOICES = [
+        ('minute', 'Minute'), # for testing purposes
+        ('day', 'Day'),
+        ('week', 'Week'),
+        ('month', 'Month'),
+    ]
+    
+    recurring_period = models.IntegerField(null=True, blank=True) # how often
+    recurring_unit = models.CharField(max_length = 10, choices = FREQUENCY_CHOICES) # unit of repetition
+
+    assignee_index = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Recurring Task: {self.title} in {self.server.group_name}"
+    
+    def get_next_assignee(self):
+        assignees = list(self.assignee.all())
+        if not assignees:
+            return None
+        # Calculate the correct index and access the assignee
+        next_assignee_index = self.assignee_index % len(assignees)
+        next_assignee = assignees[next_assignee_index]
+        
+        # Increment the assignee_index for next time
+        self.assignee_index = (self.assignee_index + 1) % len(assignees)
+        self.save()
+        return next_assignee
+    
+    def get_next_due_date(self):
+        if not self.due_date:
+            return self.first_due_date
+        if self.recurring_unit == 'minute':
+            return self.due_date + timedelta(minutes=self.recurring_period)
+        elif self.recurring_unit == 'day':
+            return self.due_date + timedelta(days=self.recurring_period)
+        elif self.recurring_unit == 'week':
+            return self.due_date + timedelta(weeks=self.recurring_period)
+        elif self.recurring_unit == 'month':
+            return self.due_date + timedelta(days=30*self.recurring_period)
+
+    def check_and_create_chore(self):
+        now = timezone.now().astimezone(get_current_timezone())
+        if not self.due_date or now >= self.due_date:
+            next_assignee = self.get_next_assignee()
+            next_due_date = self.get_next_due_date()
+            self.due_date = next_due_date  # Update the due date for the next iteration
+            self.save()
+            
+            chore = Chore.objects.create(
+                server=self.server,
+                creator=self.creator,
+                post_name=self.title,
+                description=self.description,
+                due_date=next_due_date.date(),
+                point_value=self.point_value,
+            )
+            chore.assignee.add(next_assignee)
+            
+        return None
+

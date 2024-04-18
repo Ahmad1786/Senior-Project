@@ -1,10 +1,16 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from posts.models import Bill, Chore, Event, Comment
-from servers.models import Server, Participation
-from django.http import HttpResponse
-from django.db.models import F, Q
+from servers.models import Server
 from django.db import models
+from django.shortcuts import redirect
+
+def index(request):
+    # if user logged in, redirect to feed
+    if request.user.is_authenticated:
+        return redirect('users:feed_view')
+    else:
+        return render(request, 'landing-page.html')
 
 @login_required
 def feed_view(request):

@@ -13,114 +13,192 @@
     <link href="{% static 'users/account.css' %}" rel="stylesheet">
 </head>
 
-<div class="bg-blue-600  font-[Poppins] flex w-1/5">
-    <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="Openbar()">
-      <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
-    </span>
-    <div class="sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] duration-1000
-      p-2 w-[300px] overflow-y-auto text-center bg-gray-900 shadow h-screen">
-      <div class="text-gray-100 text-xl">
-        <div class="p-2.5 mt-1 flex items-center rounded-md ">
-          <i class="bi bi-app-indicator px-2 py-1 bg-blue-600 rounded-md"></i>
-          <h1 class="text-[15px]  ml-3 text-xl text-gray-200 font-bold">CoHabitat</h1>
-          <i class="bi bi-x ml-20 cursor-pointer lg:hidden" onclick="Openbar()"></i>
+<div class="bg-blue-600  font-[Poppins] w-1/5">
+  <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="Openbar()">
+    <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
+  </span>
+  <div class="sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] duration-1000
+    p-2 w-[300px] overflow-y-auto text-center bg-gray-900 shadow h-screen">
+    <div class="text-gray-100 text-xl">
+      <div class="p-2.5 mt-1 flex items-center rounded-md ">
+        <i class="bi bi-app-indicator px-2 py-1 bg-blue-600 rounded-md"></i>
+        <h1 class="text-[15px]  ml-3 text-xl text-gray-200 font-bold">CoHabitat</h1>
+        <i class="bi bi-x ml-20 cursor-pointer lg:hidden" onclick="Openbar()"></i>
+      </div>
+      <hr class="my-2 text-gray-600">
+
+      <div>
+
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          
+          <i class="bi bi-card-text"></i>
+          <span class="text-[15px] ml-4 text-gray-200"><a href="../">Feed</span>
         </div>
-        <hr class="my-2 text-gray-600">
-  
-        <div>
-  
-          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-            
-            <i class="bi bi-card-text"></i>
-            <span class="text-[15px] ml-4 text-gray-200">Feed</span>
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <i class="bi bi-houses-fill"></i>
+          <div class="flex justify-between w-full items-center" onclick="dropDown()">
+            <span class="text-[15px] ml-4 text-gray-200">Groups</span>
+            <span class="text-sm rotate-180" id="arrow">
+              <i class="bi bi-chevron-down"></i>
+            </span>
           </div>
-          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-            <i class="bi bi-houses-fill"></i>
-            <div class="flex justify-between w-full items-center" onclick="dropDown()">
-              <span class="text-[15px] ml-4 text-gray-200">Groups</span>
-              <span class="text-sm rotate-180" id="arrow">
-                <i class="bi bi-chevron-down"></i>
-              </span>
+        </div>
+        <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto" id="submenu">
+          {% for server in servers %}
+            <h1 class="cursor-pointer p-2 hover:bg-gray-700 rounded-md mt-1"><a href="{% url 'servers:server_page' server_id=server.id %}">{{ server.group_name }}</a></h1>     
+          {% endfor %}
+        </div>
+        <hr class="my-4 text-gray-600">
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+          <i class="bi bi-person-circle"></i>
+          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
+        </div>
+
+        <!-- Notifications -->
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+        hx-get="{% url 'users:unread_notification_count' %}" hx-trigger="every 3s" hx-swap="innerHTML" hx-target="#unread-count">
+          <i class="bi bi-bell"></i>
+          <span class="ml-1 text-sm font-semibold text-red-500" id="unread-count"></span>
+          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:notification_page' %}">Notifications</a></span>
+        </div>
+        
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+                onclick="toggleJoinForm()">
+                <i class="bi bi-person-circle"></i>
+                <span class="text-[15px] ml-4 text-gray-200">Join Server</span>
             </div>
+            
+            <!-- Join Server Form -->
+        <form id="joinServerForm" class="hidden" hx-post="{% url 'servers:join_server' %}">
+          {% csrf_token %}
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            <input type="text" name="token" placeholder="Enter Invitation Code" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
           </div>
-          <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto" id="submenu">
-            {% for server in servers %}
-              <h1 class="cursor-pointer p-2 hover:bg-gray-700 rounded-md mt-1"><a href="{% url 'servers:server_page' server_id=server.id %}">{{ server.group_name }}</a></h1>     
-            {% endfor %}
-          </div>
-          <hr class="my-4 text-gray-600">
-          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-            <i class="bi bi-person-circle"></i>
-            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
-          </div>
-          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-            <i class="bi bi-person-circle"></i>
-            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile_pic' %}">Profile Pic (Testing)</a></span>
-          </div>
-  
-          
-          
-          <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-            <i class="bi bi-box-arrow-in-right"></i>
-            <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
-          </div>
-  
+          <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            Join
+          </button>
+        </form> 
+
+        <!-- Link to create server form / page  -->
+        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'servers:create_server' %}">Create Server</a></span>
         </div>
+
+        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
+        </div>
+
       </div>
     </div>
-  
-    <script>
-      function dropDown() {
-        document.querySelector('#submenu').classList.toggle('hidden')
-        document.querySelector('#arrow').classList.toggle('rotate-0')
-      }
-      dropDown()
-  
-      function Openbar() {
-        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
-      }
-    </script>
   </div>
 
-<body>
-    <div class="account-details-container font-[Poppins] ">
+
+  <script>
+        function toggleJoinForm() {
+        var form = document.getElementById('joinServerForm');
+        form.classList.toggle('hidden');
+    }
+
+    function Openbar() {
+        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+    }
+    function dropDown() {
+      document.querySelector('#submenu').classList.toggle('hidden')
+      document.querySelector('#arrow').classList.toggle('rotate-0')
+    }
+    dropDown()
+
+    function Openbar() {
+      document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById("modal"))
+
+    htmx.on("htmx:afterSwap", (e) => {
+        // Response targeting #dialog => show the modal
+        if (e.detail.target.id == "dialog") { modal.show() }
+    })
+
+    htmx.on("htmx:beforeSwap", (e) => {
+        // Empty response targeting #dialog => hide the modal
+        if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+            modal.hide()
+            e.detail.shouldSwap = false
+        }
+    })
+
+    htmx.on("hidden.bs.modal", () => {
+        document.getElementById("dialog").innerHTML = ""
+    })
+
+    // Auto reload page when new post gets added or gets edited 
+    // Or any other change that requires a page refresh to see new changes
+    document.body.addEventListener('PageRefreshNeeded', () => {
+        window.location.reload();
+    });
+  </script>
+</div>
+
+<body class="bg-blue-600">
+    <div class="account-details-container font-[Poppins]  bg-blue-600" style="position: relative; right: 50px;">
         <div class="navigation">
             <!--Navigation Bar-->
-           <ul class="nav_list">
-               <li><a>{{ user }}</a></li>
-               <li><a href="feed">Home</a></li>
-               <li><a href="#aboutyou">About You</a></li>
-               <li><a href="#info">Account Info</a></li>
-               <li><a href="#myPost">My Posts</a></li>
-           </ul>
+            <ul class="nav_list">
+                <li><a>{{ user }}</a></li>
+                <div class="right">
+                    <li><a href="#upload">Home</a></li>
+                    <li><a href="#aboutyou">About You</a></li>
+                    <li><a href="#info">Account Info</a></li>
+                    <li><a href="#myPost">My Posts</a></li>
+                </div>
+            </ul>
+        </div>    
+
+        <h4 id="upload" style="position: relative; bottom: 5px;">Upload Picture Form:</h4>
+        <div class="profilePicForm" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem;">
+
+            <h1>Profile Picture:</h1>
+            
+            <img src="{{ user.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic">
+            
+            {% if user.profile_picture.name == 'profile_pics/default_profile.png' %}
+                <p>Using default picture currently. You can upload your own if you like</p>
+            {% endif %}
+            
+            <form action="{% url 'users:profile_pic' %}" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" name="profile_pic" style="position: relative; top: 10px;"> <br/>
+              <button class="upbutton  bg-blue-600" type="submit" style="width: 105px; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+              border-radius: 0.375rem; padding: .1rem;">Upload</button>
+          </form>
+      
+          <br>
         </div>
 
-        <div>
-            {{ user_fields.profile_picture }}
-        </div>     
-
         <h4 id="aboutyou">About you:</h4>
-        <div class="about">
+        <div class="about" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem; padding: .1rem;">
             <span>Full name: {{ user_fields.first_name }} {{ user_fields.last_name }}</span><br/>
             <span>Email: {{ user_fields.email }}</span><br/>
-            <span>Phone Number: {{ user_fields.phone_number }}</span><br/>
-            <span>Social Media: {{ user_fields.socialaccount }}</span>
+            <span>Phone Number: <span id="phone-content"> {{ user_fields.phone_number }}</span></span> 
+            <!-- edit phone number -->
+            <button class="border border-gray-300 px-4 rounded"  hx-get="{% url 'users:edit_phone_number' %}" hx-target="#dialog">Edit</button>
+            <div id="dialog"></div>
         </div>
 
         <h4 id="info">Account Info:</h4>
-        <div class="accountInfo">
-            <span>Username: {{ user_fields.username }}</span><br/>
-            <span class="pass">Password: {{ user_fields.password }}</span><br/>
-            <span>Member Since: {{ user_fields.date_joined }}</span><br/>
+        <div class="accountInfo" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem; padding: .1rem;">
+            <span>Joined CoHabitat on: {{ user_fields.date_joined }}</span><br/>
             <span>Last Login: {{ user_fields.last_login }}</span><br/>
-            <span>Active: {{ user_fields.is_active }}</span><br/>
-            <span>Server: {{ user_fields.servers }}</span><br/>
-            <span>Groups: {{ user_fields.groups }}</span><br/>
-            <span>Admin Privelage: {{ user_fields.is_superuser }}</span>
         </div>
 
         <h4 id="myPost" >My Posts:</h4>
-        <div class="post">
+        <div class="post" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem; padding: .1rem;">
             <span>Chores: {{ user_fields.assigned_chores }}</span><br/>
             <span>Bills: {{ user_fields.bills }}</span><br/>
             <span>Events: {{ user_fields.posts_event_related }}</span><br/>

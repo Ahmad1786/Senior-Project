@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
+from users.models import Notification
 from servers.admin import ParticipationInline
 from posts.models import Chore, Bill, Event
 
@@ -25,6 +26,10 @@ class MyUserAdmin(UserAdmin):
 
     inlines = [ParticipationInline, ChoreInline, BillInline, EventInline] 
 
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'message', 'read', 'created', 'content_type')
+
 
 # Register models
 admin.site.register(User, MyUserAdmin)
+admin.site.register(Notification, NotificationAdmin)

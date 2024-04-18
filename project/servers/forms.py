@@ -1,6 +1,7 @@
 from django import forms
 from posts.models import SwapOffer
 from posts.models import Chore
+from .models import Server
 
 class EmailForm(forms.Form):
     emails = forms.CharField(label='Emails', widget=forms.Textarea(attrs={'placeholder': 'Enter one or more emails separated by commas'}))
@@ -36,3 +37,10 @@ class SwapOfferForm(forms.ModelForm):
         # Optionally, initialize the status field.
         if 'initial' in kwargs:
             self.fields['status'].initial = kwargs['initial'].get('status', '')
+
+            
+class ServerForm(forms.ModelForm):
+    class Meta:
+        model = Server
+        fields = ['group_name',]
+

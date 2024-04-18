@@ -1,5 +1,5 @@
 from django.urls import path
-from . import test_servers, views, htmx_views
+from . import views, htmx_views
 
 app_name = "servers"
 urlpatterns = [
@@ -14,7 +14,9 @@ htmx_routes = [
     path('edit-task/<int:task_id>', htmx_views.edit_task, name="edit_task"),
     path('add-event/<int:server_id>', htmx_views.add_event, name="add_event"),
     path('edit-event/<int:event_id>', htmx_views.edit_event, name ="edit_event"),
-    path('assign-task/', htmx_views.assign_task, name="assign_task"),
+    path('assign-task/<int:task_id>', htmx_views.assign_task, name="assign_task"),
+    path('complete-task/', htmx_views.complete_task, name="complete_task"),
+    path('leaderboard/', htmx_views.leaderboard, name='leaderboard'),
     path('invitation/<int:server_id>', htmx_views.invitation, name ="invitation"),
     path('join-server/', htmx_views.join_server, name ="join_server"),
     path('swap-request/<int:task_id>', htmx_views.swap_request, name ="swap_request"),
@@ -25,12 +27,7 @@ htmx_routes = [
     path('decline-swap-offer/<int:offer_id>', htmx_views.decline_swap_offer, name ="decline_swap__offer"),
     path('close-modal/', htmx_views.close_modal, name ="close_modal"),
     path('reload-window/', htmx_views.reload_window, name ="reload_window"),
+    path('create/', htmx_views.create_server, name='create_server'),
 ]
 
 urlpatterns += htmx_routes
-
-test_routes = [
-    path('test-server/<int:id>', test_servers.test_server, name="test_server"),
-]
-
-urlpatterns += test_routes

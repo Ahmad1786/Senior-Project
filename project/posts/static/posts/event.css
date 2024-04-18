@@ -1,0 +1,26 @@
+body {
+    background-color: white;
+    font-size: 14px;
+    width: 100%;
+}
+
+.eventcontainer {
+    width: 77%;
+    float: right;
+    padding: 20px;
+}
+
+.eventcontent{
+    background-color: white;
+    border-radius: 25px;
+}
+
+.eventdescrip {
+    margin-left: 15px;
+    color: black;
+}
+
+.head {
+    font-size: 25px;
+    font-weight: bold;
+}
