@@ -7,6 +7,7 @@ urlpatterns = [
     path('chore/<int:id>', views.chore, name="chore"),
     path('event/<int:id>', views.event, name="event"),
     path("create-recurring-task/<int:server_id>", recurring_task_views.create_recurring_task, name="create_recurring_task"),
+    path('chore-pic/<int:post_id>', views.chore_pic, name="chore_pic"),
 ]
 
 htmx_routes = [

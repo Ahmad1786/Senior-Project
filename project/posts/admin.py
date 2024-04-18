@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Bill, Chore, Comment, RecurringTask
+from .models import Event, Bill, Chore, Comment, RecurringTask, PostImage
 
 # Configurations - These give more control in the admin panel
 # list_display - what fields show up admin panel
@@ -8,6 +8,10 @@ from .models import Event, Bill, Chore, Comment, RecurringTask
 
 class CommentInline(admin.TabularInline):
     model = Comment
+    extra = 1
+
+class ImageInline(admin.TabularInline):
+    model = PostImage
     extra = 1
 
 class EventAdmin(admin.ModelAdmin):
@@ -19,7 +23,7 @@ class BillAdmin(admin.ModelAdmin):
     filter_horizontal = ('payers',)
 class ChoreAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_name', 'completed', 'assigner', 'server', 'assigned_date')
-    inlines = (CommentInline,)
+    inlines = (CommentInline, ImageInline,)
     filter_horizontal = ('assignee',)
 
 class ReplyInline(admin.TabularInline):
