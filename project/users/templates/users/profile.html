@@ -141,8 +141,8 @@
   </script>
 </div>
 
-<body>
-    <div class="account-details-container font-[Poppins]  bg-blue-600">
+<body class="bg-blue-600">
+    <div class="account-details-container font-[Poppins]  bg-blue-600" style="position: relative; right: 50px;">
         <div class="navigation">
             <!--Navigation Bar-->
             <ul class="nav_list">
@@ -156,15 +156,9 @@
             </ul>
         </div>    
 
-        <h4 id="upload">Upload Picture Form:</h4>
-        <div class="profilePicForm">
-            <form action="{% url 'users:profile_pic' %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="profile_pic"> <br/>
-                <button class="upbutton  bg-blue-600" type="submit">Upload</button>
-            </form>
-        
-            <br>
+        <h4 id="upload" style="position: relative; bottom: 5px;">Upload Picture Form:</h4>
+        <div class="profilePicForm" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem;">
 
             <h1>Profile Picture:</h1>
             
@@ -173,10 +167,20 @@
             {% if user.profile_picture.name == 'profile_pics/default_profile.png' %}
                 <p>Using default picture currently. You can upload your own if you like</p>
             {% endif %}
+            
+            <form action="{% url 'users:profile_pic' %}" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" name="profile_pic" style="position: relative; top: 10px;"> <br/>
+              <button class="upbutton  bg-blue-600" type="submit" style="width: 105px; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+              border-radius: 0.375rem; padding: .1rem;">Upload</button>
+          </form>
+      
+          <br>
         </div>
 
         <h4 id="aboutyou">About you:</h4>
-        <div class="about">
+        <div class="about" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem; padding: .1rem;">
             <span>Full name: {{ user_fields.first_name }} {{ user_fields.last_name }}</span><br/>
             <span>Email: {{ user_fields.email }}</span><br/>
             <span>Phone Number: <span id="phone-content"> {{ user_fields.phone_number }}</span></span> 
@@ -186,13 +190,15 @@
         </div>
 
         <h4 id="info">Account Info:</h4>
-        <div class="accountInfo">
+        <div class="accountInfo" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem; padding: .1rem;">
             <span>Joined CoHabitat on: {{ user_fields.date_joined }}</span><br/>
             <span>Last Login: {{ user_fields.last_login }}</span><br/>
         </div>
 
         <h4 id="myPost" >My Posts:</h4>
-        <div class="post">
+        <div class="post" style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border-radius: 0.375rem; padding: .1rem;">
             <span>Chores: {{ user_fields.assigned_chores }}</span><br/>
             <span>Bills: {{ user_fields.bills }}</span><br/>
             <span>Events: {{ user_fields.posts_event_related }}</span><br/>
