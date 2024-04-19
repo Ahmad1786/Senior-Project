@@ -59,10 +59,11 @@ def server_page(request, server_id):
         t.user_has_swap_requests = SwapRequest.objects.filter(chore=t, status='PENDING', requester = request.user).exists()
         if t.swap_requests:
             t.user_swap_offers = SwapOffer.objects.filter(swap_request__in=t.all_swap_requests, user=request.user)
-    if t.user_swap_offers is not None:
-        t.has_pending_swap_offer = any(offer.status.upper() == 'PENDING' for offer in t.user_swap_offers)
-        t.has_accepted_swap_offer = any(offer.status.upper() == 'ACCEPTED' for offer in t.user_swap_offers)
-        t.has_all_declined_swap_offer = all(offer.status.upper() == 'DECLINED' for offer in t.user_swap_offers)
+        if t.user_swap_offers is not None:
+            t.has_pending_swap_offer = any(offer.status.upper() == 'PENDING' for offer in t.user_swap_offers)
+            t.has_accepted_swap_offer = any(offer.status.upper() == 'ACCEPTED' for offer in t.user_swap_offers)
+            t.has_all_declined_swap_offer = all(offer.status.upper() == 'DECLINED' for offer in t.user_swap_offers)
+    
     for p in chain(bills, tasks, events):
         p.post_creator = p.creator.display_name(Server.objects.get(id=server_id))
 

@@ -289,7 +289,7 @@
                 <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Events</h2>
 
                 <!-- Button for adding event -->
-                <a hx-get="{% url 'servers:add_event' events.first.server.id %}" hx-target="#dialog" class="">
+                <a hx-get="{% url 'servers:add_event' server_id %}" hx-target="#dialog" class="">
 
                     <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                         <p class="text-lg font-bold text-center">Add Event</p>
