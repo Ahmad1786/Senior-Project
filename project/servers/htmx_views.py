@@ -202,19 +202,16 @@ def join_server(request):
             messages.error(request, 'Invalid Invitation Code')
 
 #Function to Create a server
-# will create it as a htmx view later
+@require_POST
 def create_server(request):
     if request.method == 'POST':
-        form = ServerForm(request.POST)
-        if form.is_valid():
-            server = form.save()
-            p = Participation(user=request.user, server=server, is_owner=True)
-            p.save()
+        server_name = request.POST.get('name')
+        if server_name:
+            server = Server.objects.create(group_name=server_name)
+            Participation.objects.create(user=request.user, server=server, is_owner=True)
             return redirect('servers:server_page', server_id=server.id)
-    else:
-        form = ServerForm()
-    
-    return render(request, 'servers/create_server.html', {'form': form})
+        else:
+            return HttpResponse(status=400)
 
 def invitation(request, server_id):
     if not is_htmx(request):
