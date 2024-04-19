@@ -95,16 +95,7 @@
     <main class="flex-1 grid grid-cols-3 gap-10 overflow-hidden p-10 mr-20">
         <!-- First Scrollable Container -->
         <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]">
-            <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>
-            
-            <!-- Temporary placed button for recurring tasks -->
-            <button class="bg-red-500 text-white px-2 py-1 rounded ml-4" 
-                hx-target="#dialog" hx-get="{%url 'posts:create_recurring_task' server_id %}">
-                Add a Recurring Task 
-            </button>
-            
-
-
+            <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>                  
             <a hx-get="{% url 'servers:add_task' server_id %}" hx-target="#dialog" class="">
 
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
@@ -166,6 +157,8 @@
                                     href="{% url 'servers:manage_swap_request' swap_request_id=t.swap_request.id %}"
                                     hx-get="{% url 'servers:manage_swap_request' swap_request_id=t.swap_request.id %}"
                                     hx-target="#dialog">Manage My Swap Request</a>
+                                {% elif t.user_has_declined_swap_requests %}
+                                    <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white">Swap Request Declined</a>
                                 {% else %}
                                     <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                     href="{% url 'servers:swap_request' t.id %}"
@@ -173,7 +166,9 @@
                                     hx-target="#dialog">Make a Swap Request</a>
                                 {% endif %}
                             {% endif %}
-
+                            {% if request.user not in t.assignee.all and t.assignee.count != participation.count and t.user_has_accepted_swap_requests %}
+                                <div class="px-3 py-1 text-sm rounded bg-blue-500 text-white">Swap Request Accepted</div>
+                            {% endif %}
                             {% if t.assigner == request.user %}
                             <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                 href="{%url 'servers:assign_task' t.id %}" hx-get="{%url 'servers:assign_task' t.id %}"

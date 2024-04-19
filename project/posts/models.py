@@ -206,6 +206,7 @@ class SwapOffer(models.Model):
                 self.swap_request.accept_offer()
             else:
                 # Automatically accept the offer with no chore in return
+                print("none block")
                 self.swap_request.chore.assignee.remove(self.swap_request.requester)
                 self.swap_request.chore.assignee.add(self.user)
                 self.status = 'ACCEPTED'
@@ -231,9 +232,9 @@ class SwapOffer(models.Model):
                 swap_request.set_status()
                 return offer
             elif offer_chore is None:
-                offer = cls(swap_request=swap_request, user=user)
+                offer = cls(swap_request=swap_request, status = status, offer_chore=None, user=user)
                 offer.save()
-                swap_request.accept_offer()
+                swap_request.set_status()
                 return offer
         else:
             raise ValueError("Cannot create offer for a swap request that is not pending.")
@@ -252,6 +253,7 @@ class SwapOffer(models.Model):
                 self.save()
         else:
             raise ValueError("Cannot update offer that is not pending.")
+
 
         
 

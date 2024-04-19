@@ -271,26 +271,26 @@ def create_swap_offer(request, swap_request_id):
     form = SwapOfferForm(request.POST, user=request.user, swap_request=swap_request)
     request_server = swap_request.chore.server
     all_swap_requests = SwapRequest.objects.filter(chore=swap_request.chore, status='PENDING').exclude(id=swap_request_id)
+    print(all_swap_requests)
     if form.is_valid():
         # Extract form data
         offer_chore = form.cleaned_data['offer_chore']
         status = form.cleaned_data['status']
+        print(offer_chore)
+        print(status)
         # Create the swap offer
-        
-        if status == 'ACCEPTED' or status == 'Accepted' and offer_chore != None:
-            SwapOffer.create_offer(swap_request=swap_request, offer_chore=offer_chore, status=status, user=request.user)
+        current_offer=SwapOffer.create_offer(swap_request=swap_request, offer_chore=offer_chore, status='PENDING', user=request.user)
+        if status == 'ACCEPTED' and offer_chore != None:
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
-        elif status == 'ACCEPTED' or status == 'Accepted' and offer_chore==None:
-            SwapOffer.create_offer(swap_request=swap_request, offer_chore=offer_chore, status=status, user=request.user)
+        elif status == 'ACCEPTED' and offer_chore==None:
+            current_offer.accept_offer()
             for swap_request_left in all_swap_requests:
                 SwapOffer.create_offer(swap_request=swap_request_left, offer_chore=None, status="DECLINED", user=request.user)
             return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
-        elif status == 'DECLINED' or status == 'Declined':
-            SwapOffer.create_offer(swap_request=swap_request_left, offer_chore=None, status="DECLINED", user=request.user)
         else:
-            SwapOffer.create_offer(swap_request=swap_request_left, offer_chore=None, status="PENDING", user=request.user)
+            current_offer.decline_offer()
         return JsonResponse({'status': 'success'}, status=200)
-
+    
 def manage_swap_request(request, swap_request_id):
     if not is_htmx(request):
         return HttpResponse(status=405)
