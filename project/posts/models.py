@@ -45,7 +45,6 @@ class Bill(Post):
     split = models.BooleanField(default = True)
     completed = models.BooleanField(default = False)
 
-
     @property
     def bill_creator(self):
         return self.creator

@@ -1,14 +1,6 @@
 import json
 import os
 
-# Simplifications to make my life easy
-# For simplicity - Will ignore phone numbers and profile pictures / icons for now
-# Will not do replies. Each comment will be a top level comment
-
-# Some time fields are set to auto_now_add=True: all creation / date_joined dates # no need to worry about them
-
-# for manual data example (our 3 house) - just make owners now
-
 Model_Types = {
     0: 'user',
     1: 'server',
@@ -139,8 +131,6 @@ for bill in Bill_List:
     }
     Bills.append(dict)
 
-# TODO: randomly add payers for each bill rather than just the owner
-# I'll add 3 manually for now - take one bill from each house and add an extra payers aside from the owner 
 bill = next(bill for bill in Bills if bill['house'] == Rowan)
 bill['payers'] += ['Ridhaa']
 
@@ -150,8 +140,6 @@ bill['payers'] += ['Luke']
 bill = next(bill for bill in Bills if bill['house'] == Tayyab_House)
 bill['payers'] += ['Mary']
 
-# create a comment for each post from the owner of that house
-# Maybe TODO: Create better comments :/
 comments = []
 for post in Chores + Events + Bills:
     house_owner = owners[post['house']]
