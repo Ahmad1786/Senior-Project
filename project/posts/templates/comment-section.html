@@ -26,7 +26,7 @@
 
         {% for parent_comment, replies in threads.items %}
             <!-- Print out the parent comment -->
-            <div class="comment" style="border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 10px; ">
+            <div class="comment" style="border-radius: 0.375rem; padding: .5rem; border: 1px solid black; margin: 10px; ">
                 <!-- Put the profile picture and comment post info on the same line -->
                 <div style="display: flex; align-items: center;">
                     <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid black;">
