@@ -84,8 +84,11 @@ def add_reply(request, post_type, post_id, parent_comment_id, replying_to):
         form_data = {
             # The creator of the new reply.
             "author": request.user,
+            # The parent comment of the chain
             "parent_comment": parent_comment,
+            # The content of the comment
             "content": content,
+            # Who the reply is replying to
             "reply_to_author": replying_to,
         }
         # Check what type of post this comment will be on and then retrieve it.
