@@ -301,18 +301,19 @@ def mark_as_paid(request, bill_id):
     return render(request, 'servers/partials/mark-as-paid-modal.html', context=context)
 
 def delete_post(request, post_type, post_id):
-    if post_type == "bill":
-        bill = Bill.objects.get(pk=post_id)
-        bill.delete()
-        return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
-    if post_type == "event":
-        event = Event.objects.get(pk=post_id)
-        event.delete()
-        return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
-    if post_type == "chore":
-        chore = Chore.objects.get(pk=post_id)
-        chore.delete()
-        return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+    if request.method == 'POST':
+        if post_type == "bill":
+            bill = Bill.objects.get(pk=post_id)
+            bill.delete()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+        if post_type == "event":
+            event = Event.objects.get(pk=post_id)
+            event.delete()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
+        if post_type == "chore":
+            chore = Chore.objects.get(pk=post_id)
+            chore.delete()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'PageRefreshNeeded'})
     
     return render(request, 'servers/partials/confirm-deletion.html')
         
