@@ -1,5 +1,3 @@
-
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -58,17 +56,26 @@
           {% endfor %}
         </div>
         <hr class="my-4 text-gray-600">
-        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
           <i class="bi bi-person-circle"></i>
           <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
         </div>
+
+        <!-- Notifications -->
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+        hx-get="{% url 'users:unread_notification_count' %}" hx-trigger="every 3s" hx-swap="innerHTML" hx-target="#unread-count">
+          <i class="bi bi-bell"></i>
+          <span class="ml-1 text-sm font-semibold text-red-500" id="unread-count"></span>
+          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:notification_page' %}">Notifications</a></span>
+        </div>
+        
         <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
                 onclick="toggleJoinForm()">
                 <i class="bi bi-person-circle"></i>
                 <span class="text-[15px] ml-4 text-gray-200">Join Server</span>
             </div>
             
-        <!-- Join Server Form -->
+            <!-- Join Server Form -->
         <form id="joinServerForm" class="hidden" hx-post="{% url 'servers:join_server' %}">
           {% csrf_token %}
           <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
@@ -78,6 +85,13 @@
             Join
           </button>
         </form> 
+
+        <!-- Link to create server form / page  -->
+        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'servers:create_server' %}">Create Server</a></span>
+        </div>
+
         <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
           <i class="bi bi-box-arrow-in-right"></i>
           <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
@@ -95,36 +109,27 @@
     <main class="flex-1 grid grid-cols-3 gap-10 overflow-hidden p-10 mr-20">
         <!-- First Scrollable Container -->
         <div class="bg-gray-200 overflow-y-auto rounded-lg h-[calc(100vh-5rem)]">
-            <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>                  
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold mt-5 mb-5 ml-6">Tasks & Chores</h2>
+                <a class="flex items-center px-3 py-2 text-lg rounded-lg bg-gold text-black hover:bg-yellow-500 hover:text-black mr-6"
+                            href="{%url 'servers:leaderboard' %}" hx-get="{%url 'servers:leaderboard' %}"
+                            hx-target="#dialog">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 0l2.45 6.294L18 7.215l-4.364 3.57 1.305 6.376L10 15.26l-5.94 3.901 1.305-6.376L2 7.215l5.55-0.92L10 0z"/>
+                            </svg> Leaderboard
+                        </a>
+                </a>
+            </div>
+                              
             <a hx-get="{% url 'servers:add_task' server_id %}" hx-target="#dialog" class="">
-
                 <div class="bg-white p-4 rounded-lg shadow-md mt-4 mb-5 block hover:bg-blue-400 mx-5">
                     <p class="text-lg font-bold text-center">Add Task & Chore</p>
                 </div>
-                <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
-                href="{%url 'servers:leaderboard' %}" hx-get="{%url 'servers:leaderboard' %}"
-                hx-target="#dialog">Leaderboard</a>
-
-                <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
-                href="{%url 'servers:complete_task' %}" hx-get="{%url 'servers:complete_task' %}"
-                hx-target="#dialog">Complete Task</a>
-            </a>           
+            </a>
+            
             {% for t in tasks %}
             <a href="{% url 'posts:chore' t.id %}">
-                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
-                    {% if t.has_pending_swap_offer%}
-                    <div class="absolute top-0 right-0 bg-gray-200 text-gray-600 p-2 rounded-lg">
-                        Swap Offer Pending
-                    </div>
-                    {% elif t.has_all_declined_swap_offer %}
-                    <div class="absolute top-0 right-0 bg-red-200 text-red-600 p-2 rounded-lg">
-                        Swap Offer Declined
-                    </div>
-                    {% elif t.has_all_declined_swap_offer %}
-                    <div class="absolute top-0 right-0 bg-green-200 text-green-600 p-2 rounded-lg">
-                        Swap Offer Accepted
-                    </div>
-                    {% endif %}
+                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 transition-transform duration-300 transform hover:hover:scale-105 {% if forloop.last %}mb-10{% endif %}">
                     <h3 class="text-xl font-bold">{{ t.post_name }}</h3>
                     <p class="text-gray-600">{{ t.description }}</p>
                     <div class="flex justify-between items-center mt-2">
@@ -158,7 +163,7 @@
                                     hx-get="{% url 'servers:manage_swap_request' swap_request_id=t.swap_request.id %}"
                                     hx-target="#dialog">Manage My Swap Request</a>
                                 {% elif t.user_has_declined_swap_requests %}
-                                    <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white">Swap Request Declined</a>
+                                    <a class="px-3 py-1 text-sm rounded bg-red-600 text-white">Swap Request Declined</a>
                                 {% else %}
                                     <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                     href="{% url 'servers:swap_request' t.id %}"
@@ -167,14 +172,13 @@
                                 {% endif %}
                             {% endif %}
                             {% if request.user not in t.assignee.all and t.assignee.count != participation.count and t.user_has_accepted_swap_requests %}
-                                <div class="px-3 py-1 text-sm rounded bg-blue-500 text-white">Swap Request Accepted</div>
+                                <div class="px-3 py-1 text-sm rounded bg-green-600 text-white">Swap Request Accepted</div>
                             {% endif %}
                             {% if t.assigner == request.user %}
                             <a class="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                                 href="{%url 'servers:assign_task' t.id %}" hx-get="{%url 'servers:assign_task' t.id %}"
                                 hx-target="#dialog">Assign Task</a>
                             {% endif %}
-
                         </div>
                     </div>
                     <hr class="my-2 border-gray-300">
@@ -186,9 +190,26 @@
                             {% endif %}{% empty %} none
                             {% endfor %}
                         </li>
+                        <li>People who completed this task: {% for p in t.assignees_completed.all %}
+                            {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{%if not forloop.last%},
+                            {% endif %}{% empty %} none
+                            {% endfor %}
+                        </li>
                         <li>Due date: {{ t.due_date | date:"l F d, Y" }} </li>
-                        <li>Completed: {% if t.completed %}Yes{% else %}No{% endif %}</li>
+                        {% if t.completed %}
+                            <li class="mt-2"></li>
+                            <a class="mt-2 px-3 py-1 text-sm rounded bg-green-600 text-white">Completed</a>
+                            {% else %}<li>Not yet completed</li>{% endif %}
+                        <li class ="mt-1">  </li>
                     </ul>
+                        {% if request.user not in t.assignees_completed.all and request.user in t.assignee.all %}
+                            <a href="{% url 'servers:mark_as_complete' t.id %}" 
+                            hx-get="{% url 'servers:mark_as_complete' t.id %}"
+                            hx-target="#dialog"
+                            class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-green-600">
+                                Mark as Complete
+                            </a>
+                        {% endif %}
                 </div>
             </a>
             {% endfor %}
@@ -210,7 +231,7 @@
             </a>
             {% for b in bills %}
             <a href="{% url 'posts:bill' b.id %}">
-                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block transition-transform duration-300 transform hover:hover:scale-105 {% if forloop.last %}mb-10{% endif %}">
                     <h3 class="text-xl font-bold">{{ b.post_name }}</h3>
                     <p class="text-gray-600">{{ b.description }}</p>
                     <div class="flex justify-between items-center mt-2">
@@ -228,29 +249,34 @@
                     <ul class="text-sm text-gray-600">
                         <li>Creator: {% if request.user == b.bill_creator %} You {% else %} {{ b.post_creator }} {% endif %}</li>
                         <li>Cost: {{ b.cost }}</li>
-                        <li>Payers:
-                            {% for p in b.payers.all %}
-                            {% if p == request.user %}You{% else %}{{ p.first_name }} {{ p.last_name }}{% endif %}{%if not forloop.last%},
-                            {% endif %}{% empty %}none
-                            {% endfor %}
-                        </li>
-                        <li>Payers (display names): {{ b.payers_string }}</li>
+                        <li>Payers: {{ b.payers_string }}</li>
+                        <li>Payers who have paid: {{ b.payers_paid_string }}</li>
                         {% if b.split %}
                         <li>Your split: {{ b.portion }}</li>
                         {% else %}
                         <li>Bill is not being split</li>
                         {% endif %}
                         {% if b.completed %}
-                        <li>Paid: Yes</li>
+                        <li class="mt-2"></li>
+                            <a class="mt-2 px-3 py-1 text-sm rounded bg-green-600 text-white">Paid by all payers</a>
                         {% else %}
-                        <li>Paid: No</li>
+                        <li>Paid by all payers? No</li>
                         {% endif %}
+                        <li class="mt-2"></li>
                     </ul>
+                    {% if request.user not in b.payers_paid.all and request.user in b.payers.all %}
+                            <a href="{% url 'servers:mark_as_paid' b.id %}" 
+                            hx-get="{% url 'servers:mark_as_paid' b.id %}"
+                            hx-target="#dialog"
+                            class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-green-600">
+                                Mark as Paid
+                            </a>
+                    {% endif %}
                 </div>
             </a>
             {% endfor %}
-            
         </div>
+
 
 
 
@@ -267,7 +293,7 @@
                     </div>
                 </a>               
                 {% for p in participation %}
-                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block transition-transform duration-300 transform hover:hover:scale-105">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xl font-bold">{{ p.display_name }}</h3>
                         {% if p.is_owner %}
@@ -292,7 +318,7 @@
                 </a>
                 {% for e in events %}
                 <a href="{% url 'posts:event' e.id %}">
-                    <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block hover:bg-blue-400">
+                    <div class="bg-white p-4 rounded-lg shadow-md mt-6 mx-5 block transition-transform duration-300 transform hover:hover:scale-105">
                         <h3 class="text-xl font-bold">{{ e.post_name }}</h3>
                         <p class="text-gray-600">{{ e.description }}</p>
                         <div class="flex justify-between items-center mt-2">

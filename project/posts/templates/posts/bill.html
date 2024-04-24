@@ -13,8 +13,7 @@
      <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.min.js"></script>
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
      <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap"rel="stylesheet">
-     <link href="{% static 'posts/bill.css' %}" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet">
 </head>
 
 <!-- Beginning Of Sidebar -->
@@ -148,29 +147,20 @@
   </div>
   <!-- End Of Sidebar -->
 
-<!-- htmx csrf_token passage -->
-<body class="font-[Poppins]  bg-blue-600" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    <div class="billcontainer font-[Poppins]" >
-        <h1 class="head">{{ post_name }}</h1>
-        <div class="billcontent font-[Poppins]">
-            <span class="billdescrip font-[Poppins]">
-                Description: {{ description }}
-            </span><br/>
-            <span class="billdescrip font-[Poppins]">
-                Date Posted: {{ date_created }}
-            </span><br/>
-            <span class="billdescrip font-[Poppins]">
-                Cost: ${{ cost }}
-            </span><br/>
-            <span class="billdescrip font-[Poppins]">
-                Split?: {{ split }}
-            </span><br/>
-            <span class="billdescrip font-[Poppins]">
-                Your Portion: ${{ individual_portion }}
-            </span><br/>
-            <span class="billdescrip font-[Poppins]"> 
-                Who To Pay:<!-- Field not ready yet -->
-            </span>
+<body class="flex min-h-screen bg-blue-600" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="w-4/6 font-[Poppins] mx-auto mt-10">
+        <div class="bg-white rounded-lg p-4 shadow-md">
+            <h1 class="text-3xl font-bold mb-4">{{ post_name }}</h1>
+            <p class="text-gray-500">Date Posted: {{ date_created }}</p>
+            <p class="text-lg">{{ description }}</p>
+            <hr class="my-4">
+            <div class="flex justify-between">
+                <div>
+                    <p class="text-lg">Cost: ${{ cost }}</p>
+                    <p class="text-lg">Split?: {{ split }}</p>
+                    <p class="text-lg">Your Portion: ${{ individual_portion }}</p>
+                </div>
+            </div>
         </div>
         
         <!-- Gets comment section -->
@@ -178,4 +168,5 @@
 
     </div>
 </body>
+
 </html>
