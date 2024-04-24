@@ -136,6 +136,7 @@ class Comment(models.Model):
     # Field attributes
     content = models.TextField()
     date_time = models.DateTimeField(auto_now_add = True)
+    reply_to_author = models.TextField(null = True)
 
     def __str__(self):
         post = self.task or self.event or self.bill
