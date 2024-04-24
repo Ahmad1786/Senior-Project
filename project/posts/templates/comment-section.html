@@ -29,15 +29,15 @@
             <div class="comment" style="border-radius: 0.375rem; padding: .5rem; border: 1px solid black; margin: 10px; ">
                 <!-- Put the profile picture and comment post info on the same line -->
                 <div style="display: flex; align-items: center;">
-                    <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
-                    <div style="font-weight: bold;">{{ parent_comment.author }}</div> 
+                    <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid black;">
+                    <div style="font-weight: bold; padding: .5%;">{{ parent_comment.author }}</div> 
                     <div style="margin-left: auto;">Posted at {{ parent_comment.date_time }}</div>
                 </div>
                 <div style="position: relative; left: 20px; font-size: 12pt;" id="parent-comment{{ parent_comment.id }}">{{ parent_comment.content}}</div>
 
                 <!-- A button to make a reply. -->
                 <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
-                border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: 2px; position: relative; left: 15px;" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id%}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
+                border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: 2px; position: relative; left: 15px;" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id parent_comment.author %}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
 
                 <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                 {% if parent_comment.author == current_user %}
@@ -56,15 +56,15 @@
                     <div class="reply" style="position: relative; left: 15px; border-radius: 0.375rem; padding: .1rem; border: 1px solid #2563eb; margin: 10px;">
                         <!-- Put the profile picture and comment post info on the same line -->
                         <div style="display: flex; align-items: center;">
-                            <img src="{{ parent_comment.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="max-width: 5%; max-height: 5%; border-radius: 50%">
-                            <div style="font-weight: bold;">{{ reply.author }}</div> 
+                            <img src="{{ reply.author.profile_picture.url }}" alt="Your Profile Picture" class="profile_pic" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid black;">
+                            <div style="padding: .5%;"> <b>{{ reply.author }}</b> replying to {{ reply.reply_to_author }}</div> 
                             <div style="margin-left: auto;">Posted at {{ reply.date_time }}</div>
                         </div>
                         <div style="position: relative; left: 20px; font-size: 12pt;" id="reply-comment{{ reply.id }}">{{ reply.content}}</div>
 
                         <!-- A button to make a reply. -->
                         <button style="background-color:white; box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
-                        border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: .1px; position: relative; left: 15px;" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id %}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
+                        border-radius: 0.375rem; padding: .1rem; border: 1px solid black; margin: 5.5px; margin-left: .1px; position: relative; left: 15px;" hx-get="{%url 'posts:add_reply' post_type post_id parent_comment.id reply.author %}" hx-target="#reply-container{{ parent_comment.id }}">Reply</button>
 
                         <!-- If the user is the creator of the comment, allow them the option to edit or delete it. -->
                         {% if reply.author == current_user %}

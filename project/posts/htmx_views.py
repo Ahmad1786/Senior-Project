@@ -71,7 +71,7 @@ def add_comment(request, post_type, post_id):
             "post_id": post_id,
         })
     
-def add_reply(request, post_type, post_id, parent_comment_id):
+def add_reply(request, post_type, post_id, parent_comment_id, replying_to):
     if request.method == "POST":
         try:
             content = request.POST['content']
@@ -84,8 +84,12 @@ def add_reply(request, post_type, post_id, parent_comment_id):
         form_data = {
             # The creator of the new reply.
             "author": request.user,
+            # The parent comment of the chain
             "parent_comment": parent_comment,
+            # The content of the comment
             "content": content,
+            # Who the reply is replying to
+            "reply_to_author": replying_to,
         }
         # Check what type of post this comment will be on and then retrieve it.
         # Store the post as a foreign key in the initial data (links the comment to the post)
@@ -110,6 +114,7 @@ def add_reply(request, post_type, post_id, parent_comment_id):
             "post_type": post_type,
             "post_id": post_id,
             "parent_comment_id": parent_comment_id,
+            "replying_to": replying_to,
         })
     
 def edit_comment(request, post_type, post_id, comment_id):
