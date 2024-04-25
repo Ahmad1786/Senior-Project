@@ -1,9 +1,11 @@
 from django.shortcuts import redirect, render
-from .models import Bill, Chore, Event, Comment, Post
+from .models import Bill, Chore, Event, Comment, PostImage
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.db.models import Q
 from posts.group_page_forms import CommentForm
+from django.views.decorators.http import require_POST
+from django.utils import timezone
 
 
 @login_required
@@ -67,6 +69,8 @@ def chore(request, id):
         "due_date": due_date,
         "assigned_to": assigned_to,
         "creator": creator,
+        "chore_images": chore.images.all(),
+        "is_assigned": request.user in chore.assignee.all(),
     })
 
 @login_required
@@ -94,3 +98,16 @@ def event(request, id):
        "time": time,
        "creator": creator, 
     })
+
+# use the html form to upload a picture to post
+@login_required
+@require_POST
+def chore_pic(request, post_id):
+    if request.FILES:
+        picture = request.FILES['chore_pic']
+        
+        post = Chore.objects.get(id=post_id)
+        post_image = PostImage(image=picture, date_uploaded=timezone.now(), post=post)
+        post_image.save()
+
+    return redirect('posts:chore', post_id)

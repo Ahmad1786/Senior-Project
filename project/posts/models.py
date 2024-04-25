@@ -144,6 +144,14 @@ class Chore(Post):
 
     def __str__(self):
         return f"Chore: {self.post_name} in {self.server.group_name}"
+    
+class PostImage(models.Model):
+    post = models.ForeignKey(Chore, on_delete = models.CASCADE, related_name = "images")
+    image = models.ImageField(upload_to = "post_pics/")
+    date_uploaded = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return f"Image for {self.post.post_name} in {self.post.server.group_name}"
 
 class Comment(models.Model):
     # Foreign keys
@@ -156,6 +164,7 @@ class Comment(models.Model):
     # Field attributes
     content = models.TextField()
     date_time = models.DateTimeField(auto_now_add = True)
+    reply_to_author = models.CharField(max_length=30)
 
     def __str__(self):
         post = self.task or self.event or self.bill

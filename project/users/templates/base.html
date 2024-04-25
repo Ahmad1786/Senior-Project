@@ -82,11 +82,24 @@
           </button>
         </form> 
 
-        <!-- Link to create server form / page  -->
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'servers:create_server' %}">Create Server</a></span>
+
+        <!-- Toggle create server form / page with JS  -->
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+        onclick="toggleCreateForm()">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span class="text-[15px] ml-4 text-gray-200">Create Server</span>
         </div>
+        
+        <!-- form that pops up when toggled with onclick - submitted with htmx -->
+        <form id="createServerForm" class="hidden" hx-post="{% url 'servers:create_server' %}">
+          {% csrf_token %}
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            <input type="text" name="name" placeholder="Enter Server Name" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
+          </div>
+          <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            Create
+          </button>
+        </form> 
 
         <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
           <i class="bi bi-box-arrow-in-right"></i>
@@ -102,6 +115,11 @@
         function toggleJoinForm() {
         var form = document.getElementById('joinServerForm');
         form.classList.toggle('hidden');
+    }
+
+    function toggleCreateForm() {
+      var form = document.getElementById('createServerForm');
+      form.classList.toggle('hidden');
     }
 
     function Openbar() {

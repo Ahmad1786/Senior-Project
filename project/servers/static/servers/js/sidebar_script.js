@@ -4,6 +4,13 @@ function toggleJoinForm() {
     form.classList.toggle('hidden');
 }
 
+
+function toggleCreateForm() {
+    var form = document.getElementById('createServerForm');
+    form.classList.toggle('hidden');
+}
+
+
 function Openbar() {
     document.querySelector('.sidebar').classList.toggle('left-[-300px]')
 }

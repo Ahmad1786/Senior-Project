@@ -8,11 +8,11 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         # Remove all but content when done with testing.
-        fields = ["author", "task", "event", "bill", "parent_comment", "content",]
+        fields = ["author", "task", "event", "bill", "parent_comment", "content", "reply_to_author"]
         widgets = {
             "content": forms.TextInput(attrs={'class': 'form-control'}),
+            "reply_to_author": forms.TextInput(attrs={'class': 'form-control'}),
         }
-
 
 class BillForm(forms.ModelForm):
     payers = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
