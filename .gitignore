@@ -4,6 +4,9 @@ venv
 !**/media/profile_pics/
 **/media/profile_pics/*
 !**/media/profile_pics/default_profile.png
+!**/media/post_pics/
+**/media/post_pics/*
+!**/media/post_pics/test_post.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
