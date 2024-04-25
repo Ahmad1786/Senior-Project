@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from posts.models import Bill, Chore, Event, SwapRequest, SwapOffer
+from posts.models import Bill, Chore, Event, SwapRequest, SwapOffer, Achievement
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
@@ -141,4 +141,12 @@ def create_invitation(request):
         participation.save()
         
         return JsonResponse({'message': f'Achievement "{achievement_name}" assigned to {user.username}. {points} points awarded.'})
+
+#def earn_achievement(user):
+
+    if Chore.objects.filter(creator=user, completed=True).exists():
+        assign_achievement(user, "Task Novice")
+        return JsonResponse({'message': f'{user.username} has earned the "Task Novice" achievement.'})
+    else:
+        return JsonResponse({'message': f'{user.username} has not completed any tasks yet.'})
     
