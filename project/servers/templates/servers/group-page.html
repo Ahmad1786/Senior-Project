@@ -20,88 +20,150 @@
 
 <!-- Beginning Of Sidebar -->
 
-<div class="bg-blue-600  font-[Poppins] w-1/6">
-  <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="Openbar()">
-    <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
-  </span>
-  <div class="sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] duration-1000
-    p-2 w-[300px] overflow-y-auto text-center bg-gray-900 shadow h-screen">
-    <div class="text-gray-100 text-xl">
-      <div class="p-2.5 mt-1 flex items-center rounded-md ">
-        <i class="bi bi-app-indicator px-2 py-1 bg-blue-600 rounded-md"></i>
-        <h1 class="text-[15px]  ml-3 text-xl text-gray-200 font-bold">CoHabitat</h1>
-        <i class="bi bi-x ml-20 cursor-pointer lg:hidden" onclick="Openbar()"></i>
-      </div>
-      <hr class="my-2 text-gray-600">
-
-      <div>
-
-        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-          
-          <i class="bi bi-card-text"></i>
-          <span class="text-[15px] ml-4 text-gray-200">Feed</span>
+<div class="bg-blue-600  font-[Poppins] w-1/5">
+    <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="Openbar()">
+      <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
+    </span>
+    <div class="sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] duration-1000
+      p-2 w-[300px] overflow-y-auto text-center bg-gray-900 shadow h-screen">
+      <div class="text-gray-100 text-xl">
+        <div class="p-2.5 mt-1 flex items-center rounded-md ">
+          <i class="bi bi-app-indicator px-2 py-1 bg-blue-600 rounded-md"></i>
+          <h1 class="text-[15px]  ml-3 text-xl text-gray-200 font-bold">CoHabitat</h1>
+          <i class="bi bi-x ml-20 cursor-pointer lg:hidden" onclick="Openbar()"></i>
         </div>
-        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-          <i class="bi bi-houses-fill"></i>
-          <div class="flex justify-between w-full items-center" onclick="dropDown()">
-            <span class="text-[15px] ml-4 text-gray-200">Groups</span>
-            <span class="text-sm rotate-180" id="arrow">
-              <i class="bi bi-chevron-down"></i>
-            </span>
-          </div>
-        </div>
-        <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto" id="submenu">
-          {% for server in servers %}
-            <h1 class="cursor-pointer p-2 hover:bg-gray-700 rounded-md mt-1"><a href="{% url 'servers:server_page' server_id=server.id %}">{{ server.group_name }}</a></h1>     
-          {% endfor %}
-        </div>
-        <hr class="my-4 text-gray-600">
-        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
-          <i class="bi bi-person-circle"></i>
-          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
-        </div>
-
-        <!-- Notifications -->
-        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
-        hx-get="{% url 'users:unread_notification_count' %}" hx-trigger="every 3s" hx-swap="innerHTML" hx-target="#unread-count">
-          <i class="bi bi-bell"></i>
-          <span class="ml-1 text-sm font-semibold text-red-500" id="unread-count"></span>
-          <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:notification_page' %}">Notifications</a></span>
-        </div>
-        
-        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
-                onclick="toggleJoinForm()">
-                <i class="bi bi-person-circle"></i>
-                <span class="text-[15px] ml-4 text-gray-200">Join Server</span>
-            </div>
+        <hr class="my-2 text-gray-600">
+  
+        <div>
+  
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
             
-            <!-- Join Server Form -->
-        <form id="joinServerForm" class="hidden" hx-post="{% url 'servers:join_server' %}">
-          {% csrf_token %}
-          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
-            <input type="text" name="token" placeholder="Enter Invitation Code" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
+            <i class="bi bi-card-text"></i>
+            <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'users:feed_view' %}">Feed</a></span>
           </div>
-          <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
-            Join
-          </button>
-        </form> 
-
-        <!-- Link to create server form / page  -->
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-houses-fill"></i>
+            <div class="flex justify-between w-full items-center" onclick="dropDown()">
+              <span class="text-[15px] ml-4 text-gray-200">Groups</span>
+              <span class="text-sm rotate-180" id="arrow">
+                <i class="bi bi-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+          <div class=" leading-7 text-left text-sm font-thin mt-2 w-4/5 mx-auto" id="submenu">
+            {% for server in servers %}
+              <h1 class="cursor-pointer p-2 hover:bg-gray-700 rounded-md mt-1"><a href="{% url 'servers:server_page' server_id=server.id %}">{{ server.group_name }}</a></h1>     
+            {% endfor %}
+          </div>
+          <hr class="my-4 text-gray-600">
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            <i class="bi bi-person-circle"></i>
+            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:profile' %}">Your Account</a></span>
+          </div>
+  
+          <!-- Notifications -->
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+          hx-get="{% url 'users:unread_notification_count' %}" hx-trigger="every 3s" hx-swap="innerHTML" hx-target="#unread-count">
+            <i class="bi bi-bell"></i>
+            <span class="ml-1 text-sm font-semibold text-red-500" id="unread-count"></span>
+            <span class="text-[15px] ml-4 text-gray-200"> <a href="{% url 'users:notification_page' %}">Notifications</a></span>
+          </div>
+          
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+                  onclick="toggleJoinForm()">
+                  <i class="bi bi-person-circle"></i>
+                  <span class="text-[15px] ml-4 text-gray-200">Join Server</span>
+              </div>
+              
+              <!-- Join Server Form -->
+          <form id="joinServerForm" class="hidden" hx-post="{% url 'servers:join_server' %}">
+            {% csrf_token %}
+            <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+              <input type="text" name="token" placeholder="Enter Invitation Code" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
+            </div>
+            <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+              Join
+            </button>
+          </form> 
+  
+  
+          <!-- Toggle create server form / page with JS  -->
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+          onclick="toggleCreateForm()">
           <i class="bi bi-box-arrow-in-right"></i>
-          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'servers:create_server' %}">Create Server</a></span>
+          <span class="text-[15px] ml-4 text-gray-200">Create Server</span>
+          </div>
+          
+          <!-- form that pops up when toggled with onclick - submitted with htmx -->
+          <form id="createServerForm" class="hidden" hx-post="{% url 'servers:create_server' %}">
+            {% csrf_token %}
+            <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+              <input type="text" name="name" placeholder="Enter Server Name" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
+            </div>
+            <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+              Create
+            </button>
+          </form> 
+  
+          <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
+          </div>
+  
         </div>
-
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'account_logout' %}">Logout</a></span>
-        </div>
-
       </div>
     </div>
+  
+  
+    <script>
+      function toggleJoinForm() {
+      var form = document.getElementById('joinServerForm');
+      form.classList.toggle('hidden');
+    }
+  
+    function toggleCreateForm() {
+      var form = document.getElementById('createServerForm');
+      form.classList.toggle('hidden');
+    }
+  
+    function Openbar() {
+        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+    }
+    function dropDown() {
+      document.querySelector('#submenu').classList.toggle('hidden')
+      document.querySelector('#arrow').classList.toggle('rotate-0')
+    }
+  
+    function Openbar() {
+      document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+    }
+  
+    const modal = new bootstrap.Modal(document.getElementById("modal"))
+  
+    htmx.on("htmx:afterSwap", (e) => {
+        // Response targeting #dialog => show the modal
+        if (e.detail.target.id == "dialog") { modal.show() }
+    })
+  
+    htmx.on("htmx:beforeSwap", (e) => {
+        // Empty response targeting #dialog => hide the modal
+        if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+            modal.hide()
+            e.detail.shouldSwap = false
+        }
+    })
+  
+    htmx.on("hidden.bs.modal", () => {
+        document.getElementById("dialog").innerHTML = ""
+    })
+  
+    // Auto reload page when new post gets added or gets edited 
+    // Or any other change that requires a page refresh to see new changes
+    document.body.addEventListener('PageRefreshNeeded', () => {
+        window.location.reload();
+    });
+    </script>
   </div>
-</div>
-<!-- End Of Sidebar -->
 
 
 <!-- Beginning of main body (everything but the sidebar) -->

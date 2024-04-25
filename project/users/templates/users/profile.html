@@ -3,10 +3,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user }} Profile</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- htmx -->
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800&display=swap" rel="stylesheet">
@@ -32,7 +35,7 @@
         <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
           
           <i class="bi bi-card-text"></i>
-          <span class="text-[15px] ml-4 text-gray-200"><a href="../">Feed</span>
+          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'users:feed_view' %}">Feed</a></span>
         </div>
         <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
           <i class="bi bi-houses-fill"></i>
@@ -79,11 +82,24 @@
           </button>
         </form> 
 
-        <!-- Link to create server form / page  -->
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span class="text-[15px] ml-4 text-gray-200"><a href="{% url 'servers:create_server' %}">Create Server</a></span>
+
+        <!-- Toggle create server form / page with JS  -->
+        <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600"
+        onclick="toggleCreateForm()">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span class="text-[15px] ml-4 text-gray-200">Create Server</span>
         </div>
+        
+        <!-- form that pops up when toggled with onclick - submitted with htmx -->
+        <form id="createServerForm" class="hidden" hx-post="{% url 'servers:create_server' %}">
+          {% csrf_token %}
+          <div class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            <input type="text" name="name" placeholder="Enter Server Name" class="text-gray-200 ml-4 bg-transparent border-none focus:ring-0">
+          </div>
+          <button type="submit" class="p-2.5 mt-2 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600">
+            Create
+          </button>
+        </form> 
 
         <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer  hover:bg-blue-600">
           <i class="bi bi-box-arrow-in-right"></i>
@@ -96,48 +112,53 @@
 
 
   <script>
-        function toggleJoinForm() {
-        var form = document.getElementById('joinServerForm');
-        form.classList.toggle('hidden');
-    }
+    function toggleJoinForm() {
+    var form = document.getElementById('joinServerForm');
+    form.classList.toggle('hidden');
+  }
 
-    function Openbar() {
-        document.querySelector('.sidebar').classList.toggle('left-[-300px]')
-    }
-    function dropDown() {
-      document.querySelector('#submenu').classList.toggle('hidden')
-      document.querySelector('#arrow').classList.toggle('rotate-0')
-    }
-    dropDown()
+  function toggleCreateForm() {
+    var form = document.getElementById('createServerForm');
+    form.classList.toggle('hidden');
+  }
 
-    function Openbar() {
+  function Openbar() {
       document.querySelector('.sidebar').classList.toggle('left-[-300px]')
-    }
+  }
+  function dropDown() {
+    document.querySelector('#submenu').classList.toggle('hidden')
+    document.querySelector('#arrow').classList.toggle('rotate-0')
+  }
+  dropDown()
 
-    const modal = new bootstrap.Modal(document.getElementById("modal"))
+  function Openbar() {
+    document.querySelector('.sidebar').classList.toggle('left-[-300px]')
+  }
 
-    htmx.on("htmx:afterSwap", (e) => {
-        // Response targeting #dialog => show the modal
-        if (e.detail.target.id == "dialog") { modal.show() }
-    })
+  const modal = new bootstrap.Modal(document.getElementById("modal"))
 
-    htmx.on("htmx:beforeSwap", (e) => {
-        // Empty response targeting #dialog => hide the modal
-        if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
-            modal.hide()
-            e.detail.shouldSwap = false
-        }
-    })
+  htmx.on("htmx:afterSwap", (e) => {
+      // Response targeting #dialog => show the modal
+      if (e.detail.target.id == "dialog") { modal.show() }
+  })
 
-    htmx.on("hidden.bs.modal", () => {
-        document.getElementById("dialog").innerHTML = ""
-    })
+  htmx.on("htmx:beforeSwap", (e) => {
+      // Empty response targeting #dialog => hide the modal
+      if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+          modal.hide()
+          e.detail.shouldSwap = false
+      }
+  })
 
-    // Auto reload page when new post gets added or gets edited 
-    // Or any other change that requires a page refresh to see new changes
-    document.body.addEventListener('PageRefreshNeeded', () => {
-        window.location.reload();
-    });
+  htmx.on("hidden.bs.modal", () => {
+      document.getElementById("dialog").innerHTML = ""
+  })
+
+  // Auto reload page when new post gets added or gets edited 
+  // Or any other change that requires a page refresh to see new changes
+  document.body.addEventListener('PageRefreshNeeded', () => {
+      window.location.reload();
+  });
   </script>
 </div>
 
