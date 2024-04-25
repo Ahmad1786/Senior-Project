@@ -144,6 +144,15 @@ class Chore(Post):
 
     def __str__(self):
         return f"Chore: {self.post_name} in {self.server.group_name}"
+
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+    criteria = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
     
 class PostImage(models.Model):
     post = models.ForeignKey(Chore, on_delete = models.CASCADE, related_name = "images")
