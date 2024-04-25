@@ -51,12 +51,12 @@ def create_recurring_task(request, server_id):
         else:
             return render(request, 'servers/partials/recurring-task-form.html', {
                 'form': form,
-                'serer_id': server_id,
+                'server_id': server_id,
             })
     
     form = RecurringTaskForm(server_instance=server_instance)
     return render(request, 'servers/partials/recurring-task-form.html', {
         'form': form,
-        'serer_id': server_id,
+        'server_id': server_instance.id,
     })
 

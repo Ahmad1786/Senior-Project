@@ -11,17 +11,34 @@
     {% csrf_token %}
     <div class="bg-white rounded-lg overflow-hidden shadow-xl w-96">
         <div class="modal-header p-4 bg-gray-200 border-b">
-            <h5 class="modal-title">Task Completion:</h5>
+            <h5 class="modal-title">Mark as complete</h5>
         </div>
         <div class="modal-body p-4">
-            {{ form.as_p }}
+            <p>You are about to mark the following task as complete:</p>
+            <div class="border p-4 mt-4">
+                <h6 class="font-bold">Chore Details</h6>
+                <p>Chore Name: {{ chore.post_name }}</p>
+                <p>Description: {{ chore.description}}</p>
+                <!-- Add other chore details here -->
+            </div>
+            <p class="mt-4">Ensure you completed the task before you mark as complete.</p>
         </div>
         <div class="modal-footer p-4 bg-gray-200 border-t">
             <button type="button" hx-post="{% url 'servers:close_modal' %}" class="text-gray-500 hover:text-gray-700">Cancel</button>
-            <button type="submit" class="ml-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
+            <button type="submit" class="ml-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Mark as Complete</button>
         </div>
     </div>
 </form>
+
+{% if success %}
+<div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
+    <div class="bg-white rounded-lg overflow-hidden shadow-xl w-96 p-4">
+        <p>Successfully submitted swap request for your chore!</p>
+        <button hx-get="{% url 'servers:reload_window' %}" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Close</button>
+    </div>
+</div>
+{% endif %}
+
 
 <style>
     /* Add black border to form fields with rounded corners */

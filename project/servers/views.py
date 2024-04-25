@@ -57,6 +57,8 @@ def server_page(request, server_id):
         t.swap_request = swap_request
         t.all_swap_requests = SwapRequest.objects.filter(chore=t, status='PENDING')
         t.user_has_swap_requests = SwapRequest.objects.filter(chore=t, status='PENDING', requester = request.user).exists()
+        t.user_has_declined_swap_requests = SwapRequest.objects.filter(chore=t, status='DECLINED', requester = request.user).exists()
+        t.user_has_accepted_swap_requests = SwapRequest.objects.filter(chore=t, status='ACCEPTED', requester = request.user).exists()
         if t.swap_requests:
             t.user_swap_offers = SwapOffer.objects.filter(swap_request__in=t.all_swap_requests, user=request.user)
         if t.user_swap_offers is not None:

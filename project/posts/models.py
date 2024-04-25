@@ -44,6 +44,8 @@ class Bill(Post):
     cost = models.DecimalField(blank = True, null = True, max_digits = 10, decimal_places = 2)
     split = models.BooleanField(default = True)
     completed = models.BooleanField(default = False)
+    payers_paid = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="payers_paid", blank=True)
+    num_payers_paid = models.IntegerField(default=0)
 
     @property
     def bill_creator(self):
@@ -65,6 +67,24 @@ class Bill(Post):
         if user in self.payers.all():
             return f"You, {', '.join([p.display_name(self.server) for p in self.payers.all() if p != user])}"
         return ', '.join([p.display_name(self.server) for p in self.payers.all()]) 
+    
+    def payers_paid_string(self, user):
+        if len(self.payers.all()) == 1:
+            return "You" if user in self.payers_paid.all() else self.payers_paid.first().display_name(self.server)
+        if user in self.payers.all():
+            return f"You, {', '.join([p.display_name(self.server) for p in self.payers_paid.all() if p != user])}"
+        return ', '.join([p.display_name(self.server) for p in self.payers_paid.all()]) 
+    
+    def mark_as_paid(self, user):
+        if user in self.payers.all() and user not in self.payers_paid.all():
+            self.payers_paid.add(user)
+            self.num_payers_paid += 1
+            self.save()
+            if self.num_payers_paid == len(self.payers.all()):
+                self.completed = True
+                self.save()
+        else:
+            raise ValueError("A user that has paid the bill or is not assigned to pay this bill, cannot mark it as paid")
 
     def __str__(self):
         return f"Bill: {self.post_name} in {self.server.group_name} (${self.cost})"
@@ -79,6 +99,8 @@ class Chore(Post):
     # make assigned date the current date it was created ?
     completed = models.BooleanField(default = False)
     point_value = models.IntegerField(default = 0)
+    assignees_completed = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="completed_chores", blank=True)
+    num_assignees_completed = models.IntegerField(default=0)
 
     @property
     def assigner(self):
@@ -97,21 +119,27 @@ class Chore(Post):
 
     @property
     def point_val(self):
-
-        if self.completed:
-            return 10
+        days_remaining = (self.due_date - timezone.now().date()).days
+        if days_remaining < 1:
+            # Point system based on how early a task is completed?
+            return 0
+        elif days_remaining <= 3:
+            return 3
+        elif days_remaining <= 7:
+            return 5
         else:
-            # Calculate points based on due date
-            days_remaining = (self.due_date - datetime.now().date()).days
-            if days_remaining < 1:
-                # Point system based on how early a task is completed?
-                return 0
-            elif days_remaining <= 3:
-                return 8
-            elif days_remaining <= 7:
-                return 5
-            else:
-                return 3
+            return 8
+
+    def mark_as_complete(self, user):
+        if user in self.assignee.all() and user not in self.assignees_completed.all():
+            self.assignees_completed.add(user)
+            self.num_assignees_completed += 1
+            self.save()
+            if self.num_assignees_completed == len(self.assignee.all()):
+                self.completed = True
+                self.save()
+        else:
+            raise ValueError("User is not assigned to this chore or has already marked it as complete.")
 
 
     def __str__(self):
@@ -215,6 +243,7 @@ class SwapOffer(models.Model):
                 self.swap_request.accept_offer()
             else:
                 # Automatically accept the offer with no chore in return
+                print("none block")
                 self.swap_request.chore.assignee.remove(self.swap_request.requester)
                 self.swap_request.chore.assignee.add(self.user)
                 self.status = 'ACCEPTED'
@@ -240,9 +269,9 @@ class SwapOffer(models.Model):
                 swap_request.set_status()
                 return offer
             elif offer_chore is None:
-                offer = cls(swap_request=swap_request, user=user)
+                offer = cls(swap_request=swap_request, status = status, offer_chore=None, user=user)
                 offer.save()
-                swap_request.accept_offer()
+                swap_request.set_status()
                 return offer
         else:
             raise ValueError("Cannot create offer for a swap request that is not pending.")
@@ -261,6 +290,7 @@ class SwapOffer(models.Model):
                 self.save()
         else:
             raise ValueError("Cannot update offer that is not pending.")
+
 
         
 
