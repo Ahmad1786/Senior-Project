@@ -121,3 +121,24 @@ def create_invitation(request):
     
     # You can return a success message or any relevant data
     return JsonResponse({'message': 'Invitation created successfully'})
+
+
+#def assign_achievement(user, achievement_name):
+    # Check if the user already has the achievement
+    if Achievement.objects.filter(user=user, name=achievement_name).exists():
+        return JsonResponse({'message': f'{user.username} already has the "{achievement_name}" achievement.'})
+    else:
+        achievement = Achievement(user=user, name=achievement_name, description="Achievement earned.")
+        achievement.save()
+        
+        if achievement_name == "Task Novice":
+            points = 10  
+        else:
+            points = 0  
+    
+        participation = Participation.objects.get(user=user)
+        participation.points += points
+        participation.save()
+        
+        return JsonResponse({'message': f'Achievement "{achievement_name}" assigned to {user.username}. {points} points awarded.'})
+    
